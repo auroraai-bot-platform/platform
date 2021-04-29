@@ -13,8 +13,8 @@ Start Botfront locally at the first time:
 5.	Open `http://localhost:8888/` on your browser (wait little time after docker-compose up if not responding)
 6.	On Admin Settings `http://localhost:8888/admin/settings/default-nlu-pipeline`, comment away the `#- name: rasa_addons.nlu.components.gazette.Gazette` row in Default NLU Pipeline (there seems to be bug in current Botfront version when training new NLU model with Gazette)
 7.  Add new project in `http://localhost:8888/admin/projects` (you can also delete the already existing chitchat project)
-8.  Copy your project id and replace the existing id in `BF_PROJECT_ID` field in the `botfront.env` file
-9. Restart Botfront by running `docker-compose up -d` on the command line
+8.  Copy your project id and replace the existing id in `BF_PROJECT_ID` field in the `.env` file
+9.  Restart Botfront by running `docker-compose up -d` on the command line
 10. Click your project's name to open the project in `http://localhost:8888/admin/projects`
 
 Next time, you can start Botfront again by running `docker-compose up -d` on the command line
