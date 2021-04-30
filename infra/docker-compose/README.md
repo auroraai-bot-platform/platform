@@ -18,3 +18,5 @@ Start Botfront locally at the first time:
 10. Click your project's name to open the project in `http://localhost:8888/admin/projects`
 
 Next time, you can start Botfront again by running `docker-compose up -d` on the command line
+
+If you want to import example chatbot project into Botfront, check README in the repo's `services/example-bot` folder

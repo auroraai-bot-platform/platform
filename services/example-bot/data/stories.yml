@@ -1,0 +1,27 @@
+stories:
+  - story: Ask name from user
+    steps:
+      - intent: get_started
+        entities: []
+      - action: utter_aloitus
+      - action: ask_name_form
+      - active_loop: ask_name_form
+      - active_loop: null
+      - action: utter_nimi_vastaus
+    metadata:
+      group: Example group
+rules:
+  - rule: Farewells
+    condition: []
+    steps:
+      - intent: chitchat.bye
+      - action: utter_bye
+    metadata:
+      group: Example group
+  - rule: Greetings
+    condition: []
+    steps:
+      - intent: chitchat.greet
+      - action: utter_hi
+    metadata:
+      group: Example group
