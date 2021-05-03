@@ -8,7 +8,7 @@ Botfront is an open source graphical UI for developing and maintaining Rasa chat
 Start Botfront locally at the first time:
 1.	Install Docker if not already installed
 2.  Install Python if not already installed
-3.  On the command line run `python generate_compose_env_file.py` to generate Botfront env file for Dockers
+3.  On the command line run `python generate_compose_env_file.py` to generate Botfront env file for Dockers (if you don't have Python, you could copy needed env vars from the Python script and create the file manually)
 4.	On the command line run `docker-compose up -d` to start Botfront
 5.	Open `http://localhost:8888/` on your browser (wait little time after docker-compose up if not responding)
 6.	On Admin Settings `http://localhost:8888/admin/settings/default-nlu-pipeline`, comment away the `#- name: rasa_addons.nlu.components.gazette.Gazette` row in Default NLU Pipeline (there seems to be bug in current Botfront version when training new NLU model with Gazette)

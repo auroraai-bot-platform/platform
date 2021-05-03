@@ -12,7 +12,7 @@ services:
     networks:
       - botfront-network
     volumes:
-      - './models/:/app/models'
+      - models:/app/models
     ports:
       - '8888:3000'
     depends_on:
@@ -33,7 +33,7 @@ services:
     ports:
       - '5005:5005'
     volumes:
-      - './models/:/app/models'
+      - models:/app/models
     env_file:
       - .env
   actions:
@@ -71,7 +71,7 @@ services:
     networks:
       - botfront-network
     volumes:
-      - './botfront-db:/data/db'
+      - botfront-db:/data/db
     ports:
       - '27017:27017'
     env_file:
@@ -79,4 +79,5 @@ services:
 networks:
   botfront-network: {}
 volumes:
-  botfront-db: null
+  botfront-db:
+  models:
