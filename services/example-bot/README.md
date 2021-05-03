@@ -6,8 +6,9 @@ Local Botfront chatbot project instructions (to install Botfront locally, check 
 
 To import this chatbot project into your local Botfront:
 1.  Create `.zip` file of the cloned repository chatbot project files
-2.  Go to project settings in Botfront, select `Import/Export` and import the `.zip` file
-3.  Now you should have this chatbot project in your Botfront
+2.  Go to project settings in Botfront, select `Import/Export` and add the `.zip` file in the Import tab
+3.  Turn on the `Reset project` toggle to make sure possible existing project won't conflict with the import
+4.  Now you should have this chatbot project in your Botfront
 
 To export chatbot project from your local Botfront:
 1.  Go to project settings in Botfront, select `Import/Export` and export
