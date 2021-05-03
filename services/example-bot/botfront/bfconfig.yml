@@ -1,0 +1,10 @@
+name: examplebot
+namespace: bf-example-bot
+defaultLanguage: fi
+nluThreshold: 0.75
+timezoneOffset: 0
+allowContextualQuestions: false
+instance:
+  name: Default Instance
+  host: 'http://rasa:5005'
+  projectId: ExJ23SZs3cvA2eNRm

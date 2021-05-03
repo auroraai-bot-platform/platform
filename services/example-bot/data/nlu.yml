@@ -1,0 +1,24 @@
+version: "2.0"
+nlu:
+- intent: chitchat.bye
+  metadata:
+    language: fi
+  examples: |
+    - hei hei
+    - heippa
+    - huomiseen
+    - lopeta
+    - nähdään
+    - näkemisiin
+- intent: chitchat.greet
+  metadata:
+    language: fi
+  examples: |
+    - hei
+    - moi
+    - moikkaa
+    - morjens
+    - moro
+    - moro moro
+    - terve
+    - tervehdys
