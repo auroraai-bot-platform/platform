@@ -1,6 +1,6 @@
 # servicerec
 
-Contains a Python source code for fetching service recommendations through Aurora AI API. 
+Contains a Python source code for fetching service recommendations through Aurora AI API.
 Documentation of the API can be found here (https://auroraai.astest.suomi.fi/service-recommender/v1/docs/).
 
 ## Installation
@@ -8,7 +8,7 @@ Documentation of the API can be found here (https://auroraai.astest.suomi.fi/ser
 * Create virtual environment, and activate it.
     ```bash
     virtualenv venv
-    source venv/bin/activate 
+    source venv/bin/activate
     ```
 
 * Install required packages.
@@ -18,7 +18,7 @@ Documentation of the API can be found here (https://auroraai.astest.suomi.fi/ser
     ```
 ## Environment variables
 
-For local testing user must create .env file to a servicerec/ folder 
+For local testing user must create .env file to a servicerec/ folder
 with key value pair defining api endpoint and api key as follows:
 
 ```python
@@ -27,6 +27,15 @@ AURORA_API_KEY=api_key_123
 ```
 
 For other environments a separate solution must be developed.
+
+## Integration test
+
+Directory `tests/integration` contains simple integration test. The
+test can be run as follows:
+
+```
+python -m unittest tests.integration.test_api
+```
 
 ## Usage
 
@@ -59,4 +68,3 @@ params = {
 
 output = api.get_recommendations(params) # returns 'recommended services'
 ```
-
