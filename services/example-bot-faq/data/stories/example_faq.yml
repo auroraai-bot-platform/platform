@@ -1,0 +1,38 @@
+stories: []
+rules:
+  - rule: faq_bot_help
+    condition: []
+    steps:
+      - intent: faq.bot-help
+        user: apua
+        entities: []
+      - action: utter_bot_help
+    metadata:
+      group: Example FAQ
+  - rule: faq_bot_info
+    condition: []
+    steps:
+      - intent: faq.bot-info
+        user: Kuka olet?
+        entities: []
+      - action: utter_faq_bot_info
+    metadata:
+      group: Example FAQ
+  - rule: faq_data_protection
+    condition: []
+    steps:
+      - intent: faq.data_protection
+        user: Keräätkö minusta jotain tietoja?
+        entities: []
+      - action: utter_faq_data_protection
+    metadata:
+      group: Example FAQ
+  - rule: faq_services
+    condition: []
+    steps:
+      - intent: faq.services
+        user: Mitä palveluita tarjoat?
+        entities: []
+      - action: utter_faq_services
+    metadata:
+      group: Example FAQ
