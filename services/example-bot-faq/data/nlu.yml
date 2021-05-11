@@ -1,0 +1,85 @@
+version: "2.0"
+nlu:
+- intent: chitchat.bye
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      hei hei
+    metadata:
+      canonical: true
+  - text: |
+      heippa
+  - text: |
+      huomiseen
+  - text: |
+      lopeta
+  - text: |
+      nähdään
+  - text: |
+      näkemisiin
+- intent: chitchat.greet
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      hei
+    metadata:
+      canonical: true
+  - text: |
+      moi
+  - text: |
+      moikkaa
+  - text: |
+      morjens
+  - text: |
+      moro
+  - text: |
+      moro moro
+  - text: |
+      terve
+  - text: |
+      tervehdys
+- intent: faq.bot-help
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      apua
+    metadata:
+      canonical: true
+  - text: |
+      miten tää toimii
+  - text: |
+      mitä teen
+- intent: faq.bot-info
+  metadata:
+    language: fi
+  examples: |
+    - Kuka olet?
+    - kerro itsestäsi
+    - mikä botti tää on
+    - tietoja botista
+- intent: faq.data_protection
+  metadata:
+    language: fi
+  examples: |
+    - Keräätkö minusta jotain tietoja?
+    - kerro tietosuojasta
+    - mihin vastaukseni menevät
+    - mitä syötetyille tiedoille tapahtuu
+    - mitä tietoja tallennat
+- intent: faq.services
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      Mitä palveluita tarjoat?
+    metadata:
+      canonical: true
+  - text: |
+      kerro palveluista
+  - text: |
+      minkälaisia palveluja löytyy
+  - text: |
+      mitä osaat tehdä
