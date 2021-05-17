@@ -28,34 +28,45 @@ export class ApplicationStack extends cdk.Stack {
       vpc: props.baseVpc
     });
 
-    cluster.addDefaultCloudMapNamespace({
-      name: 'ai.local',
-      vpc: props.baseVpc
-    });
-
     const mongoSecret = new ssm.StringParameter(this, 'mongo-secret', {
-      stringValue: `mongodb://root:${dbSecret.secretValue.toString()}@mongo.ai.local:27017/bf?authSource=admin`
+      stringValue: `mongodb://root:${dbSecret.secretValue.toString()}@127.0.0.1:27017/bf?authSource=admin`
     });
 
-    const lb = new ApplicationLoadBalancer(this, 'botfrontlb', {
+    const loadBalancer = new ApplicationLoadBalancer(this, 'botfrontlb', {
       vpc: props.baseVpc,
       internetFacing: true
-    })
+    });
 
     const sg = ec2.SecurityGroup.fromSecurityGroupId(this, 'basesg', cdk.Fn.importValue('base-security-group-id'));
 
-    const mongotd = new ecs.TaskDefinition(this, 'mongotd', {
-      cpu: '256',
-      memoryMiB: '512',
+    const basetd = new ecs.TaskDefinition(this, 'basetd', {
+      cpu: '2048',
+      memoryMiB: '4096',
       compatibility:  ecs.Compatibility.FARGATE
     });
 
-    mongotd.addContainer('mongocontainer', {
-      image: ecs.ContainerImage.fromRegistry('mongo:latest'),
-      containerName: 'botfront-mongo',
+    basetd.addContainer('botfront', {
+      image: ecs.ContainerImage.fromRegistry('botfront/botfront:v1.0.5'),
+      containerName: 'botfront',
       portMappings: [{
-        containerPort: 27017,
-        hostPort: 27017
+        containerPort: 8888
+      }],
+      environment: {
+        PORT: '8888',
+        MONGO_URL: mongoSecret.stringValue,
+        ROOT_URL: `http://${loadBalancer.loadBalancerDnsName}`
+      },
+      logging: ecs.LogDriver.awsLogs({
+        streamPrefix: 'botfront',
+        logRetention: RetentionDays.ONE_DAY
+      }),
+    });
+
+    basetd.addContainer('mongo', {
+      image: ecs.ContainerImage.fromRegistry('mongo:latest'),
+      containerName: 'mongo',
+      portMappings: [{
+        containerPort: 27017
       }],
       environment: {
         MONGO_INITDB_ROOT_USERNAME: 'root',
@@ -67,54 +78,74 @@ export class ApplicationStack extends cdk.Stack {
       logging: ecs.LogDriver.awsLogs({
         streamPrefix: 'mongo',
         logRetention: RetentionDays.ONE_DAY
+      }),
+      memoryReservationMiB: 1024
+    });
+
+    basetd.addContainer('rasa', {
+      image: ecs.ContainerImage.fromRegistry('botfront/rasa-for-botfront:v2.3.3-bf.3'),
+      containerName: 'rasa',
+      portMappings: [{
+        containerPort: 5005
+      }],
+      environment: {
+        BF_PROJECT_ID: 'bf',
+        BF_URL: `http://127.0.0.1:8080/graphql`,
+      },
+      logging: ecs.LogDriver.awsLogs({
+        streamPrefix: 'rasa',
+        logRetention: RetentionDays.ONE_DAY
       })
     });
 
-    const mongoService = new ecs.FargateService(this, 'mongo-service', {
-      cluster,
-      cloudMapOptions: {
-        name: 'mongo',
+    basetd.addContainer('botfront-api', {
+      image: ecs.ContainerImage.fromRegistry('botfront/botfront-api:v0.27.5'),
+      containerName: 'botfront-api',
+      portMappings: [{
+        containerPort: 8080
+      }],
+      environment: {
+        MONGO_URL: mongoSecret.stringValue
       },
-      taskDefinition: mongotd
+      logging: ecs.LogDriver.awsLogs({
+        streamPrefix: 'botfront-api',
+        logRetention: RetentionDays.ONE_DAY
+      })
+
+    })
+
+    basetd.addContainer('duckling', {
+      image: ecs.ContainerImage.fromRegistry('botfront/duckling:latest'),
+      containerName: 'duckling',
+      portMappings: [{
+        containerPort: 8000
+      }],
+      logging: ecs.LogDriver.awsLogs({
+        streamPrefix: 'duckling',
+        logRetention: RetentionDays.ONE_DAY
+      })
     });
+
 
     const botfrontService = new ecsp.ApplicationLoadBalancedFargateService(this, 'botfront-service', {
       cluster,
-      loadBalancer: lb,
-      memoryLimitMiB: 2048,
-      cpu: 512,
-      openListener: false,
-      cloudMapOptions: {
-        name: 'botfront',
-      },
+      loadBalancer,
+      taskDefinition: basetd,
+      openListener: true,
+      publicLoadBalancer: true,
       listenerPort: 80,
-      taskImageOptions: {
-        image: ecs.ContainerImage.fromRegistry('botfront/botfront:v1.0.5'),
-        containerName: 'botfront-app',
-        containerPort: 3000,
-        environment: {
-          PORT: '3000',
-          MONGO_URL: mongoSecret.stringValue,
-          BF_PROJECT_ID: 'bf',
-          BF_URL: 'http://botfront.ai.local:3000/graphql',
-          ROOT_URL: `http://${lb.loadBalancerDnsName}`
-        }
-      }
+      minHealthyPercent: 0,
+      maxHealthyPercent: 100
     });
 
-    mongoService.connections.allowFrom(
-      botfrontService.service, 
-      ec2.Port.tcp(27017)
-    );
-
     dbSecret.grantRead(botfrontService.service.taskDefinition.taskRole);
-    botfrontService.loadBalancer.addSecurityGroup(sg);
+    //botfrontService.loadBalancer.addSecurityGroup(sg);
 
     botfrontService.service.connections.allowFromAnyIpv4(
       ec2.Port.tcp(8888), 'Inbound traffic'
     );
 
-    dbSecret.grantRead(mongoService.taskDefinition.taskRole);
+    dbSecret.grantRead(botfrontService.taskDefinition.taskRole);
 
   }
 }
