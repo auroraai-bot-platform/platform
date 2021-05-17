@@ -1,0 +1,66 @@
+actions:
+  - action_botfront_disambiguation
+  - action_botfront_disambiguation_followup
+  - action_botfront_fallback
+  - action_botfront_mapping
+  - utter_I0dF_IqYL
+  - utter_Yzl4eyWiY
+  - utter_bye
+  - utter_fdClUFHga
+  - utter_get_started
+  - utter_hi
+entities: []
+forms: {}
+intents:
+  - chitchat.bye
+  - chitchat.greet
+  - response.good
+responses:
+  utter_I0dF_IqYL:
+    - language: fi
+      text: |-
+        moi takaisin
+
+        miten menee?
+  utter_Yzl4eyWiY:
+    - language: fi
+      metadata: null
+      text: Hei sitten
+  utter_bye:
+    - language: fi
+      metadata: null
+      text: 'Heippa, oli kiva kun juttelit kanssani!'
+    - language: fi
+      metadata: null
+      text: 'Kiitos keskustelusta, toivottavasti kokemus oli mielekäs!'
+    - language: fi
+      metadata: null
+      text: Moi moi! Hyvää päivän jatkoa!
+  utter_fdClUFHga:
+    - language: fi
+      text: |+
+        Hienoa, kiva kuulla!
+
+        Mahtavaa!
+
+  utter_get_started:
+    - language: fi
+      metadata: null
+      text: >-
+        Hei, olen kesädemobotti ja haluaisin jutella kanssasi. Olen vielä
+        kehitysvaiheessa ja ymmärrän parhaiten lyhyitä viestejä. Mitä sinulle
+        kuuluu?
+    - language: fi
+      metadata: null
+      text: ''
+  utter_hi:
+    - language: fi
+      metadata: null
+      text: 'Hei, juu'
+session_config: {}
+slots:
+  disambiguation_message:
+    type: unfeaturized
+  fallback_language:
+    initial_value: fi
+    type: unfeaturized

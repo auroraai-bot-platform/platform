@@ -1,0 +1,274 @@
+{
+  "rasa_nlu_data": {
+    "common_examples": [
+      {
+        "text": "hei hei",
+        "intent": "chitchat.bye",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "heippa",
+        "intent": "chitchat.bye",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "lopeta",
+        "intent": "chitchat.bye",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "nähdään",
+        "intent": "chitchat.bye",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "näkemiin",
+        "intent": "chitchat.bye",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "Hei",
+        "intent": "chitchat.greet",
+        "entities": [],
+        "metadata": {
+          "language": "fi",
+          "canonical": true
+        }
+      },
+      {
+        "text": "hei",
+        "intent": "chitchat.greet",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "moi",
+        "intent": "chitchat.greet",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "moikka",
+        "intent": "chitchat.greet",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "morjens",
+        "intent": "chitchat.greet",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "moro",
+        "intent": "chitchat.greet",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "tere",
+        "intent": "chitchat.greet",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "terve",
+        "intent": "chitchat.greet",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "ei kovin hyvää",
+        "intent": "response.bad",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "hunosti",
+        "intent": "response.bad",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "huono",
+        "intent": "response.bad",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "huonoa",
+        "intent": "response.bad",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "hyvin",
+        "intent": "response.good",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "hyvin menee",
+        "intent": "response.good",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "hyvää",
+        "intent": "response.good",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "ihan fine",
+        "intent": "response.good",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "ihan ok",
+        "intent": "response.good",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "ei",
+        "intent": "response.no",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "ei tod",
+        "intent": "response.no",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "en",
+        "intent": "response.no",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "no ei todellakaan",
+        "intent": "response.no",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "jep",
+        "intent": "response.yes",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "joo",
+        "intent": "response.yes",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "juu",
+        "intent": "response.yes",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "kyllä",
+        "intent": "response.yes",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "käy",
+        "intent": "response.yes",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "toki",
+        "intent": "response.yes",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      },
+      {
+        "text": "tottakai",
+        "intent": "response.yes",
+        "entities": [],
+        "metadata": {
+          "language": "fi"
+        }
+      }
+    ],
+    "entity_synonyms": [],
+    "gazette": [],
+    "regex_features": []
+  }
+}
