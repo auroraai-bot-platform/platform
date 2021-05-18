@@ -12,6 +12,8 @@ export class Ec2Stack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: Ec2Props) {
     super(scope, id, props);
 
+    const sg = ec2.SecurityGroup.fromSecurityGroupId(this, 'basesg', cdk.Fn.importValue('base-security-group-id'));
+
     const script = `
     #!/bin/bash
     yum update -y
@@ -40,8 +42,10 @@ export class Ec2Stack extends cdk.Stack {
         userData: userdata
     });
 
-    host.connections.allowFromAnyIpv4(ec2.Port.tcpRange(3000, 9000));
-    host.connections.allowFromAnyIpv4(ec2.Port.tcp(22));
+    host.addSecurityGroup(sg)
+
+    host.connections.allowFromAnyIpv4(ec2.Port.tcp(8888));
+    host.connections.allowFromAnyIpv4(ec2.Port.tcp(5005));
 
     new CfnOutput(this, 'ip-address', {
         value: host.instancePublicIp
