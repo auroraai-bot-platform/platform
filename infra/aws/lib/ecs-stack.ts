@@ -8,13 +8,13 @@ import * as secrets from '@aws-cdk/aws-secretsmanager';
 import { ApplicationLoadBalancer } from '@aws-cdk/aws-elasticloadbalancingv2';
 import { RetentionDays } from '@aws-cdk/aws-logs';
 
-interface ApplicationProps extends cdk.StackProps {
+interface EcsProps extends cdk.StackProps {
   baseRepo: ecr.IRepository,
   baseVpc: ec2.IVpc
 }
 
-export class ApplicationStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props: ApplicationProps) {
+export class EcsStack extends cdk.Stack {
+  constructor(scope: cdk.Construct, id: string, props: EcsProps) {
     super(scope, id, props);
 
     const dbSecret = new secrets.Secret(this, 'db-secret', {
