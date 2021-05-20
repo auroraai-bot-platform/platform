@@ -1,37 +1,37 @@
 stories:
-  - story: ShortStory
+  - story: BasicPath
     steps:
-      - intent: chitchat.greet
-        user: moi
-      - action: utter_I0dF_IqYL
-      - intent: response.good
-        user: hyvin
-      - action: utter_fdClUFHga
-      - intent: chitchat.bye
-        user: heippa
-      - action: utter_Yzl4eyWiY
-    metadata:
-      group: Example group
-rules:
-  - rule: Farewells
-    condition: []
-    steps:
-      - intent: chitchat.bye
-      - action: utter_bye
-    metadata:
-      group: Example group
-  - rule: GetStarted
-    condition: []
-    steps:
-      - intent: chitchat.greet
+      - intent: greet
         user: Hei
-      - action: utter_get_started
+        entities: []
+      - action: utter_greet
+      - intent: response.yes
+        user: joo
+        entities: []
+      - action: utter_wants_to_discuss
+      - intent: response.location
+        user: Asun Mikkelissä
+        entities:
+          - city: Mikkelissä
+      - action: utter_ask_friends
+      - intent: response.no
+        user: ei
+        entities: []
+      - action: action_set_friends
+      - action: utter_hos_no_friends2
+      - intent: response.yes
+        user: joo
+        entities: []
+      - action: action_my_action
     metadata:
-      group: Example group
-  - rule: Greetings
+      group: test
+rules:
+  - rule: WhatYouCanDo
     condition: []
     steps:
-      - intent: chitchat.greet
-      - action: utter_hi
+      - intent: chitchat.ask_whoami
+        user: mitä osaat
+        entities: []
+      - action: utter_what_you_can
     metadata:
-      group: Example group
+      group: test

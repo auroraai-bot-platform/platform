@@ -1,0 +1,75 @@
+version: "2.0"
+nlu:
+- intent: chitchat.ask_joke
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      kerro joku vitsi
+  - text: |
+      kerro vitsi
+  - text: |
+      osaatko kertoa vitsin?
+    metadata:
+      canonical: true
+- intent: chitchat.ask_whoami
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      chitchat
+  - text: |
+      chitchat.ask_whoami
+  - text: |
+      kuka olet?
+    metadata:
+      canonical: true
+  - text: |
+      mikä sinun nimesi on?
+  - text: |
+      mikä sinä olet?
+  - text: |
+      mistä tulet?
+  - text: |
+      mitä osaat
+- intent: greet
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      Hei
+    metadata:
+      canonical: true
+  - text: |
+      hei
+  - text: |
+      moi
+  - text: |
+      tere
+- intent: response.location
+  metadata:
+    language: fi
+  examples: |
+    - Asun [Mikkelissä]{"entity": "city", "value": "Mikkeli"}
+    - Asun [Turussa]{"entity": "city", "value": "Turku"}
+    - Olen [Mikkelistä]{"entity": "city", "value": "Mikkeli"}
+    - Olen [Turusta]{"entity": "city", "value": "Turku"}
+- intent: response.no
+  metadata:
+    language: fi
+  examples: |
+    - ei
+    - ei ole
+    - en
+- intent: response.yes
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      joo
+  - text: |
+      kyllä
+  - text: |
+      on
+    metadata:
+      canonical: true

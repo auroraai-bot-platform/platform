@@ -3,64 +3,55 @@ actions:
   - action_botfront_disambiguation_followup
   - action_botfront_fallback
   - action_botfront_mapping
-  - utter_I0dF_IqYL
-  - utter_Yzl4eyWiY
-  - utter_bye
-  - utter_fdClUFHga
-  - utter_get_started
-  - utter_hi
-entities: []
+  - action_my_action
+  - action_set_friends
+  - utter_ask_friends
+  - utter_greet
+  - utter_hos_no_friends2
+  - utter_wants_to_discuss
+  - utter_what_you_can
+entities:
+  - city
 forms: {}
 intents:
-  - chitchat.bye
-  - chitchat.greet
-  - response.good
+  - chitchat.ask_whoami
+  - greet
+  - response.location
+  - response.no
+  - response.yes
 responses:
-  utter_I0dF_IqYL:
-    - language: fi
-      text: |-
-        moi takaisin
-
-        miten menee?
-  utter_Yzl4eyWiY:
+  utter_ask_friends:
     - language: fi
       metadata: null
-      text: Hei sitten
-  utter_bye:
+      text: Onko sinulla ystäviä?
+  utter_greet:
     - language: fi
       metadata: null
-      text: 'Heippa, oli kiva kun juttelit kanssani!'
-    - language: fi
-      metadata: null
-      text: 'Kiitos keskustelusta, toivottavasti kokemus oli mielekäs!'
-    - language: fi
-      metadata: null
-      text: Moi moi! Hyvää päivän jatkoa!
-  utter_fdClUFHga:
-    - language: fi
-      text: |+
-        Hienoa, kiva kuulla!
-
-        Mahtavaa!
-
-  utter_get_started:
+      text: 'Hei, olen kesädemo-botti. Haluaisitko jutella kanssani?'
+  utter_hos_no_friends2:
     - language: fi
       metadata: null
       text: >-
-        Hei, olen kesädemobotti ja haluaisin jutella kanssasi. Olen vielä
-        kehitysvaiheessa ja ymmärrän parhaiten lyhyitä viestejä. Mitä sinulle
-        kuuluu?
+        haluaisitko että etsin alueeltasi tapahtumia joissa voisi tavata uusia
+        ystäviä?
+  utter_wants_to_discuss:
     - language: fi
       metadata: null
-      text: ''
-  utter_hi:
+      text: >-
+        Kivaa, voin yrittää auttaa sinua löytämään lähialueeltasi palveluita
+        joista saattaisit olla kiinnostunut. Mutta tarvitsen hieman apuasi.
+        Mistäpäin olet?
+  utter_what_you_can:
     - language: fi
-      metadata: null
-      text: 'Hei, juu'
+      text: Osaan suositella palveluita alueeltasi.
 session_config: {}
 slots:
+  city:
+    type: unfeaturized
   disambiguation_message:
     type: unfeaturized
   fallback_language:
     initial_value: fi
+    type: unfeaturized
+  has_friends:
     type: unfeaturized
