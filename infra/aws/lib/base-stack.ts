@@ -18,6 +18,9 @@ export class BaseStack extends cdk.Stack {
     // s3 import bucket
     // login to bucket with x
 
+    // GitHub hook + deploy key
+    // Nat gateway
+
     this.baseVpc = new ec2.Vpc(this, 'network', {
       maxAzs: 2
     });

@@ -43,7 +43,6 @@ export class Ec2Stack extends cdk.Stack {
     });
 
     host.addSecurityGroup(sg)
-
     host.connections.allowFromAnyIpv4(ec2.Port.tcp(8888));
     host.connections.allowFromAnyIpv4(ec2.Port.tcp(5005));
 
