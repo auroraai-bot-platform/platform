@@ -5,8 +5,10 @@ from rasa_sdk.events import SlotSet, AllSlotsReset
 from actions.servicerec.api import ServiceRecommenderAPI
 import json
 
+# todo: City codes must be fetched from stat.fi
 city_codes = {"turku": "853",
-              "mikkeli": "491"}
+              "mikkeli": "491",
+              "espoo": "049"}
 
 class MyAction(Action):
     def name(self):
@@ -16,17 +18,11 @@ class MyAction(Action):
         city_code = city_codes[location]
         return city_code
 
-    def get_meter_value(self, meter: bool):
-        if meter == False:
-            value = 10
-        else:
-            value = 0
-        return value
-
     def run(self, dispatcher, tracker, domain):
         default_value = 0
 
-        friends_value = self.get_meter_value(tracker.get_slot("has_friends"))
+        friends_value = int(tracker.get_slot("friends"))
+        health_value = int(tracker.get_slot("health"))
         location_detected = tracker.get_slot("city").lower()
 
         try:
@@ -39,7 +35,7 @@ class MyAction(Action):
                     "family": [default_value],
                     "finance": [default_value],
                     "friends": [friends_value],
-                    "health": [default_value],
+                    "health": [health_value],
                     "housing": [default_value],
                     "improvement_of_strengths": [default_value],
                     "life_satisfaction": [default_value],
@@ -57,18 +53,16 @@ class MyAction(Action):
             if response.ok:
                 services = response.json()
                 names = [service['service_name'] for service in services['recommended_services']]
-                dispatcher.utter_message(template=f"Alueeltasi ({location_detected}) löytyy mm. seuraavia palveluita: {str(names)}")
+                dispatcher.utter_message(
+                    template=f"Terveys: {str(health_value)}, Kaverit: {str(friends_value)}")
+                dispatcher.utter_message(
+                    template=f"Alueeltasi ({location_detected}) löytyy mm. seuraavia palveluita: {str(names)}")
             else:
                 dispatcher.utter_message(template="En valitettavasti saa palveluita käsiini.")
 
         except KeyError:
             dispatcher.utter_message(template="En valitettavasti löytänyt aluettasi.")
-
+        except ConnectionError:
+            dispatcher.utter_message(template="En valitettavasti pysty hakemaan palveluita juuri nyt.")
         return[]
 
-class SetFriends(Action):
-    def name(self):
-        return "action_set_friends"
-
-    def run(self, dispatcher, tracker, domain):
-        return[SlotSet("has_friends", False)]

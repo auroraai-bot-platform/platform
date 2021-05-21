@@ -1,24 +1,21 @@
 stories:
-  - story: BasicPath
+  - story: FormPath
     steps:
       - intent: greet
-        user: Hei
+        user: hei
         entities: []
       - action: utter_greet
       - intent: response.yes
         user: joo
         entities: []
       - action: utter_wants_to_discuss
-      - intent: response.location
-        user: Asun Mikkelissä
-        entities:
-          - city: Mikkelissä
-      - action: utter_ask_friends
-      - intent: response.no
-        user: ei
-        entities: []
-      - action: action_set_friends
-      - action: utter_hos_no_friends2
+      - action: howareyou_form
+      - active_loop: howareyou_form
+      - active_loop: null
+      - action: utter_print_location
+      - action: utter_print_friends
+      - action: utter_print_health
+      - action: utter_ask_show_services
       - intent: response.yes
         user: joo
         entities: []

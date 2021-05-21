@@ -50,8 +50,10 @@ nlu:
   metadata:
     language: fi
   examples: |
+    - Asun [Espoossa]{"entity": "city", "value": "Espoo"}
     - Asun [Mikkelissä]{"entity": "city", "value": "Mikkeli"}
     - Asun [Turussa]{"entity": "city", "value": "Turku"}
+    - Olen [Espoosta]{"entity": "city", "value": "Espoo"}
     - Olen [Mikkelistä]{"entity": "city", "value": "Mikkeli"}
     - Olen [Turusta]{"entity": "city", "value": "Turku"}
 - intent: response.no

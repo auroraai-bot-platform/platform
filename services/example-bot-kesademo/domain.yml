@@ -4,43 +4,223 @@ actions:
   - action_botfront_fallback
   - action_botfront_mapping
   - action_my_action
-  - action_set_friends
+  - utter_ask_city
   - utter_ask_friends
+  - utter_ask_health
+  - utter_ask_show_services
+  - utter_default
   - utter_greet
-  - utter_hos_no_friends2
+  - utter_invalid_city
+  - utter_invalid_friends
+  - utter_invalid_health
+  - utter_print_friends
+  - utter_print_health
+  - utter_print_location
+  - utter_valid_city
+  - utter_valid_friends
+  - utter_valid_health
   - utter_wants_to_discuss
   - utter_what_you_can
-entities:
-  - city
-forms: {}
+entities: []
+forms:
+  howareyou_form:
+    collect_in_botfront: null
+    description: null
+    graph_elements:
+      edges:
+        - condition: null
+          id: e1-city
+          source: '1'
+          target: city
+          type: condition
+        - condition: null
+          id: ecity-friends
+          source: city
+          target: friends
+          type: condition
+        - condition: null
+          id: efriends-health
+          source: friends
+          target: health
+          type: condition
+      nodes:
+        - id: '1'
+          position:
+            x: 200
+            'y': 200
+          type: start
+        - id: city
+          position:
+            x: 120
+            'y': 360
+          slotName: city
+          type: slot
+        - id: friends
+          position:
+            x: 120
+            'y': 520
+          slotName: friends
+          type: slot
+        - id: health
+          position:
+            x: 120
+            'y': 760
+          slotName: health
+          type: slot
+    groupName: form_stories
+    name: howareyou_form
+    slots:
+      - filling:
+          - entity:
+              - city
+            group: null
+            intent:
+              - response.location
+            not_intent: null
+            role: null
+            type: from_entity
+          - intent: []
+            not_intent: []
+            type: from_text
+        name: city
+        utter_on_new_valid_slot: true
+        validation:
+          comparatum:
+            - Turku
+            - Mikkeli
+            - Espoo
+          operator: is_in
+      - filling:
+          - intent:
+              - response.yes
+            not_intent: []
+            type: from_intent
+            value: '10'
+          - intent:
+              - response.no
+            not_intent: []
+            type: from_intent
+            value: '0'
+        name: friends
+        utter_on_new_valid_slot: false
+        validation:
+          comparatum:
+            - '0'
+            - '10'
+          operator: is_in
+      - filling:
+          - intent:
+              - response.yes
+            not_intent: null
+            type: from_intent
+            value: '0'
+          - intent:
+              - response.no
+            not_intent: null
+            type: from_intent
+            value: '10'
+        name: health
+        utter_on_new_valid_slot: true
+        validation:
+          comparatum:
+            - '0'
+            - '10'
+          operator: is_in
+    updatedAt: 1621600555310
 intents:
   - chitchat.ask_whoami
   - greet
-  - response.location
-  - response.no
   - response.yes
 responses:
+  utter_ask_city:
+    - language: fi
+      metadata: null
+      text: Mistäpäin olet?
   utter_ask_friends:
     - language: fi
       metadata: null
       text: Onko sinulla ystäviä?
+    - language: fi
+      metadata: null
+      text: Onko sinulla tarpeeksi kavereita?
+  utter_ask_health:
+    - language: fi
+      metadata: null
+      text: Onko sinulla terveyteen liittyviä huolia?
+  utter_ask_show_services:
+    - language: fi
+      metadata: null
+      text: Haluaisitko että etsin alueeltasi tilanteeseesi liittyviä palveluita?
+  utter_default:
+    - language: fi
+      text: Nyt en pysynyt kärryillä...
   utter_greet:
     - language: fi
       metadata: null
-      text: 'Hei, olen kesädemo-botti. Haluaisitko jutella kanssani?'
-  utter_hos_no_friends2:
+      text: >-
+        Hei, olen kesädemobotti ja haluaisin keskustella kanssasi. Sopiiko että
+        juttelemme hetken?
+  utter_invalid_city:
     - language: fi
       metadata: null
       text: >-
-        haluaisitko että etsin alueeltasi tapahtumia joissa voisi tavata uusia
-        ystäviä?
+        En valitettavasti osaa vielä hakea palveluita antamaltasi alueelta. Voit
+        antaa alueeksi esimerkiksi Turku jos haluat jatkaa keskustelua
+        testimielessä.
+  utter_invalid_friends:
+    - language: fi
+      metadata: null
+      text: |+
+        Nyt en valitettavasti ymmärtänyt...
+
+        Tämäpä noloa, en ymmärtänyt vastaustasi...
+
+  utter_invalid_health:
+    - language: fi
+      metadata: null
+      text: |+
+        Tämäpä noloa, en ymmärtänyt...
+
+        En valitettavasti ymmärtänyt
+
+  utter_print_friends:
+    - language: fi
+      metadata: null
+      text: 'Sinulla on kavereita {friends}'
+  utter_print_health:
+    - language: fi
+      metadata: null
+      text: 'Sinun terveydellisiä huolia {health}'
+  utter_print_location:
+    - language: fi
+      metadata: null
+      text: 'Kotipaikkasi on {city}'
+  utter_valid_city:
+    - language: fi
+      metadata: null
+      text: 'Mahtavaa, tiedänkin jo jotain alueesi palveluista!'
+  utter_valid_friends:
+    - language: fi
+      metadata: null
+      text: |+
+        selvä!
+
+        okei!
+
+  utter_valid_health:
+    - language: fi
+      metadata: null
+      text: |+
+        ok
+
+        kiitos
+
   utter_wants_to_discuss:
     - language: fi
       metadata: null
       text: >-
         Kivaa, voin yrittää auttaa sinua löytämään lähialueeltasi palveluita
         joista saattaisit olla kiinnostunut. Mutta tarvitsen hieman apuasi.
-        Mistäpäin olet?
   utter_what_you_can:
     - language: fi
       text: Osaan suositella palveluita alueeltasi.
@@ -53,5 +233,7 @@ slots:
   fallback_language:
     initial_value: fi
     type: unfeaturized
-  has_friends:
+  friends:
+    type: unfeaturized
+  health:
     type: unfeaturized
