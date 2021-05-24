@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import * as ecr from '@aws-cdk/aws-ecr'
 import * as ec2 from '@aws-cdk/aws-ec2';
+import * as iam from '@aws-cdk/aws-iam';
 import { CfnOutput } from '@aws-cdk/core';
 
 interface Ec2Props extends cdk.StackProps {
@@ -43,6 +44,10 @@ export class Ec2Stack extends cdk.Stack {
         userData: userdata
     });
 
+    host.role.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName(
+      'AmazonSSMManagedInstanceCore'
+    ));
+
     host.addSecurityGroup(sg)
     host.connections.allowFromAnyIpv4(ec2.Port.tcp(8888));
     host.connections.allowFromAnyIpv4(ec2.Port.tcp(5005));
@@ -50,6 +55,10 @@ export class Ec2Stack extends cdk.Stack {
     new CfnOutput(this, 'ip-address', {
         value: host.instancePublicIp
     });
+
+    new CfnOutput(this, 'host-instance-id', {
+      value: host.instanceId
+    })
 
     this.hostIp = host.instancePublicIp;
 

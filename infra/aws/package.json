@@ -25,6 +25,7 @@
     "@aws-cdk/aws-ecr": "^1.104.0",
     "@aws-cdk/aws-ecs": "^1.104.0",
     "@aws-cdk/aws-ecs-patterns": "^1.104.0",
+    "@aws-cdk/aws-iam": "^1.104.0",
     "@aws-cdk/aws-secretsmanager": "^1.104.0",
     "@aws-cdk/aws-ssm": "^1.104.0",
     "@aws-cdk/core": "^1.104.0",
