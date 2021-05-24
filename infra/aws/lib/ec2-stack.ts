@@ -9,6 +9,7 @@ interface Ec2Props extends cdk.StackProps {
   }
 
 export class Ec2Stack extends cdk.Stack {
+  public readonly hostIp: String
   constructor(scope: cdk.Construct, id: string, props: Ec2Props) {
     super(scope, id, props);
 
@@ -49,6 +50,8 @@ export class Ec2Stack extends cdk.Stack {
     new CfnOutput(this, 'ip-address', {
         value: host.instancePublicIp
     });
+
+    this.hostIp = host.instancePublicIp;
 
   }
 }

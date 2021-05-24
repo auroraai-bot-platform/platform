@@ -14,7 +14,12 @@ const base = new BaseStack(app, 'BaseStack');
   baseRepo: base.baseRepo,
   baseVpc: base.baseVpc
 }); */
-new Ec2Stack(app, 'Ec2Stack', {
+const ec2stack = new Ec2Stack(app, 'Ec2Stack', {
   baseRepo: base.baseRepo,
   baseVpc: base.baseVpc
 });
+
+/* new webchatStack(app, 'WebchatStack', {
+  
+})
+*/
