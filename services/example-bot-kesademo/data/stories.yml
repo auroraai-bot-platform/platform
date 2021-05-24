@@ -1,25 +1,102 @@
 stories:
-  - story: FormPath
+  - story: Feedback
     steps:
-      - intent: greet
-        user: hei
-        entities: []
-      - action: utter_greet
+      - checkpoint: link-to-Feedback/2dd3cab5-dfc9-470d-a56b-a226e1ea06b2
+      - action: utter_ask_feedback
+      - checkpoint: Feedback__branches
+    metadata:
+      group: test
+  - story: Feedback__New Branch 1
+    steps:
+      - checkpoint: Feedback__branches
       - intent: response.yes
-        user: joo
+        entities: []
+      - action: utter_positive_feedback
+      - checkpoint: link-to-ReDo/302dfe29-a099-45b1-8f66-c1ff9b1eb32a
+    metadata:
+      group: test
+  - story: Feedback__New Branch 2
+    steps:
+      - checkpoint: Feedback__branches
+      - intent: response.no
+        entities: []
+      - action: utter_negative_feedback
+      - checkpoint: link-to-ReDo/302dfe29-a099-45b1-8f66-c1ff9b1eb32a
+    metadata:
+      group: test
+  - story: HappyPath
+    steps:
+      - or:
+          - intent: greet
+            user: hei
+            entities: []
+          - intent: get_started
+            entities: []
+      - action: utter_greet
+      - checkpoint: HappyPath__branches
+    metadata:
+      group: test
+  - story: HappyPath__will discuss
+    steps:
+      - checkpoint: HappyPath__branches
+      - intent: response.yes
         entities: []
       - action: utter_wants_to_discuss
       - action: howareyou_form
       - active_loop: howareyou_form
       - active_loop: null
-      - action: utter_print_location
-      - action: utter_print_friends
-      - action: utter_print_health
       - action: utter_ask_show_services
-      - intent: response.yes
-        user: joo
+      - checkpoint: HappyPath__will_discuss__branches
+    metadata:
+      group: test
+  - story: HappyPath__will discuss__doesn't want services
+    steps:
+      - checkpoint: HappyPath__will_discuss__branches
+      - intent: response.no
         entities: []
-      - action: action_my_action
+      - action: utter_wont_see_services
+      - checkpoint: link-to-Feedback/2dd3cab5-dfc9-470d-a56b-a226e1ea06b2
+    metadata:
+      group: test
+  - story: HappyPath__will discuss__wants services
+    steps:
+      - checkpoint: HappyPath__will_discuss__branches
+      - intent: response.yes
+        entities: []
+      - action: action_show_services
+      - checkpoint: link-to-Feedback/2dd3cab5-dfc9-470d-a56b-a226e1ea06b2
+    metadata:
+      group: test
+  - story: HappyPath__wont't discuss
+    steps:
+      - checkpoint: HappyPath__branches
+      - intent: response.no
+        entities: []
+      - action: utter_wont_discuss
+      - checkpoint: link-to-Feedback/2dd3cab5-dfc9-470d-a56b-a226e1ea06b2
+    metadata:
+      group: test
+  - story: ReDo
+    steps:
+      - checkpoint: link-to-ReDo/302dfe29-a099-45b1-8f66-c1ff9b1eb32a
+      - action: utter_try_again
+      - checkpoint: ReDo__branches
+    metadata:
+      group: test
+  - story: ReDo__New Branch 1
+    steps:
+      - checkpoint: ReDo__branches
+      - intent: response.yes
+        entities: []
+      - action: action_slot_reset
+      - action: action_restart_chat
+    metadata:
+      group: test
+  - story: ReDo__New Branch 2
+    steps:
+      - checkpoint: ReDo__branches
+      - intent: response.no
+        entities: []
     metadata:
       group: test
 rules:

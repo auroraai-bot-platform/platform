@@ -1,5 +1,21 @@
 version: "2.0"
 nlu:
+- intent: bye
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      haluan lopettaa
+    metadata:
+      canonical: true
+  - text: |
+      hei sitten
+  - text: |
+      heippa
+  - text: |
+      lopeta
+  - text: |
+      ole hyvä
 - intent: chitchat.ask_joke
   metadata:
     language: fi
@@ -17,9 +33,9 @@ nlu:
     language: fi
   examples:
   - text: |
-      chitchat
+      auta
   - text: |
-      chitchat.ask_whoami
+      kuka olet
   - text: |
       kuka olet?
     metadata:
@@ -32,6 +48,8 @@ nlu:
       mistä tulet?
   - text: |
       mitä osaat
+  - text: |
+      mitä teet?
 - intent: greet
   metadata:
     language: fi
@@ -46,23 +64,72 @@ nlu:
       moi
   - text: |
       tere
+- intent: help
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      apua
+    metadata:
+      canonical: true
 - intent: response.location
   metadata:
     language: fi
-  examples: |
-    - Asun [Espoossa]{"entity": "city", "value": "Espoo"}
-    - Asun [Mikkelissä]{"entity": "city", "value": "Mikkeli"}
-    - Asun [Turussa]{"entity": "city", "value": "Turku"}
-    - Olen [Espoosta]{"entity": "city", "value": "Espoo"}
-    - Olen [Mikkelistä]{"entity": "city", "value": "Mikkeli"}
-    - Olen [Turusta]{"entity": "city", "value": "Turku"}
+  examples:
+  - text: |
+      Asun [Mikkelissä]{"entity": "city", "value": "Mikkeli"}
+    metadata:
+      canonical: true
+  - text: |
+      Asun Oulu[ssa]{"entity": "city", "value": "Oulu"}
+    metadata:
+      canonical: true
+  - text: |
+      Asun [Turussa]{"entity": "city", "value": "Turku"}
+    metadata:
+      canonical: true
+  - text: |
+      [Mikkeli](city)
+  - text: |
+      [Mikkelistä]{"entity": "city", "value": "Mikkeli"}
+  - text: |
+      Olen [Mikkelistä]{"entity": "city", "value": "Mikkeli"}
+  - text: |
+      Olen Oulu[sta]{"entity": "city", "value": "Oulu'"}
+    metadata:
+      canonical: true
+  - text: |
+      Olen [Turusta]{"entity": "city", "value": "Turku"}
+  - text: |
+      [Oulu](city)
+  - text: |
+      [Oulusta]{"entity": "city", "value": "Oulu"}
+  - text: |
+      [Turku](city)
+  - text: |
+      [Turusta]{"entity": "city", "value": "Turku"}
+  - text: |
+      [mikkeli]{"entity": "city", "value": "Mikkeli"}
+  - text: |
+      [oulu]{"entity": "city", "value": "Oulu"}
+  - text: |
+      response.yes
+    metadata:
+      canonical: true
+  - text: |
+      [turku]{"entity": "city", "value": "Turku"}
 - intent: response.no
   metadata:
     language: fi
-  examples: |
-    - ei
-    - ei ole
-    - en
+  examples:
+  - text: |
+      ei
+    metadata:
+      canonical: true
+  - text: |
+      ei ole
+  - text: |
+      en
 - intent: response.yes
   metadata:
     language: fi
@@ -70,8 +137,30 @@ nlu:
   - text: |
       joo
   - text: |
+      kiitos
+  - text: |
       kyllä
+  - text: |
+      ok
   - text: |
       on
     metadata:
       canonical: true
+- synonym: Mikkeli
+  examples: |
+    - Mikkelissä
+    - Mikkelistä
+    - mikkeli
+- synonym: Oulu
+  examples: |
+    - ssa
+    - Oulusta
+    - oulu
+- synonym: Turku
+  examples: |
+    - Turussa
+    - Turusta
+    - turku
+- synonym: Oulu'
+  examples: |
+    - sta

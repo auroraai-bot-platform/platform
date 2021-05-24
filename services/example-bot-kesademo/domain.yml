@@ -3,24 +3,30 @@ actions:
   - action_botfront_disambiguation_followup
   - action_botfront_fallback
   - action_botfront_mapping
-  - action_my_action
+  - action_restart_chat
+  - action_show_services
+  - action_slot_reset
   - utter_ask_city
+  - utter_ask_feedback
   - utter_ask_friends
   - utter_ask_health
   - utter_ask_show_services
   - utter_default
+  - utter_fallback
   - utter_greet
   - utter_invalid_city
   - utter_invalid_friends
   - utter_invalid_health
-  - utter_print_friends
-  - utter_print_health
-  - utter_print_location
+  - utter_negative_feedback
+  - utter_positive_feedback
+  - utter_try_again
   - utter_valid_city
   - utter_valid_friends
   - utter_valid_health
   - utter_wants_to_discuss
   - utter_what_you_can
+  - utter_wont_discuss
+  - utter_wont_see_services
 entities: []
 forms:
   howareyou_form:
@@ -64,7 +70,7 @@ forms:
         - id: health
           position:
             x: 120
-            'y': 760
+            'y': 700
           slotName: health
           type: slot
     groupName: form_stories
@@ -88,7 +94,7 @@ forms:
           comparatum:
             - Turku
             - Mikkeli
-            - Espoo
+            - Oulu
           operator: is_in
       - filling:
           - intent:
@@ -102,7 +108,7 @@ forms:
             type: from_intent
             value: '0'
         name: friends
-        utter_on_new_valid_slot: false
+        utter_on_new_valid_slot: true
         validation:
           comparatum:
             - '0'
@@ -126,104 +132,119 @@ forms:
             - '0'
             - '10'
           operator: is_in
-    updatedAt: 1621600555310
+    updatedAt: 1621860760722
 intents:
   - chitchat.ask_whoami
-  - greet
+  - response.no
   - response.yes
 responses:
   utter_ask_city:
     - language: fi
       metadata: null
       text: Mistäpäin olet?
+  utter_ask_feedback:
+    - language: fi
+      quick_replies:
+        - payload: /response.yes
+          title: kyllä
+          type: postback
+        - payload: /response.no
+          title: et
+          type: postback
+      text: 'Kerro mielipiteesi, osasinko auttaa sinua?'
   utter_ask_friends:
     - language: fi
-      metadata: null
       text: Onko sinulla ystäviä?
     - language: fi
-      metadata: null
       text: Onko sinulla tarpeeksi kavereita?
   utter_ask_health:
     - language: fi
-      metadata: null
       text: Onko sinulla terveyteen liittyviä huolia?
   utter_ask_show_services:
     - language: fi
-      metadata: null
       text: Haluaisitko että etsin alueeltasi tilanteeseesi liittyviä palveluita?
   utter_default:
     - language: fi
       text: Nyt en pysynyt kärryillä...
+  utter_fallback:
+    - language: fi
+      text: Hei!
   utter_greet:
     - language: fi
-      metadata: null
       text: >-
         Hei, olen kesädemobotti ja haluaisin keskustella kanssasi. Sopiiko että
         juttelemme hetken?
   utter_invalid_city:
-    - language: fi
-      metadata: null
+    - buttons:
+        - payload: '/response.location{"city":"Oulu"}'
+          title: Oulu
+          type: postback
+        - payload: '/response.location{"city":"Turku"}'
+          title: Turku
+          type: postback
+        - payload: '/response.location{"city":"Mikkeli"}'
+          title: Mikkeli
+          type: postback
+      language: fi
       text: >-
-        En valitettavasti osaa vielä hakea palveluita antamaltasi alueelta. Voit
-        antaa alueeksi esimerkiksi Turku jos haluat jatkaa keskustelua
-        testimielessä.
+        Hups, en voi vastata sinulle tuohon vielä, tarvitsen ensin alueestasi
+        tiedon. Toistaiseksi voit valita jonkin seuraavista alueista
+        jatkaaksesi.
   utter_invalid_friends:
     - language: fi
       metadata: null
-      text: |+
-        Nyt en valitettavasti ymmärtänyt...
-
-        Tämäpä noloa, en ymmärtänyt vastaustasi...
-
+      text: Nyt en valitettavasti ymmärtänyt...
   utter_invalid_health:
     - language: fi
       metadata: null
-      text: |+
-        Tämäpä noloa, en ymmärtänyt...
-
-        En valitettavasti ymmärtänyt
-
-  utter_print_friends:
+      text: 'Tämäpä noloa, en ymmärtänyt...'
+  utter_negative_feedback:
     - language: fi
-      metadata: null
-      text: 'Sinulla on kavereita {friends}'
-  utter_print_health:
+      text: 'Harmi juttu, kiitos kuitenkin palautteesta!'
+  utter_positive_feedback:
     - language: fi
-      metadata: null
-      text: 'Sinun terveydellisiä huolia {health}'
-  utter_print_location:
+      text: Kiva kuulla! Kiitos palautteesta!
+  utter_try_again:
     - language: fi
-      metadata: null
-      text: 'Kotipaikkasi on {city}'
+      quick_replies:
+        - payload: /response.yes
+          title: kyllä
+          type: postback
+        - payload: /response.no
+          title: en
+          type: postback
+      text: Haluatko kokeilla uudestaan?
   utter_valid_city:
     - language: fi
-      metadata: null
       text: 'Mahtavaa, tiedänkin jo jotain alueesi palveluista!'
   utter_valid_friends:
     - language: fi
       metadata: null
-      text: |+
-        selvä!
-
-        okei!
-
+      text: selvä!
   utter_valid_health:
     - language: fi
       metadata: null
-      text: |+
-        ok
-
-        kiitos
-
+      text: 'ok, kiitos!'
   utter_wants_to_discuss:
     - language: fi
-      metadata: null
       text: >-
         Kivaa, voin yrittää auttaa sinua löytämään lähialueeltasi palveluita
         joista saattaisit olla kiinnostunut. Mutta tarvitsen hieman apuasi.
   utter_what_you_can:
     - language: fi
-      text: Osaan suositella palveluita alueeltasi.
+      text: >-
+        Olen kesädemo-botti. Osaan suositella palveluita alueeltasi
+        keskustelumme perusteella. Opettelen vielä, ja ymmärrän parhaiten
+        lyhyitä lauseita.
+  utter_wont_discuss:
+    - language: fi
+      text: 'Selvä juttu, voit toki jatkaa juttelua kanssani myöhemminkin!'
+  utter_wont_see_services:
+    - language: fi
+      text: |-
+        ok
+
+        sekin käy
 session_config: {}
 slots:
   city:
