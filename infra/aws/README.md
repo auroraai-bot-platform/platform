@@ -6,6 +6,32 @@
 - Create CI/CD to get chatbot into the environment
 - Print relevant info to console
 
+## Naming Convention
+To easily identify and find resources in AWS, all resources should follow a strict convention on naming and tagging.
+
+The prefix consists of following parts:
+- Environment - e.g. DEMO
+- Stack Name  - e.g. BOTFRONT.sStack names should describe the containing functionality. Stacks should describe a modular piece of functionality.
+
+Rules:
+- Each part should use only characters or numbers. E.g. `dev`, `compute`
+- Parts are divided by a single dash
+- The prefix ends in a single dash
+
+A valid prefix looks like this: `dev-compute-`
+
+A resource should be named by its type. If there are multiple resources of the same type in a single stack, they need an additional functional description.
+
+For example:
+- `dev-frontend-basicauth-lambda`
+- `dev-frontend-api-lambda`
+- `prod1-infra-vpc`
+
+Each resource's name hsould follow this convention.
+Additionally, each resource should have following tags:
+- name: the full prefixed name
+- env: the environment name
+
 ## Getting started
 - Setup your AWS credentials on your local machine
   - Basic access key and secret access key generation [here](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html)
