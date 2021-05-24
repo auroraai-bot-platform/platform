@@ -6,8 +6,8 @@ exports.handler = (event, context, callback) => {
     const headers = request.headers;
 
     // Configure authentication
-    const authUser = process.env.USER;
-    const authPass = process.env.PASSWORD;
+    const authUser = 'demouser';
+    const authPass = 'AURORAai2021';
 
     // Construct the Basic Auth string
     const authString = 'Basic ' + new Buffer(authUser + ':' + authPass).toString('base64');
