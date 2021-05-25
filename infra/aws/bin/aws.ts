@@ -18,13 +18,14 @@ const base = new BaseStack(app, 'BaseStack');
   baseRepo: base.baseRepo,
   baseVpc: base.baseVpc
 }); */
-const ec2stack = new Ec2Stack(app, 'Ec2Stack', {
+export const ec2stack = new Ec2Stack(app, 'Ec2Stack', {
   baseRepo: base.baseRepo,
   baseVpc: base.baseVpc
 });
 
 new WebChatStack(app, 'WebChatStack', {
   envName,
+  rasaIp: ec2stack.hostIp,
   env: {
     region
   }

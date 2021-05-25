@@ -5,9 +5,14 @@ import * as s3 from '@aws-cdk/aws-s3';
 
 import { BaseStackProps } from '../types/index';
 
+interface WebChatProps extends BaseStackProps {
+  rasaIp: string;
+}
+
+
 export class WebChatStack extends cdk.Stack {
   
-  constructor(scope: cdk.Construct, id: string, props: BaseStackProps) {
+  constructor(scope: cdk.Construct, id: string, props: WebChatProps) {
     super(scope, id, props);
     const prefix = createPrefix(props.envName, this.constructor.name);
     const bucket = new s3.Bucket(this, `${prefix}frontend-bucket`, {bucketName: `${prefix}frontend-bucket`, publicReadAccess: false});
