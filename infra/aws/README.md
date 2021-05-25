@@ -54,3 +54,12 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
  * `cdk deploy`      deploy this stack to your default AWS account/region
  * `cdk diff`        compare deployed stack with current state
  * `cdk synth`       emits the synthesized CloudFormation template
+
+
+## Deploy WebChat Stack
+The WebChat stack provides the frontend for a simple react app to show the integration of the rasa chatbot into a web app.
+
+Steps:
+- `cdk deploy WebChatStack`
+- build demo-frontend
+- copy demo-frontend files to the created s3 bucket
