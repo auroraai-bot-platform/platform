@@ -1,0 +1,82 @@
+cards:
+  - name: Visits & Engagement
+    description: >-
+      Visits: the total number of conversations in a given temporal window.
+      Engagements: of those conversations, those with length one or more.
+    type: conversationCounts
+    visible: true
+    startDate: '2021-05-13T00:00:00.000Z'
+    endDate: '2021-05-19T23:59:59.999Z'
+    chartType: line
+    valueType: absolute
+    wide: true
+    showDenominator: true
+    conversationLength: 1
+    userInitiatedConversations: true
+    triggerConversations: true
+    eventFilterOperator: or
+    eventFilter: []
+  - name: Conversation Length
+    type: conversationLengths
+    visible: true
+    startDate: '2021-05-13T00:00:00.000Z'
+    endDate: '2021-05-19T23:59:59.999Z'
+    chartType: bar
+    valueType: absolute
+  - name: Top 10 Intents
+    type: intentFrequencies
+    visible: true
+    startDate: '2021-05-13T00:00:00.000Z'
+    endDate: '2021-05-19T23:59:59.999Z'
+    chartType: bar
+    valueType: absolute
+    excludeIntents:
+      - get_started
+    limit: 10
+  - name: Conversation Duration
+    type: conversationDurations
+    visible: true
+    startDate: '2021-05-13T00:00:00.000Z'
+    endDate: '2021-05-19T23:59:59.999Z'
+    chartType: bar
+    valueType: absolute
+  - name: Conversations with Fallback
+    description: The number of conversations in which a fallback action was triggered.
+    type: conversationCounts
+    visible: true
+    startDate: '2021-05-13T00:00:00.000Z'
+    endDate: '2021-05-19T23:59:59.999Z'
+    chartType: line
+    valueType: absolute
+    eventFilter:
+      - name: action_botfront_fallback
+        excluded: false
+        type: action
+    eventFilterOperator: or
+    userInitiatedConversations: true
+    triggerConversations: true
+  - name: Fallback Rate
+    description: The number of times a fallback action was triggered.
+    type: actionCounts
+    visible: true
+    startDate: '2021-05-13T00:00:00.000Z'
+    endDate: '2021-05-19T23:59:59.999Z'
+    chartType: line
+    valueType: absolute
+    includeActions:
+      - action_botfront_fallback
+  - name: Top 10 Triggers
+    type: triggerFrequencies
+    visible: true
+    startDate: '2021-05-13T00:00:00.000Z'
+    endDate: '2021-05-19T23:59:59.999Z'
+    chartType: bar
+    valueType: absolute
+    limit: 10
+languages:
+  - fi
+envs:
+  - development
+name: Default Dashboard
+projectId: NA23mMthqSpdyd6mc
+__v: 0
