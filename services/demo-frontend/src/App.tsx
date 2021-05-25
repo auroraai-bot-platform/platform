@@ -19,7 +19,7 @@ function App() {
           socketUrl={"http://localhost:5005"}
           socketPath={"/socket.io/"}
           onSocketEvent={onSocketEvent}
-          customData={{"language": "en"}} // arbitrary custom data. Stay minimal as this will be added to the socket
+          customData={{"language": "fi"}} // arbitrary custom data. Stay minimal as this will be added to the socket
           title={"Title"}
         />
         <img src={logo} className="App-logo" alt="logo" />
