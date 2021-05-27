@@ -63,3 +63,17 @@ Steps:
 - `cdk deploy WebChatStack`
 - build demo-frontend
 - copy demo-frontend files to the created s3 bucket
+
+## Use the demo environment
+
+*Botfront*
+* URL: `http://ec2-13-53-66-50.eu-north-1.compute.amazonaws.com:8888/`
+* Login: `johannes.feig@gofore.com`
+* Password: `HkddxmVT43Wiqqv`
+
+You can create your own account in Botfront after login.
+
+*Frontend*
+* URL: `https://dfu5c3kd1h37l.cloudfront.net/`
+* Login: `demouser`
+* Password: `AURORAai2021`
