@@ -9,7 +9,7 @@ interface Ec2Props extends cdk.StackProps {
   }
 
 export class Ec2Stack extends cdk.Stack {
-  public readonly hostIp: String
+  public readonly hostIp: string;
   constructor(scope: cdk.Construct, id: string, props: Ec2Props) {
     super(scope, id, props);
 
