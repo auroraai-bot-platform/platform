@@ -1,0 +1,16 @@
+version: "2.0"
+nlu:
+- intent: greet
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      Hei
+    metadata:
+      canonical: true
+  - text: |
+      Moi
+  - text: |
+      Moro
+  - text: |
+      Päivää

@@ -1,0 +1,37 @@
+actions:
+  - action_botfront_disambiguation
+  - action_botfront_disambiguation_followup
+  - action_botfront_fallback
+  - action_botfront_mapping
+  - utter_ask_chat_topic
+  - utter_bye
+  - utter_chat_confidentially
+  - utter_get_started
+  - utter_greet
+  - utter_hi
+entities: []
+forms: {}
+intents:
+  - chitchat.bye
+  - chitchat.greet
+  - get_started
+responses:
+  utter_ask_chat_topic:
+    - language: fi
+      metadata: null
+      text: Mistä haluat jutella?
+  utter_chat_confidentially:
+    - language: fi
+      metadata: null
+      text: Minulle voit kertoa elämästäsi luottamuksellisesti.
+  utter_greet:
+    - language: fi
+      metadata: null
+      text: Morjens! Olen Hytebotti.
+session_config: {}
+slots:
+  disambiguation_message:
+    type: unfeaturized
+  fallback_language:
+    initial_value: fi
+    type: unfeaturized

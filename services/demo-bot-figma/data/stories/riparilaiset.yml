@@ -1,0 +1,15 @@
+stories:
+  - story: HappyPath
+    steps:
+      - or:
+          - intent: get.started
+            entities: []
+          - intent: greet
+            user: Hei
+            entities: []
+      - action: utter_greet
+      - action: utter_chat_confidentially
+      - action: utter_ask_chat_topic
+    metadata:
+      group: Riparilaiset
+rules: []
