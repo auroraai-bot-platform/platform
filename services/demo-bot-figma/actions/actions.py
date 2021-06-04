@@ -138,7 +138,7 @@ class ShowServices(Action):
                 names = [service['service_name'] for service in services['recommended_services']]
 
                 dispatcher.utter_message(
-                    template=f"Alueeltasi ({location.capitalize()}) löytyy mm. seuraavia palveluita:")
+                    template=f"Tässä olisi muutama palvelu alueelta ({location.capitalize()}):")
 
                 for name in names:
                     dispatcher.utter_message(
@@ -148,8 +148,10 @@ class ShowServices(Action):
                 dispatcher.utter_message(template=utter_api_error)
 
         except ConnectionError:
+            services = None
             dispatcher.utter_message(template=utter_api_error)
-        return[]
+
+        return[SlotSet('recommendation', services)]
 
 class ActionRestarted(Action):
     """
@@ -178,7 +180,28 @@ class ActionShowInfo(Action):
     def name(self):
         return 'action_show_info'
 
+    @staticmethod
+    def get_service_channel(service: list, channel: str) -> list:
+        out = [item[channel][0] for item in service['service_channels']]
+        return out
+
     def run(self, dispatcher, tracker, domain):
-        pick = tracker.get_slot("carouselpick")
-        dispatcher.utter_message(template=f'valinta: {pick}')
+        services = tracker.get_slot('recommendation')
+        selection = tracker.get_slot('contact_selected')
+
+        if str(selection) == 'contactinfo':
+
+            for service in services['recommended_services']:
+                name = service['service_name']
+                links = self.get_service_channel(service, 'phone_numbers')
+                dispatcher.utter_message(template=f'Palvelu: {name}. '
+                                                  f'Puhelin: {links}')
+
+        if str(selection) == 'moreinfo':
+
+            for service in services['recommended_services']:
+                name = service['service_name']
+                links = self.get_service_channel(service, 'web_pages')
+                dispatcher.utter_message(template=f'Palvelu: {name}. '
+                                                  f'Linkit: {links}')
         return[]

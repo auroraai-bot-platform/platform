@@ -1,111 +1,81 @@
 stories:
-  - story: Feedback
-    steps:
-      - checkpoint: link-to-Feedback/2dd3cab5-dfc9-470d-a56b-a226e1ea06b2
-      - action: utter_ask_feedback
-      - checkpoint: Feedback__branches
-    metadata:
-      group: test
-  - story: Feedback__New Branch 1
-    steps:
-      - checkpoint: Feedback__branches
-      - intent: response.yes
-        entities: []
-      - action: utter_positive_feedback
-      - checkpoint: link-to-ReDo/302dfe29-a099-45b1-8f66-c1ff9b1eb32a
-    metadata:
-      group: test
-  - story: Feedback__New Branch 2
-    steps:
-      - checkpoint: Feedback__branches
-      - intent: response.no
-        entities: []
-      - action: utter_negative_feedback
-      - checkpoint: link-to-ReDo/302dfe29-a099-45b1-8f66-c1ff9b1eb32a
-    metadata:
-      group: test
   - story: HappyPath
     steps:
       - or:
-          - intent: greet
-            user: hei
+          - intent: get.started
             entities: []
-          - intent: get_started
+          - intent: greet
+            user: Hei
             entities: []
       - action: utter_greet
-      - checkpoint: HappyPath__branches
-    metadata:
-      group: test
-  - story: HappyPath__will discuss
-    steps:
-      - checkpoint: HappyPath__branches
-      - intent: response.yes
+      - action: utter_chat_confidentially
+      - action: utter_ask_chat_topic
+      - intent: response.none
+        user: 'no, emmätiiä'
         entities: []
-      - action: utter_wants_to_discuss
-      - action: howareyou_form
-      - active_loop: howareyou_form
+      - action: age_form
+      - active_loop: age_form
       - active_loop: null
-      - action: utter_ask_show_services
-      - checkpoint: HappyPath__will_discuss__branches
-    metadata:
-      group: test
-  - story: HappyPath__will discuss__doesn't want services
-    steps:
-      - checkpoint: HappyPath__will_discuss__branches
-      - intent: response.no
+      - action: utter_whats_up
+      - intent: response.ok
+        user: 'ihan ok, ripari on ihan jees'
         entities: []
-      - action: utter_wont_see_services
-      - checkpoint: link-to-Feedback/2dd3cab5-dfc9-470d-a56b-a226e1ea06b2
-    metadata:
-      group: test
-  - story: HappyPath__will discuss__wants services
-    steps:
-      - checkpoint: HappyPath__will_discuss__branches
-      - intent: response.yes
+      - action: utter_nice_to_hear
+      - action: utter_ask_friends_in_camp
+      - or:
+          - intent: response.disagree
+            user: ei
+            entities: []
+          - intent: inform.friends
+            entities: []
+      - action: friends_form
+      - active_loop: friends_form
+      - active_loop: null
+      - action: utter_ask_miss_friends
+      - intent: response.agree
+        user: joo
         entities: []
+      - action: utter_agree
+      - action: utter_cheerup_miss_friends
+      - action: family_form
+      - active_loop: family_form
+      - active_loop: null
+      - action: utter_agree
+      - action: utter_ask_home_situationn
+      - intent: response.maybe
+        user: 'no, on kai'
+        entities: []
+      - action: utter_ask_what_happened
+      - intent: inform.feeling
+        user: >-
+          ärsyttää vaan, ettei mun vanhemmat auta mua säästämään. haluun uuden
+          kännykän
+        entities: []
+      - action: utter_ask_discussed_at_home
+      - intent: response.bad
+        user: 'joo, mut tulee aina riita'
+        entities: []
+      - action: utter_ask_why
+      - intent: response.dontknow
+        user: 'en tiiä, mua vaan ärsyttää ja lähen menee'
+        entities: []
+      - action: utter_ask_chat_with_specialist
+      - or:
+          - intent: response.maybe
+            user: ehkä
+            entities: []
+          - intent: response.agree
+            user: joo
+            entities: []
+      - action: city_form
+      - active_loop: city_form
+      - active_loop: null
+      - action: utter_will_seek_info
       - action: action_show_services
-      - checkpoint: link-to-Feedback/2dd3cab5-dfc9-470d-a56b-a226e1ea06b2
+      - action: services_form
+      - active_loop: services_form
+      - active_loop: null
+      - action: action_show_info
     metadata:
-      group: test
-  - story: HappyPath__wont't discuss
-    steps:
-      - checkpoint: HappyPath__branches
-      - intent: response.no
-        entities: []
-      - action: utter_wont_discuss
-      - checkpoint: link-to-Feedback/2dd3cab5-dfc9-470d-a56b-a226e1ea06b2
-    metadata:
-      group: test
-  - story: ReDo
-    steps:
-      - checkpoint: link-to-ReDo/302dfe29-a099-45b1-8f66-c1ff9b1eb32a
-      - action: utter_try_again
-      - checkpoint: ReDo__branches
-    metadata:
-      group: test
-  - story: ReDo__New Branch 1
-    steps:
-      - checkpoint: ReDo__branches
-      - intent: response.yes
-        entities: []
-      - action: action_slot_reset
-      - action: action_restart_chat
-    metadata:
-      group: test
-  - story: ReDo__New Branch 2
-    steps:
-      - checkpoint: ReDo__branches
-      - intent: response.no
-        entities: []
-    metadata:
-      group: test
-rules:
-  - rule: WhatYouCanDo
-    condition: []
-    steps:
-      - intent: chitchat.ask_whoami
-        user: mitä osaat
-        entities: []
-      - action: utter_what_you_can
-    metadata:
-      group: test
+      group: Riparilaiset
+rules: []

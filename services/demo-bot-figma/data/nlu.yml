@@ -14,3 +14,118 @@ nlu:
       Moro
   - text: |
       Päivää
+- intent: inform.feeling
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      ärsyttää vaan, ettei mun vanhemmat auta mua säästämään. haluun uuden kännykän
+    metadata:
+      canonical: true
+- intent: inform.friends
+  metadata:
+    language: fi
+  examples: |
+    - kaikki kaverit on toisella leirillä
+- intent: inform.location
+  metadata:
+    language: fi
+  examples: |
+    - asun [turussa]{"entity": "city", "value": "turku"}
+    - olen [turusta]{"entity": "city", "value": "turku"}
+    - [turku](city)
+    - [turus]{"entity": "city", "value": "turku"}
+    - [turussa]{"entity": "city", "value": "turku"}
+- intent: response.agree
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      jep
+  - text: |
+      joo
+    metadata:
+      canonical: true
+  - text: |
+      juu
+  - text: |
+      kyllä
+  - text: |
+      kyllä se sopii
+  - text: |
+      niin olen
+  - text: |
+      näin on
+  - text: |
+      se käy
+- intent: response.bad
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      joo, mut tulee aina riita
+    metadata:
+      canonical: true
+- intent: response.disagree
+  metadata:
+    language: fi
+  examples: |
+    - ei
+- intent: response.dontknow
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      en tiiä, mua vaan ärsyttää ja lähen menee
+    metadata:
+      canonical: true
+- intent: response.maybe
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      ehkä
+  - text: |
+      no, on kai
+    metadata:
+      canonical: true
+- intent: response.none
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      en mistään
+  - text: |
+      ihan sama
+  - text: |
+      no, emmätiiä
+    metadata:
+      canonical: true
+- intent: response.ok
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      aika jees
+  - text: |
+      ihan ok
+  - text: |
+      ihan ok, ripari on ihan jees
+    metadata:
+      canonical: true
+- intent: show.contactinfo
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      [yhteystiedot]{"entity": "contact", "value": "contactinfo"}
+    metadata:
+      canonical: true
+- intent: show.moreinfo
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      [lisätietoja]{"entity": "contact", "value": "moreinfo"}
+    metadata:
+      canonical: true
