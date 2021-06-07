@@ -19,14 +19,17 @@ nlu:
     language: fi
   examples:
   - text: |
-      ärsyttää vaan, ettei mun vanhemmat auta mua säästämään. haluun uuden kännykän
+      mua ärsyttää
     metadata:
       canonical: true
+  - text: |
+      ärsyttää
 - intent: inform.friends
   metadata:
     language: fi
   examples: |
     - kaikki kaverit on toisella leirillä
+    - kaverit toisella leirillä
 - intent: inform.location
   metadata:
     language: fi
@@ -36,6 +39,14 @@ nlu:
     - [turku](city)
     - [turus]{"entity": "city", "value": "turku"}
     - [turussa]{"entity": "city", "value": "turku"}
+- intent: inform.needhelp
+  metadata:
+    language: fi
+  examples: |
+    - haluan että vanhemmat auttais mua säästämään rahaa
+    - vanhemmat ei auta mua
+    - vanhemmat ei auta mua hankkimaan uutta kännykkää
+    - ärsyttää vaan, ettei mun vanhemmat auta mua säästämään. haluun uuden kännykän
 - intent: response.agree
   metadata:
     language: fi
@@ -47,6 +58,8 @@ nlu:
     metadata:
       canonical: true
   - text: |
+      joo on
+  - text: |
       juu
   - text: |
       kyllä
@@ -57,24 +70,39 @@ nlu:
   - text: |
       näin on
   - text: |
+      on
+  - text: |
+      on joo
+  - text: |
       se käy
 - intent: response.bad
   metadata:
     language: fi
   examples:
   - text: |
+      aina tulee vaan riita
+  - text: |
       joo, mut tulee aina riita
     metadata:
       canonical: true
+  - text: |
+      siitä tulee vaan riita
+  - text: |
+      tulee aina riitaa
 - intent: response.disagree
   metadata:
     language: fi
   examples: |
     - ei
+    - en
 - intent: response.dontknow
   metadata:
     language: fi
   examples:
+  - text: |
+      en tiedä
+  - text: |
+      en tiiä
   - text: |
       en tiiä, mua vaan ärsyttää ja lähen menee
     metadata:
@@ -86,9 +114,17 @@ nlu:
   - text: |
       ehkä
   - text: |
+      kai
+  - text: |
+      kait
+  - text: |
       no, on kai
     metadata:
       canonical: true
+  - text: |
+      on kai
+  - text: |
+      on kait
 - intent: response.none
   metadata:
     language: fi
@@ -108,6 +144,12 @@ nlu:
   - text: |
       aika jees
   - text: |
+      ihan fain
+  - text: |
+      ihan fine
+  - text: |
+      ihan jees
+  - text: |
       ihan ok
   - text: |
       ihan ok, ripari on ihan jees
@@ -121,6 +163,11 @@ nlu:
       [yhteystiedot]{"entity": "contact", "value": "contactinfo"}
     metadata:
       canonical: true
+- intent: show.homepage
+  metadata:
+    language: fi
+  examples: |
+    - palvelun [kotisivu]{"entity": "contact", "value": "homepage"}
 - intent: show.moreinfo
   metadata:
     language: fi

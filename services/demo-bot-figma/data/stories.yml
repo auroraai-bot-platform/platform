@@ -10,9 +10,12 @@ stories:
       - action: utter_greet
       - action: utter_chat_confidentially
       - action: utter_ask_chat_topic
-      - intent: response.none
-        user: 'no, emmätiiä'
-        entities: []
+      - or:
+          - intent: response.none
+            user: 'no, emmätiiä'
+            entities: []
+          - intent: response.dontknow
+            entities: []
       - action: age_form
       - active_loop: age_form
       - active_loop: null
@@ -32,33 +35,42 @@ stories:
       - active_loop: friends_form
       - active_loop: null
       - action: utter_ask_miss_friends
-      - intent: response.agree
-        user: joo
-        entities: []
+      - or:
+          - intent: response.agree
+            user: joo
+            entities: []
+          - intent: response.maybe
+            entities: []
       - action: utter_agree
       - action: utter_cheerup_miss_friends
       - action: family_form
       - active_loop: family_form
       - active_loop: null
       - action: utter_agree
-      - action: utter_ask_home_situationn
-      - intent: response.maybe
-        user: 'no, on kai'
-        entities: []
+      - action: utter_ask_situation_at_home
+      - or:
+          - intent: response.maybe
+            user: 'no, on kai'
+            entities: []
+          - intent: response.disagree
+            entities: []
       - action: utter_ask_what_happened
-      - intent: inform.feeling
-        user: >-
-          ärsyttää vaan, ettei mun vanhemmat auta mua säästämään. haluun uuden
-          kännykän
-        entities: []
+      - or:
+          - intent: inform.needhelp
+            entities: []
+          - intent: inform.feeling
+            entities: []
       - action: utter_ask_discussed_at_home
       - intent: response.bad
         user: 'joo, mut tulee aina riita'
         entities: []
       - action: utter_ask_why
-      - intent: response.dontknow
-        user: 'en tiiä, mua vaan ärsyttää ja lähen menee'
-        entities: []
+      - or:
+          - intent: response.dontknow
+            user: 'en tiiä, mua vaan ärsyttää ja lähen menee'
+            entities: []
+          - intent: inform.feeling
+            entities: []
       - action: utter_ask_chat_with_specialist
       - or:
           - intent: response.maybe
@@ -71,9 +83,9 @@ stories:
       - active_loop: city_form
       - active_loop: null
       - action: utter_will_seek_info
-      - action: action_show_services
-      - action: services_form
-      - active_loop: services_form
+      - action: action_show_carousel
+      - action: carousel_form
+      - active_loop: carousel_form
       - active_loop: null
       - action: action_show_info
     metadata:
