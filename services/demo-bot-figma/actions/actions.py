@@ -181,8 +181,11 @@ class ActionShowInfo(Action):
         return 'action_show_info'
 
     @staticmethod
-    def get_service_channel(service: list, channel: str) -> list:
-        out = [item[channel][0] for item in service['service_channels']]
+    def remove_duplicates(records: list):
+        out = []
+        for r in records:
+            if r not in out:
+                out.append(r)
         return out
 
     def run(self, dispatcher, tracker, domain):
@@ -192,29 +195,39 @@ class ActionShowInfo(Action):
         if str(selection) == 'contactinfo':
 
             for service in services['recommended_services']:
-                name = service['service_name']
-                email = self.get_service_channel(service, 'emails')
-                phone = self.get_service_channel(service, 'phone_numbers')
-                address = self.get_service_channel(service, 'address')
-                dispatcher.utter_message(template=f'Palvelu: {name}. '
-                                                  f'Sähköposti: {email} '
-                                                  f'Puhelin: {phone} '
-                                                  f'Osoite: {address} ')
+
+                dispatcher.utter_message(template=f'-----------------------')
+                dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
+
+                for record in service['service_channels']:
+
+                    emails = '\n'.join(map(str, self.remove_duplicates(record['emails'])))
+                    phone_numbers = '\n'.join(map(str, self.remove_duplicates(record['phone_numbers'])))
+                    address = record['address']
+
+                    dispatcher.utter_message(template=f"Sähköposti: {emails}")
+                    dispatcher.utter_message(template=f"Puhelin: {phone_numbers}")
+                    dispatcher.utter_message(template=f"Osoite: {address}")
 
         if str(selection) == 'moreinfo':
 
             for service in services['recommended_services']:
-                name = service['service_name']
-                hours = self.get_service_channel(service, 'service_hours')
-                dispatcher.utter_message(template=f'Palvelu: {name}. '
-                                                  f'Aukioloajat: {hours}')
+
+                dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
+
+                for record in service['service_channels']:
+                    hours = '\n'.join(map(str, record['service_hours']))
+                    dispatcher.utter_message(template=f"Aukioloajat: {hours}")
 
         if str(selection) == 'homepage':
 
             for service in services['recommended_services']:
-                name = service['service_name']
-                links = self.get_service_channel(service, 'web_pages')
-                dispatcher.utter_message(template=f'Palvelu: {name}. '
-                                                  f'Linkit: {links}')
+
+                dispatcher.utter_message(template=f'-----------------------')
+                dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
+
+                for record in service['service_channels']:
+                    web_pages = '\n'.join(map(str, record['web_pages']))
+                    dispatcher.utter_message(template=f"Kotisivut: {web_pages}")
 
         return[]
