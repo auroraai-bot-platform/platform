@@ -187,21 +187,34 @@ class ActionShowInfo(Action):
 
     def run(self, dispatcher, tracker, domain):
         services = tracker.get_slot('recommendation')
-        selection = tracker.get_slot('contact_selected')
+        selection = tracker.get_slot('show_info')
 
         if str(selection) == 'contactinfo':
 
             for service in services['recommended_services']:
                 name = service['service_name']
-                links = self.get_service_channel(service, 'phone_numbers')
+                email = self.get_service_channel(service, 'emails')
+                phone = self.get_service_channel(service, 'phone_numbers')
+                address = self.get_service_channel(service, 'address')
                 dispatcher.utter_message(template=f'Palvelu: {name}. '
-                                                  f'Puhelin: {links}')
+                                                  f'Sähköposti: {email} '
+                                                  f'Puhelin: {phone} '
+                                                  f'Osoite: {address} ')
 
         if str(selection) == 'moreinfo':
+
+            for service in services['recommended_services']:
+                name = service['service_name']
+                hours = self.get_service_channel(service, 'service_hours')
+                dispatcher.utter_message(template=f'Palvelu: {name}. '
+                                                  f'Aukioloajat: {hours}')
+
+        if str(selection) == 'homepage':
 
             for service in services['recommended_services']:
                 name = service['service_name']
                 links = self.get_service_channel(service, 'web_pages')
                 dispatcher.utter_message(template=f'Palvelu: {name}. '
                                                   f'Linkit: {links}')
+
         return[]
