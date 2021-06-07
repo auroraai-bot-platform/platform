@@ -190,44 +190,272 @@ class ActionShowInfo(Action):
 
     def run(self, dispatcher, tracker, domain):
         services = tracker.get_slot('recommendation')
-        selection = tracker.get_slot('show_info')
+        selection = tracker.get_slot('carousel_pick')
 
-        if str(selection) == 'contactinfo':
+        if str(selection) == 'b2':
 
-            for service in services['recommended_services']:
+            service = services['recommended_services'][1]
+            dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
 
-                dispatcher.utter_message(template=f'-----------------------')
-                dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
+            for record in service['service_channels']:
 
-                for record in service['service_channels']:
+                emails = '\n'.join(map(str, self.remove_duplicates(record['emails'])))
+                phone_numbers = '\n'.join(map(str, self.remove_duplicates(record['phone_numbers'])))
+                address = record['address']
 
-                    emails = '\n'.join(map(str, self.remove_duplicates(record['emails'])))
-                    phone_numbers = '\n'.join(map(str, self.remove_duplicates(record['phone_numbers'])))
-                    address = record['address']
+                dispatcher.utter_message(template=f"Sähköposti: {emails}")
+                dispatcher.utter_message(template=f"Puhelin: {phone_numbers}")
+                dispatcher.utter_message(template=f"Osoite: {address}")
 
-                    dispatcher.utter_message(template=f"Sähköposti: {emails}")
-                    dispatcher.utter_message(template=f"Puhelin: {phone_numbers}")
-                    dispatcher.utter_message(template=f"Osoite: {address}")
-
-        if str(selection) == 'moreinfo':
-
-            for service in services['recommended_services']:
-
-                dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
-
-                for record in service['service_channels']:
-                    hours = '\n'.join(map(str, record['service_hours']))
-                    dispatcher.utter_message(template=f"Aukioloajat: {hours}")
-
-        if str(selection) == 'homepage':
-
-            for service in services['recommended_services']:
-
-                dispatcher.utter_message(template=f'-----------------------')
-                dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
-
-                for record in service['service_channels']:
-                    web_pages = '\n'.join(map(str, record['web_pages']))
-                    dispatcher.utter_message(template=f"Kotisivut: {web_pages}")
+        else:
+            dispatcher.utter_message(template=f"Sähköposti: {str(selection)}")
+        # if str(selection) == 'moreinfo':
+        #
+        #     for service in services['recommended_services']:
+        #
+        #         dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
+        #
+        #         for record in service['service_channels']:
+        #             hours = '\n'.join(map(str, record['service_hours']))
+        #             dispatcher.utter_message(template=f"Aukioloajat: {hours}")
+        #
+        # if str(selection) == 'homepage':
+        #
+        #     for service in services['recommended_services']:
+        #
+        #         dispatcher.utter_message(template=f'-----------------------')
+        #         dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
+        #
+        #         for record in service['service_channels']:
+        #             web_pages = '\n'.join(map(str, record['web_pages']))
+        #             dispatcher.utter_message(template=f"Kotisivut: {web_pages}")
 
         return[]
+
+# class ActionShowCarousel(Action):
+#     """
+#     Generates carousel
+#     """
+#
+#     def name(self):
+#         return 'action_show_carousel'
+#
+#     @staticmethod
+#     def remove_duplicates(records: list):
+#         out = []
+#         for r in records:
+#             if r not in out:
+#                 out.append(r)
+#         return out
+#
+#     def run(self, dispatcher, tracker, domain):
+#
+#         services = tracker.get_slot('recommendation')
+#         name_a = services['recommended_services'][0]["service_name"]
+#         name_b = services['recommended_services'][1]["service_name"]
+#
+#         test_carousel = {
+#             "type": "template",
+#             "payload": {
+#                 "template_type": "generic",
+#                 "elements": [{
+#                     "title": name_a,
+#                     "subtitle": "Subtitle",
+#                     "image_url": "/static/images/test.png",
+#                     "buttons": [{
+#                         "title": "Link name",
+#                         "url": "http://link.url",
+#                         "type": "web_url"
+#                     },
+#                         {
+#                             "title": "postback name",
+#                             "type": "postback",
+#                             "payload": "/greet"
+#                         }
+#                     ]
+#                 },
+#                     {
+#                         "title": name_b,
+#                         "subtitle": "Subtitle",
+#                         "image_url": "/static/images/test.png",
+#                         "buttons": [{
+#                             "title": "Link name",
+#                             "url": "http://link.url",
+#                             "type": "web_url"
+#                         },
+#                             {
+#                                 "title": "postback name",
+#                                 "type": "postback",
+#                                 "payload": "/greet"
+#                             }
+#                         ]
+#                     }
+#                 ]
+#             }
+#         }
+#
+#         dispatcher.utter_message(attachment=test_carousel)
+
+class ActionShowCarousel(Action):
+    """
+    Generates carousel
+    """
+
+    def name(self):
+        return 'action_show_carousel'
+
+    def validate_feat(self, tracker, name):
+        """
+        Will check if slot exists, and if its value is convertable to int.
+
+        Parameters
+        ----------
+        name : str
+            Name of the feature/meter.
+
+        Returns
+        -------
+        int
+            Life situation feature/meter value.
+        """
+        try:
+            value = int(tracker.get_slot(name))
+        except:
+            value = None
+        return value
+
+    def validate_location(self, dispatcher, tracker):
+        """
+        Will check if location slot has a value, and tries to get municipality
+        code for that location.
+
+        Returns
+        -------
+        list(str,str)
+            Municipality code and location/city.
+        """
+        try:
+            location = tracker.get_slot("city").lower()
+            code = municipality_codes[location]
+        except:
+            dispatcher.utter_message(template=utter_location_error)
+            code = None
+        return [code, location]
+
+    def run(self, dispatcher, tracker, domain):
+        """
+        Fetches slot values from the bot tracker store, validates slot values,
+        and calls service recommender api to fetch recommended services based on
+        the features collected and for the location observed.
+        """
+        friends = self.validate_feat(tracker, "friends")
+        family = self.validate_feat(tracker, "family")
+        municipality_code, location = self.validate_location(dispatcher, tracker)
+        life_situation_features = life_situation(friends=friends, family=family)
+
+        try:
+            api = ServiceRecommenderAPI()
+
+            params = {
+                "age": 15,
+                "life_situation_meters": life_situation_features,
+                "limit": 3,
+                "municipality_code": municipality_code,
+                "session_id": "xyz-123"
+            }
+
+            response = api.get_recommendations(params)
+
+            if response.ok:
+                services = response.json()
+                names = [service['service_name'] for service in services['recommended_services']]
+
+                dispatcher.utter_message(
+                    template=f"Tällaisia palveluita löysin alueelta {location.capitalize()}:")
+
+                name_a = services['recommended_services'][0]["service_name"]
+                name_b = services['recommended_services'][1]["service_name"]
+                name_c = services['recommended_services'][2]["service_name"]
+
+                test_carousel = {
+                    "type": "template",
+                    "payload": {
+                        "template_type": "generic",
+                        "elements": [{
+                            "title": name_a,
+                            # "subtitle": "Subtitle",
+                            # "image_url": testicon.png,
+                            "buttons": [{
+                                "title": "Lisätietoja",
+                                "type": "postback",
+                                "payload": "/show.moreinfo{\"contact\": a1}"
+                            },
+                                {
+                                    "title": "Yhteystiedot",
+                                    "type": "postback",
+                                    "payload": "/show.contactinfo{\"contact\": a2}"
+                                },
+                                {
+                                    "title": "Palvelun kotisivu",
+                                    "type": "postback",
+                                    "payload": "/show.homepage{\"contact\": a3}"
+                                }
+                            ]
+                        },
+                            {
+                                "title": name_b,
+                                # "subtitle": "Subtitle",
+                                # "image_url": "/static/images/test.png",
+                                "buttons": [{
+                                    "title": "Lisätietoja",
+                                    "type": "postback",
+                                    "payload": "/show.moreinfo{\"contact\": b1}"
+                                },
+                                    {
+                                        "title": "Yhteystiedot",
+                                        "type": "postback",
+                                        "payload": "/show.contactinfo{\"contact\": b2}"
+                                    },
+                                    {
+                                        "title": "Palvelun kotisivu",
+                                        "type": "postback",
+                                        "payload": "/show.homepage{\"contact\": b3}"
+                                    }
+                                ]
+                            },
+                            {
+                                "title": name_c,
+                                # "subtitle": "Subtitle",
+                                # "image_url": "/static/images/test.png",
+                                "buttons": [{
+                                    "title": "Lisätietoja",
+                                    "type": "postback",
+                                    "payload": "/show.moreinfo{\"contact\": c1}"
+                                },
+                                    {
+                                        "title": "Yhteystiedot",
+                                        "type": "postback",
+                                        "payload": "/show.contactinfo{\"contact\": c2}"
+                                    },
+                                    {
+                                        "title": "Palvelun kotisivu",
+                                        "type": "postback",
+                                        "payload": "/show.homepage{\"contact\": c3}"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+
+                dispatcher.utter_message(attachment=test_carousel)
+
+
+            else:
+                dispatcher.utter_message(template=utter_api_error)
+
+        except ConnectionError:
+            services = None
+            dispatcher.utter_message(template=utter_api_error)
+
+        return[SlotSet('recommendation', services)]
