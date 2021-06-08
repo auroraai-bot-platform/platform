@@ -24,6 +24,28 @@ life_situation_meter_keys = [
                     "working_studying"
                 ]
 
+# Service recommendation carousel button mapping
+mapping = {'a1': {'recommendation_number': 0,
+                  'button': 'Lisätietoja'},
+           'a2': {'recommendation_number': 0,
+                  'button': 'Yhteystiedot'},
+           'a3': {'recommendation_number': 0,
+                  'button': 'Palvelun kotisivu'},
+           'b1': {'recommendation_number': 1,
+                  'button': 'Lisätietoja'},
+           'b2': {'recommendation_number': 1,
+                  'button': 'Yhteystiedot'},
+           'b3': {'recommendation_number': 1,
+                  'button': 'Palvelun kotisivu'},
+           'c1': {'recommendation_number': 2,
+                  'button': 'Lisätietoja'},
+           'c2': {'recommendation_number': 2,
+                  'button': 'Yhteystiedot'},
+           'c3': {'recommendation_number': 2,
+                  'button': 'Palvelun kotisivu'}
+           }
+
+
 # todo: Add utterance to botfront? Develope a way to manage api errors.
 utter_api_error = "En valitettavasti pysty hakemaan palveluita juuri nyt."
 utter_location_error = "En valitettavasti löytänyt aluettasi."
@@ -191,11 +213,11 @@ class ActionShowInfo(Action):
     def run(self, dispatcher, tracker, domain):
         services = tracker.get_slot('recommendation')
         selection = tracker.get_slot('carousel_pick')
+        rec_num = int(mapping[str(selection)]['recommendation_number'])
+        service = services['recommended_services'][rec_num]
+        dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
 
-        if str(selection) == 'b2':
-
-            service = services['recommended_services'][1]
-            dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
+        if mapping[str(selection)]['button'] == 'Yhteystiedot':
 
             for record in service['service_channels']:
 
@@ -207,94 +229,16 @@ class ActionShowInfo(Action):
                 dispatcher.utter_message(template=f"Puhelin: {phone_numbers}")
                 dispatcher.utter_message(template=f"Osoite: {address}")
 
-        else:
-            dispatcher.utter_message(template=f"Sähköposti: {str(selection)}")
-        # if str(selection) == 'moreinfo':
-        #
-        #     for service in services['recommended_services']:
-        #
-        #         dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
-        #
-        #         for record in service['service_channels']:
-        #             hours = '\n'.join(map(str, record['service_hours']))
-        #             dispatcher.utter_message(template=f"Aukioloajat: {hours}")
-        #
-        # if str(selection) == 'homepage':
-        #
-        #     for service in services['recommended_services']:
-        #
-        #         dispatcher.utter_message(template=f'-----------------------')
-        #         dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
-        #
-        #         for record in service['service_channels']:
-        #             web_pages = '\n'.join(map(str, record['web_pages']))
-        #             dispatcher.utter_message(template=f"Kotisivut: {web_pages}")
+        if mapping[str(selection)]['button'] == 'Lisätietoja':
+            hours = '\n'.join(map(str, record['service_hours']))
+            dispatcher.utter_message(template=f"Aukioloajat: {hours}")
+
+        if mapping[str(selection)]['button'] == 'Palvelun kotisivu':
+            web_pages = '\n'.join(map(str, record['web_pages']))
+            dispatcher.utter_message(template=f"Kotisivut: {web_pages}")
 
         return[]
 
-# class ActionShowCarousel(Action):
-#     """
-#     Generates carousel
-#     """
-#
-#     def name(self):
-#         return 'action_show_carousel'
-#
-#     @staticmethod
-#     def remove_duplicates(records: list):
-#         out = []
-#         for r in records:
-#             if r not in out:
-#                 out.append(r)
-#         return out
-#
-#     def run(self, dispatcher, tracker, domain):
-#
-#         services = tracker.get_slot('recommendation')
-#         name_a = services['recommended_services'][0]["service_name"]
-#         name_b = services['recommended_services'][1]["service_name"]
-#
-#         test_carousel = {
-#             "type": "template",
-#             "payload": {
-#                 "template_type": "generic",
-#                 "elements": [{
-#                     "title": name_a,
-#                     "subtitle": "Subtitle",
-#                     "image_url": "/static/images/test.png",
-#                     "buttons": [{
-#                         "title": "Link name",
-#                         "url": "http://link.url",
-#                         "type": "web_url"
-#                     },
-#                         {
-#                             "title": "postback name",
-#                             "type": "postback",
-#                             "payload": "/greet"
-#                         }
-#                     ]
-#                 },
-#                     {
-#                         "title": name_b,
-#                         "subtitle": "Subtitle",
-#                         "image_url": "/static/images/test.png",
-#                         "buttons": [{
-#                             "title": "Link name",
-#                             "url": "http://link.url",
-#                             "type": "web_url"
-#                         },
-#                             {
-#                                 "title": "postback name",
-#                                 "type": "postback",
-#                                 "payload": "/greet"
-#                             }
-#                         ]
-#                     }
-#                 ]
-#             }
-#         }
-#
-#         dispatcher.utter_message(attachment=test_carousel)
 
 class ActionShowCarousel(Action):
     """
@@ -388,17 +332,17 @@ class ActionShowCarousel(Action):
                             "buttons": [{
                                 "title": "Lisätietoja",
                                 "type": "postback",
-                                "payload": "/show.moreinfo{\"contact\": a1}"
+                                "payload": "/service1.moreinfo{\"contact\": a1}"
                             },
                                 {
                                     "title": "Yhteystiedot",
                                     "type": "postback",
-                                    "payload": "/show.contactinfo{\"contact\": a2}"
+                                    "payload": "/service1.contactinfo{\"contact\": a2}"
                                 },
                                 {
                                     "title": "Palvelun kotisivu",
                                     "type": "postback",
-                                    "payload": "/show.homepage{\"contact\": a3}"
+                                    "payload": "/service1.homepage{\"contact\": a3}"
                                 }
                             ]
                         },
@@ -409,17 +353,17 @@ class ActionShowCarousel(Action):
                                 "buttons": [{
                                     "title": "Lisätietoja",
                                     "type": "postback",
-                                    "payload": "/show.moreinfo{\"contact\": b1}"
+                                    "payload": "/service2.moreinfo{\"contact\": b1}"
                                 },
                                     {
                                         "title": "Yhteystiedot",
                                         "type": "postback",
-                                        "payload": "/show.contactinfo{\"contact\": b2}"
+                                        "payload": "/service2.contactinfo{\"contact\": b2}"
                                     },
                                     {
                                         "title": "Palvelun kotisivu",
                                         "type": "postback",
-                                        "payload": "/show.homepage{\"contact\": b3}"
+                                        "payload": "/service2.homepage{\"contact\": b3}"
                                     }
                                 ]
                             },
@@ -430,17 +374,17 @@ class ActionShowCarousel(Action):
                                 "buttons": [{
                                     "title": "Lisätietoja",
                                     "type": "postback",
-                                    "payload": "/show.moreinfo{\"contact\": c1}"
+                                    "payload": "/service3.moreinfo{\"contact\": c1}"
                                 },
                                     {
                                         "title": "Yhteystiedot",
                                         "type": "postback",
-                                        "payload": "/show.contactinfo{\"contact\": c2}"
+                                        "payload": "/service3.contactinfo{\"contact\": c2}"
                                     },
                                     {
                                         "title": "Palvelun kotisivu",
                                         "type": "postback",
-                                        "payload": "/show.homepage{\"contact\": c3}"
+                                        "payload": "/service3.homepage{\"contact\": c3}"
                                     }
                                 ]
                             }
