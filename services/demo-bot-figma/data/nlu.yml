@@ -1,5 +1,15 @@
 version: "2.0"
 nlu:
+- intent: chitchat.thanks
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      kiitos
+    metadata:
+      canonical: true
+  - text: |
+      kiitti
 - intent: greet
   metadata:
     language: fi
@@ -155,6 +165,51 @@ nlu:
       ihan ok, ripari on ihan jees
     metadata:
       canonical: true
+- intent: service1.contactinfo
+  metadata:
+    language: fi
+  examples: |
+    - palvelun 1 [yhteystiedot](contact)
+- intent: service1.homepage
+  metadata:
+    language: fi
+  examples: |
+    - palvelun 1 [kotisivut](contact)
+- intent: service1.moreinfo
+  metadata:
+    language: fi
+  examples: |
+    - palvelun 1 [lisätiedot](contact)
+- intent: service2.contactinfo
+  metadata:
+    language: fi
+  examples: |
+    - palvelun 2 [yhteystiedot](contact)
+- intent: service2.homepage
+  metadata:
+    language: fi
+  examples: |
+    - palvelun 2 [kotisivut](contact)
+- intent: service2.moreinfo
+  metadata:
+    language: fi
+  examples: |
+    - palvelun 2 [lisätiedot](contact)
+- intent: service3.contactinfo
+  metadata:
+    language: fi
+  examples: |
+    - palvelun 3 [yhteystiedot](contact)
+- intent: service3.homepage
+  metadata:
+    language: fi
+  examples: |
+    - palvelun 3 [kotisivut](contact)
+- intent: service3.moreinfo
+  metadata:
+    language: fi
+  examples: |
+    - palvelun 3 [lisätiedot](contact)
 - intent: show.contactinfo
   metadata:
     language: fi

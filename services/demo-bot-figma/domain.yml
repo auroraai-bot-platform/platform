@@ -1,4 +1,5 @@
 actions:
+  - action_ask_feedback
   - action_botfront_disambiguation
   - action_botfront_disambiguation_followup
   - action_botfront_fallback
@@ -26,6 +27,8 @@ actions:
   - utter_greet
   - utter_nice_to_hear
   - utter_valid_city
+  - utter_welcome
+  - utter_what_next
   - utter_whats_up
   - utter_will_seek_info
 entities: []
@@ -82,38 +85,74 @@ forms:
           type: start
         - id: carousel_pick
           position:
-            x: 240
-            'y': 780
+            x: 300
+            'y': 800
           slotName: carousel_pick
           type: slot
     groupName: Riparilaiset
     name: carousel_form
     slots:
       - filling:
-          - entity: null
-            group: null
-            intent:
-              - show.contactinfo
+          - intent:
+              - service1.moreinfo
             not_intent: null
-            role: null
+            type: from_intent
+            value: a1
+          - intent:
+              - service1.contactinfo
+            not_intent: []
+            type: from_intent
+            value: a2
+          - intent:
+              - service1.homepage
+            not_intent: []
+            type: from_intent
+            value: a3
+          - intent:
+              - service2.moreinfo
+            not_intent: []
+            type: from_intent
+            value: b1
+          - intent:
+              - service2.contactinfo
+            not_intent: null
             type: from_intent
             value: b2
-          - entity: null
-            group: null
-            intent:
-              - show.moreinfo
+          - intent:
+              - service2.homepage
             not_intent: []
-            role: null
             type: from_intent
             value: b3
+          - intent:
+              - service3.moreinfo
+            not_intent: []
+            type: from_intent
+            value: c1
+          - intent:
+              - service3.contactinfo
+            not_intent: []
+            type: from_intent
+            value: c2
+          - intent:
+              - service3.homepage
+            not_intent: []
+            type: from_intent
+            value: c3
         name: carousel_pick
         utter_on_new_valid_slot: false
         validation:
           comparatum:
+            - a1
+            - a2
+            - a3
+            - b1
             - b2
             - b3
+            - c1
+            - c2
+            - c3
           operator: is_in
-    updatedAt: 1623080753980
+    updatedAt: 1623159908339
   city_form:
     collect_in_botfront: null
     description: null
@@ -404,6 +443,24 @@ responses:
     - language: fi
       metadata: null
       text: kiitos!
+  utter_welcome:
+    - language: fi
+      metadata: null
+      text: Kiitos palautteesta!
+  utter_what_next:
+    - language: fi
+      metadata:
+        forceClose: false
+        forceOpen: false
+        linkTarget: _blank
+        pageChangeCallbacks: null
+        pageEventCallbacks: null
+        userInput: show
+      quick_replies:
+        - title: Palaa kotisivulle
+          type: web_url
+          url: 'https://fi.wikipedia.org/wiki/Revontulet'
+      text: Mitä haluat tehdä seuraavaksi?
   utter_whats_up:
     - language: fi
       metadata: null

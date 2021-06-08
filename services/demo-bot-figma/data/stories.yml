@@ -88,6 +88,17 @@ stories:
       - active_loop: carousel_form
       - active_loop: null
       - action: action_show_info
+      - action: action_ask_feedback
+      - or:
+          - intent: chitchat.thanks
+            user: kiitos
+            entities: []
+          - intent: response.agree
+            entities: []
+          - intent: response.disagree
+            entities: []
+      - action: utter_welcome
+      - action: utter_what_next
     metadata:
       group: Riparilaiset
 rules: []
