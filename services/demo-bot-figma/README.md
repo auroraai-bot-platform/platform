@@ -1,8 +1,9 @@
 ## Introduction 
 
-This folder contains example chatbot built with botfront and which is integrated to external service recommender api.
+This folder contains example chatbot built with botfront general framework that is documented in `infra/docker-compose`.
 
-Project is built with general framework that is documented in `infra/docker-compose`.
+This demo-bot contains one discussion path where user is asked questions regarding his/her life situation. This information
+is sent to external api to get service recommendations that would help user in his/her issues. 
 
 ## Environment variables
 
@@ -31,3 +32,11 @@ Local Botfront chatbot project instructions (to install Botfront locally, check 
 ### Cloud environment
 
 To be added.
+
+## About the bot
+
+Bot will collect information regarding
+- user age
+- does user have friends
+- does user have issues with his/her family
+- user home city

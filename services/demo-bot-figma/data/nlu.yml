@@ -37,26 +37,43 @@ nlu:
 - intent: inform.friends
   metadata:
     language: fi
-  examples: |
-    - kaikki kaverit on toisella leirillä
-    - kaverit toisella leirillä
+  examples:
+  - text: |
+      kaikki kaverit on toisella leirillä
+    metadata:
+      canonical: true
+  - text: |
+      kaverit toisella leirillä
 - intent: inform.location
   metadata:
     language: fi
-  examples: |
-    - asun [turussa]{"entity": "city", "value": "turku"}
-    - olen [turusta]{"entity": "city", "value": "turku"}
-    - [turku](city)
-    - [turus]{"entity": "city", "value": "turku"}
-    - [turussa]{"entity": "city", "value": "turku"}
+  examples:
+  - text: |
+      asun [turussa]{"entity": "city", "value": "turku"}
+    metadata:
+      canonical: true
+  - text: |
+      olen [turusta]{"entity": "city", "value": "turku"}
+  - text: |
+      [turku](city)
+  - text: |
+      [turus]{"entity": "city", "value": "turku"}
+  - text: |
+      [turussa]{"entity": "city", "value": "turku"}
 - intent: inform.needhelp
   metadata:
     language: fi
-  examples: |
-    - haluan että vanhemmat auttais mua säästämään rahaa
-    - vanhemmat ei auta mua
-    - vanhemmat ei auta mua hankkimaan uutta kännykkää
-    - ärsyttää vaan, ettei mun vanhemmat auta mua säästämään. haluun uuden kännykän
+  examples:
+  - text: |
+      haluan että vanhemmat auttais mua säästämään rahaa
+    metadata:
+      canonical: true
+  - text: |
+      vanhemmat ei auta mua
+  - text: |
+      vanhemmat ei auta mua hankkimaan uutta kännykkää
+  - text: |
+      ärsyttää vaan, ettei mun vanhemmat auta mua säästämään. haluun uuden kännykän
 - intent: response.agree
   metadata:
     language: fi
@@ -102,9 +119,13 @@ nlu:
 - intent: response.disagree
   metadata:
     language: fi
-  examples: |
-    - ei
-    - en
+  examples:
+  - text: |
+      ei
+    metadata:
+      canonical: true
+  - text: |
+      en
 - intent: response.dontknow
   metadata:
     language: fi
@@ -168,48 +189,75 @@ nlu:
 - intent: service1.contactinfo
   metadata:
     language: fi
-  examples: |
-    - palvelun 1 [yhteystiedot](contact)
+  examples:
+  - text: |
+      palvelun 1 [yhteystiedot](contact)
+    metadata:
+      canonical: true
 - intent: service1.homepage
   metadata:
     language: fi
-  examples: |
-    - palvelun 1 [kotisivut](contact)
+  examples:
+  - text: |
+      palvelun 1 [kotisivut](contact)
+    metadata:
+      canonical: true
 - intent: service1.moreinfo
   metadata:
     language: fi
-  examples: |
-    - palvelun 1 [lisätiedot](contact)
+  examples:
+  - text: |
+      palvelun 1 [lisätiedot](contact)
+    metadata:
+      canonical: true
 - intent: service2.contactinfo
   metadata:
     language: fi
-  examples: |
-    - palvelun 2 [yhteystiedot](contact)
+  examples:
+  - text: |
+      palvelun 2 [yhteystiedot](contact)
+    metadata:
+      canonical: true
 - intent: service2.homepage
   metadata:
     language: fi
-  examples: |
-    - palvelun 2 [kotisivut](contact)
+  examples:
+  - text: |
+      palvelun 2 [kotisivut](contact)
+    metadata:
+      canonical: true
 - intent: service2.moreinfo
   metadata:
     language: fi
-  examples: |
-    - palvelun 2 [lisätiedot](contact)
+  examples:
+  - text: |
+      palvelun 2 [lisätiedot](contact)
+    metadata:
+      canonical: true
 - intent: service3.contactinfo
   metadata:
     language: fi
-  examples: |
-    - palvelun 3 [yhteystiedot](contact)
+  examples:
+  - text: |
+      palvelun 3 [yhteystiedot](contact)
+    metadata:
+      canonical: true
 - intent: service3.homepage
   metadata:
     language: fi
-  examples: |
-    - palvelun 3 [kotisivut](contact)
+  examples:
+  - text: |
+      palvelun 3 [kotisivut](contact)
+    metadata:
+      canonical: true
 - intent: service3.moreinfo
   metadata:
     language: fi
-  examples: |
-    - palvelun 3 [lisätiedot](contact)
+  examples:
+  - text: |
+      palvelun 3 [lisätiedot](contact)
+    metadata:
+      canonical: true
 - intent: show.contactinfo
   metadata:
     language: fi
@@ -221,8 +269,11 @@ nlu:
 - intent: show.homepage
   metadata:
     language: fi
-  examples: |
-    - palvelun [kotisivu]{"entity": "contact", "value": "homepage"}
+  examples:
+  - text: |
+      palvelun [kotisivu]{"entity": "contact", "value": "homepage"}
+    metadata:
+      canonical: true
 - intent: show.moreinfo
   metadata:
     language: fi
@@ -231,3 +282,17 @@ nlu:
       [lisätietoja]{"entity": "contact", "value": "moreinfo"}
     metadata:
       canonical: true
+- synonym: turku
+  examples: |
+    - turussa
+    - turusta
+    - turus
+- synonym: contactinfo
+  examples: |
+    - yhteystiedot
+- synonym: homepage
+  examples: |
+    - kotisivu
+- synonym: moreinfo
+  examples: |
+    - lisätietoja

@@ -2,10 +2,10 @@ stories:
   - story: HappyPath
     steps:
       - or:
-          - intent: get.started
-            entities: []
           - intent: greet
             user: Hei
+            entities: []
+          - intent: get_started
             entities: []
       - action: utter_greet
       - action: utter_chat_confidentially

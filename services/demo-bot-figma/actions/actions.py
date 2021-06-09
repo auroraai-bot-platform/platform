@@ -94,7 +94,7 @@ class ActionSlotReset(Action):
 
 class ActionShowInfo(Action):
     """
-    Resets all slots to an original state.
+    Prints out info user has chosen from carousel.
     """
     def name(self):
         return 'action_show_info'
@@ -143,7 +143,9 @@ class ActionShowInfo(Action):
 
 class ActionShowCarousel(Action):
     """
-    Generates carousel
+    Fetches slot values for recommender api.
+    Calls recommender api and stores the response to a slot.
+    Generates carousel for UI from api recommendations.
     """
 
     def name(self):
@@ -192,7 +194,9 @@ class ActionShowCarousel(Action):
         Fetches slot values from the bot tracker store, validates slot values,
         and calls service recommender api to fetch recommended services based on
         the features collected and for the location observed.
+        Generates a carousel for UI from the top 3 service recommendations.
         """
+        age = self.validate_feat(tracker, "age")
         friends = self.validate_feat(tracker, "friends")
         family = self.validate_feat(tracker, "family")
         municipality_code, location = self.validate_location(dispatcher, tracker)
@@ -202,7 +206,7 @@ class ActionShowCarousel(Action):
             api = ServiceRecommenderAPI()
 
             params = {
-                "age": 15,
+                "age": age,
                 "life_situation_meters": life_situation_features,
                 "limit": 3,
                 "municipality_code": municipality_code,
