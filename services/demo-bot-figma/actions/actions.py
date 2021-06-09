@@ -113,6 +113,7 @@ class ActionShowInfo(Action):
         rec_num = int(mapping[str(selection)]['recommendation_number'])
         service = services['recommended_services'][rec_num]
         dispatcher.utter_message(template=f'Palvelu: {service["service_name"]}. ')
+        dispatcher.utter_message(image='https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Polarlicht_2.jpg/333px-Polarlicht_2.jpg')
 
         if mapping[str(selection)]['button'] == 'Yhteystiedot':
 
@@ -227,6 +228,7 @@ class ActionShowCarousel(Action):
                         "template_type": "generic",
                         "elements": [{
                             "title": name_a,
+                            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Polarlicht_2.jpg/333px-Polarlicht_2.jpg",
                             "buttons": [{
                                 "title": "Lisätietoja",
                                 "type": "postback",
@@ -246,6 +248,7 @@ class ActionShowCarousel(Action):
                         },
                             {
                                 "title": name_b,
+                                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Polarlicht_2.jpg/333px-Polarlicht_2.jpg",
                                 "buttons": [{
                                     "title": "Lisätietoja",
                                     "type": "postback",
@@ -265,6 +268,7 @@ class ActionShowCarousel(Action):
                             },
                             {
                                 "title": name_c,
+                                "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Polarlicht_2.jpg/333px-Polarlicht_2.jpg",
                                 "buttons": [{
                                     "title": "Lisätietoja",
                                     "type": "postback",
