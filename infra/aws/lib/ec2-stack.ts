@@ -81,12 +81,14 @@ export class Ec2Stack extends cdk.Stack {
       port: rasaPort,
       protocol: elbv2.ApplicationProtocol.HTTPS,
       open: true,
+      certificates: [cert]
     });
 
     const botfrontListener = alb.addListener(`${prefix}botfront-listener`, {
       port: botfrontPort,
       protocol: elbv2.ApplicationProtocol.HTTPS,
       open: true,
+      certificates: [cert]
     });
 
     const rasaTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}rasa-targetgroup`, {
