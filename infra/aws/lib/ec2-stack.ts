@@ -2,17 +2,28 @@ import * as cdk from '@aws-cdk/core';
 import * as ecr from '@aws-cdk/aws-ecr'
 import * as ec2 from '@aws-cdk/aws-ec2';
 import { CfnOutput } from '@aws-cdk/core';
+import { BaseStackProps } from '../types';
+import { createPrefix } from './utilities';
+import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
+import * as elbv2Targets from '@aws-cdk/aws-elasticloadbalancingv2-targets';
+import * as route53 from '@aws-cdk/aws-route53';
+import * as acm from '@aws-cdk/aws-certificatemanager';
 
-interface Ec2Props extends cdk.StackProps {
+interface Ec2Props extends BaseStackProps {
     baseRepo: ecr.IRepository,
     baseVpc: ec2.IVpc
+    subDomain: string;
+    zoneName: string;
   }
+
+const rasaPort = 5005;
+const botfrontPort = 8888;
 
 export class Ec2Stack extends cdk.Stack {
   public readonly hostIp: string;
   constructor(scope: cdk.Construct, id: string, props: Ec2Props) {
     super(scope, id, props);
-
+    const prefix = createPrefix(props.envName, this.constructor.name);
     const sg = ec2.SecurityGroup.fromSecurityGroupId(this, 'basesg', cdk.Fn.importValue('base-security-group-id'));
 
     const script = `
@@ -40,18 +51,80 @@ export class Ec2Stack extends cdk.Stack {
         vpc: props.baseVpc,
         vpcSubnets: {subnetType: ec2.SubnetType.PUBLIC},
         keyName: 'aurora-ai',
-        userData: userdata
+        userData: userdata,
+        instanceName: `${prefix}botfront-full`
     });
 
     host.addSecurityGroup(sg)
-    host.connections.allowFromAnyIpv4(ec2.Port.tcp(8888));
-    host.connections.allowFromAnyIpv4(ec2.Port.tcp(5005));
+    host.connections.allowFromAnyIpv4(ec2.Port.tcp(botfrontPort));
+    host.connections.allowFromAnyIpv4(ec2.Port.tcp(rasaPort));
 
     new CfnOutput(this, 'ip-address', {
         value: host.instancePublicIp
     });
 
-    this.hostIp = host.instancePublicIp;
+    const hostedZone = new route53.HostedZone(this, `${prefix}hosted-zone`, {
+      zoneName: props.zoneName
+    });
 
+    const cert = new acm.Certificate(this, '${prefix}-hosted-zone-certificate', {
+      domainName: props.subDomain,
+      validation: acm.CertificateValidation.fromDns(hostedZone)
+    });
+
+    const alb = new elbv2.ApplicationLoadBalancer(this, `${prefix}alb`, {
+      vpc: props.baseVpc,
+      internetFacing: true
+    });
+
+    const rasaListener = alb.addListener(`${prefix}rasa-listener`, {
+      port: rasaPort,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      open: true,
+    });
+
+    const botfrontListener = alb.addListener(`${prefix}botfront-listener`, {
+      port: botfrontPort,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      open: true,
+    });
+
+    const rasaTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}rasa-targetgroup`, {
+      targetType: elbv2.TargetType.INSTANCE,
+      port: rasaPort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      targetGroupName: `${prefix}rasa-targetgroup`,
+      healthCheck: {
+        enabled: true,
+        protocol: elbv2.Protocol.HTTP
+      },
+      targets: [new elbv2Targets.InstanceTarget(host, rasaPort)]
+    });
+
+    const botfrontTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}botfront-targetgroup`, {
+      targetType: elbv2.TargetType.INSTANCE,
+      port: botfrontPort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      targetGroupName: `${prefix}botfront-targetgroup`,
+      healthCheck: {
+        enabled: true,
+        protocol: elbv2.Protocol.HTTP
+      },
+      targets: [new elbv2Targets.InstanceTarget(host, botfrontPort)]
+    });
+
+    
+
+    rasaListener.addTargetGroups(`${prefix}rasa-listener-assignment`, {
+      targetGroups: [rasaTargetGroup]
+    });
+
+    botfrontListener.addTargetGroups(`${prefix}botfront-listener-assignment`, {
+      targetGroups: [botfrontTargetGroup]
+    });
+
+    
+
+    this.hostIp = host.instancePublicIp;
   }
 }

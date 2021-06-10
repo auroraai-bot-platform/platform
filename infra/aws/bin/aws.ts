@@ -20,7 +20,8 @@ const base = new BaseStack(app, 'BaseStack');
 }); */
 export const ec2stack = new Ec2Stack(app, 'Ec2Stack', {
   baseRepo: base.baseRepo,
-  baseVpc: base.baseVpc
+  baseVpc: base.baseVpc,
+  envName
 });
 
 new WebChatStack(app, 'WebChatStack', {
