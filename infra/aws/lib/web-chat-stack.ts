@@ -4,6 +4,7 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as s3 from '@aws-cdk/aws-s3';
 
 import { BaseStackProps } from '../types/index';
+import { createPrefix } from './utilities';
 
 interface WebChatProps extends BaseStackProps {
   rasaIp: string;
@@ -51,8 +52,4 @@ export class WebChatStack extends cdk.Stack {
     });
 
   }
-}
-
-function createPrefix(env: string, stack: string) {
-  return `${env}-${stack.toLowerCase().split('stack')[0]}-`;
 }
