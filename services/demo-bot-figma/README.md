@@ -31,12 +31,5 @@ Local Botfront chatbot project instructions (to install Botfront locally, check 
 
 ### Cloud environment
 
-To be added.
-
-## About the bot
-
-Bot will collect information regarding
-- user age
-- does user have friends
-- does user have issues with his/her family
-- user home city
+Environment variables are read and used in `actions/servicerec/api.py`. User must provide these variables through actions
+dockerfile for example.
