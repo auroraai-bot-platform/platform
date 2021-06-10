@@ -1,0 +1,298 @@
+version: "2.0"
+nlu:
+- intent: chitchat.thanks
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      kiitos
+    metadata:
+      canonical: true
+  - text: |
+      kiitti
+- intent: greet
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      Hei
+    metadata:
+      canonical: true
+  - text: |
+      Moi
+  - text: |
+      Moro
+  - text: |
+      Päivää
+- intent: inform.feeling
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      mua ärsyttää
+    metadata:
+      canonical: true
+  - text: |
+      ärsyttää
+- intent: inform.friends
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      kaikki kaverit on toisella leirillä
+    metadata:
+      canonical: true
+  - text: |
+      kaverit toisella leirillä
+- intent: inform.location
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      asun [turussa]{"entity": "city", "value": "turku"}
+    metadata:
+      canonical: true
+  - text: |
+      olen [turusta]{"entity": "city", "value": "turku"}
+  - text: |
+      [turku](city)
+  - text: |
+      [turus]{"entity": "city", "value": "turku"}
+  - text: |
+      [turussa]{"entity": "city", "value": "turku"}
+- intent: inform.needhelp
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      haluan että vanhemmat auttais mua säästämään rahaa
+    metadata:
+      canonical: true
+  - text: |
+      vanhemmat ei auta mua
+  - text: |
+      vanhemmat ei auta mua hankkimaan uutta kännykkää
+  - text: |
+      ärsyttää vaan, ettei mun vanhemmat auta mua säästämään. haluun uuden kännykän
+- intent: response.agree
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      jep
+  - text: |
+      joo
+    metadata:
+      canonical: true
+  - text: |
+      joo on
+  - text: |
+      juu
+  - text: |
+      kyllä
+  - text: |
+      kyllä se sopii
+  - text: |
+      niin olen
+  - text: |
+      näin on
+  - text: |
+      on
+  - text: |
+      on joo
+  - text: |
+      se käy
+- intent: response.bad
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      aina tulee vaan riita
+  - text: |
+      joo, mut tulee aina riita
+    metadata:
+      canonical: true
+  - text: |
+      siitä tulee vaan riita
+  - text: |
+      tulee aina riitaa
+- intent: response.disagree
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      ei
+    metadata:
+      canonical: true
+  - text: |
+      en
+- intent: response.dontknow
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      en tiedä
+  - text: |
+      en tiiä
+  - text: |
+      en tiiä, mua vaan ärsyttää ja lähen menee
+    metadata:
+      canonical: true
+- intent: response.maybe
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      ehkä
+  - text: |
+      kai
+  - text: |
+      kait
+  - text: |
+      no, on kai
+    metadata:
+      canonical: true
+  - text: |
+      on kai
+  - text: |
+      on kait
+- intent: response.none
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      en mistään
+  - text: |
+      ihan sama
+  - text: |
+      no, emmätiiä
+    metadata:
+      canonical: true
+- intent: response.ok
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      aika jees
+  - text: |
+      ihan fain
+  - text: |
+      ihan fine
+  - text: |
+      ihan jees
+  - text: |
+      ihan ok
+  - text: |
+      ihan ok, ripari on ihan jees
+    metadata:
+      canonical: true
+- intent: service1.contactinfo
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      palvelun 1 [yhteystiedot](contact)
+    metadata:
+      canonical: true
+- intent: service1.homepage
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      palvelun 1 [kotisivut](contact)
+    metadata:
+      canonical: true
+- intent: service1.moreinfo
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      palvelun 1 [lisätiedot](contact)
+    metadata:
+      canonical: true
+- intent: service2.contactinfo
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      palvelun 2 [yhteystiedot](contact)
+    metadata:
+      canonical: true
+- intent: service2.homepage
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      palvelun 2 [kotisivut](contact)
+    metadata:
+      canonical: true
+- intent: service2.moreinfo
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      palvelun 2 [lisätiedot](contact)
+    metadata:
+      canonical: true
+- intent: service3.contactinfo
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      palvelun 3 [yhteystiedot](contact)
+    metadata:
+      canonical: true
+- intent: service3.homepage
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      palvelun 3 [kotisivut](contact)
+    metadata:
+      canonical: true
+- intent: service3.moreinfo
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      palvelun 3 [lisätiedot](contact)
+    metadata:
+      canonical: true
+- intent: show.contactinfo
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      [yhteystiedot]{"entity": "contact", "value": "contactinfo"}
+    metadata:
+      canonical: true
+- intent: show.homepage
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      palvelun [kotisivu]{"entity": "contact", "value": "homepage"}
+    metadata:
+      canonical: true
+- intent: show.moreinfo
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      [lisätietoja]{"entity": "contact", "value": "moreinfo"}
+    metadata:
+      canonical: true
+- synonym: turku
+  examples: |
+    - turussa
+    - turusta
+    - turus
+- synonym: contactinfo
+  examples: |
+    - yhteystiedot
+- synonym: homepage
+  examples: |
+    - kotisivu
+- synonym: moreinfo
+  examples: |
+    - lisätietoja

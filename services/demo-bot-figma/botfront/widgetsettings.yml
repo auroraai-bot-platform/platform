@@ -1,0 +1,5 @@
+title: figmademo
+subtitle: Happy to help
+inputTextFieldHint: Type your message...
+initPayload: /get_started
+hideWhenNotConnected: true

@@ -1,0 +1,462 @@
+actions:
+  - action_ask_feedback
+  - action_botfront_disambiguation
+  - action_botfront_disambiguation_followup
+  - action_botfront_fallback
+  - action_botfront_mapping
+  - action_show_carousel
+  - action_show_info
+  - utter_agree
+  - utter_ask_age
+  - utter_ask_carousel_pick
+  - utter_ask_chat_topic
+  - utter_ask_chat_with_specialist
+  - utter_ask_city
+  - utter_ask_contact_selected
+  - utter_ask_discussed_at_home
+  - utter_ask_family
+  - utter_ask_friends
+  - utter_ask_friends_in_camp
+  - utter_ask_miss_friends
+  - utter_ask_riparilainen
+  - utter_ask_show_info
+  - utter_ask_situation_at_home
+  - utter_ask_what_happened
+  - utter_ask_why
+  - utter_chat_confidentially
+  - utter_cheerup_miss_friends
+  - utter_greet
+  - utter_nice_to_hear
+  - utter_valid_city
+  - utter_welcome
+  - utter_what_next
+  - utter_whats_up
+  - utter_will_seek_info
+entities: []
+forms:
+  age_form:
+    collect_in_botfront: null
+    description: null
+    graph_elements:
+      edges:
+        - condition: null
+          id: e1-age
+          source: '1'
+          target: age
+          type: condition
+      nodes:
+        - id: '1'
+          position:
+            x: 200
+            'y': 200
+          type: start
+        - id: age
+          position:
+            x: 120
+            'y': 350
+          slotName: age
+          type: slot
+    groupName: Riparilaiset
+    name: age_form
+    slots:
+      - filling:
+          - intent:
+              - response.agree
+            not_intent: []
+            type: from_intent
+            value: '15'
+        name: age
+        utter_on_new_valid_slot: false
+        validation:
+          comparatum:
+            - '15'
+          operator: is_in
+    updatedAt: 1623246525061
+  carousel_form:
+    collect_in_botfront: null
+    description: null
+    graph_elements:
+      edges:
+        - condition: null
+          id: e1-carousel_pick
+          source: '1'
+          target: carousel_pick
+          type: condition
+      nodes:
+        - id: '1'
+          position:
+            x: 380
+            'y': 500
+          type: start
+        - id: carousel_pick
+          position:
+            x: 300
+            'y': 800
+          slotName: carousel_pick
+          type: slot
+    groupName: Riparilaiset
+    name: carousel_form
+    slots:
+      - filling:
+          - intent:
+              - service1.moreinfo
+            not_intent: null
+            type: from_intent
+            value: a1
+          - intent:
+              - service1.contactinfo
+            not_intent: []
+            type: from_intent
+            value: a2
+          - intent:
+              - service1.homepage
+            not_intent: []
+            type: from_intent
+            value: a3
+          - intent:
+              - service2.moreinfo
+            not_intent: []
+            type: from_intent
+            value: b1
+          - intent:
+              - service2.contactinfo
+            not_intent: null
+            type: from_intent
+            value: b2
+          - intent:
+              - service2.homepage
+            not_intent: []
+            type: from_intent
+            value: b3
+          - intent:
+              - service3.moreinfo
+            not_intent: []
+            type: from_intent
+            value: c1
+          - intent:
+              - service3.contactinfo
+            not_intent: []
+            type: from_intent
+            value: c2
+          - intent:
+              - service3.homepage
+            not_intent: []
+            type: from_intent
+            value: c3
+        name: carousel_pick
+        utter_on_new_valid_slot: false
+        validation:
+          comparatum:
+            - a1
+            - a2
+            - a3
+            - b1
+            - b2
+            - b3
+            - c1
+            - c2
+            - c3
+          operator: is_in
+    updatedAt: 1623246718987
+  city_form:
+    collect_in_botfront: null
+    description: null
+    graph_elements:
+      edges:
+        - condition: null
+          id: e1-city
+          source: '1'
+          target: city
+          type: condition
+      nodes:
+        - id: '1'
+          position:
+            x: 200
+            'y': 200
+          type: start
+        - id: city
+          position:
+            x: 120
+            'y': 350
+          slotName: city
+          type: slot
+    groupName: Riparilaiset
+    name: city_form
+    slots:
+      - filling:
+          - entity:
+              - city
+            group: null
+            intent:
+              - inform.location
+            not_intent: []
+            role: null
+            type: from_entity
+        name: city
+        utter_on_new_valid_slot: false
+        validation:
+          comparatum:
+            - turku
+          operator: is_in
+    updatedAt: 1623244310790
+  family_form:
+    collect_in_botfront: null
+    description: null
+    graph_elements:
+      edges:
+        - condition: null
+          id: e1-family
+          source: '1'
+          target: family
+          type: condition
+      nodes:
+        - id: '1'
+          position:
+            x: 200
+            'y': 200
+          type: start
+        - id: family
+          position:
+            x: 120
+            'y': 350
+          slotName: family
+          type: slot
+    groupName: Riparilaiset
+    name: family_form
+    slots:
+      - filling:
+          - intent:
+              - response.disagree
+            not_intent: null
+            type: from_intent
+            value: '5'
+        name: family
+        utter_on_new_valid_slot: false
+    updatedAt: 1623244310812
+  friends_form:
+    collect_in_botfront: null
+    description: null
+    graph_elements:
+      edges:
+        - condition: null
+          id: e1-friends
+          source: '1'
+          target: friends
+          type: condition
+      nodes:
+        - id: '1'
+          position:
+            x: 200
+            'y': 200
+          type: start
+        - id: friends
+          position:
+            x: 120
+            'y': 360
+          slotName: friends
+          type: slot
+    groupName: Riparilaiset
+    name: friends_form
+    slots:
+      - filling:
+          - intent:
+              - response.agree
+            not_intent: null
+            type: from_intent
+            value: '8'
+          - intent:
+              - response.dontknow
+            not_intent: null
+            type: from_intent
+            value: '5'
+          - intent:
+              - response.disagree
+            not_intent: null
+            type: from_intent
+            value: '0'
+        name: friends
+        utter_on_new_valid_slot: false
+        validation:
+          comparatum:
+            - '0'
+            - '5'
+            - '8'
+          operator: is_in
+    updatedAt: 1623244310856
+intents:
+  - get_started
+  - chitchat.thanks
+  - greet
+  - inform.feeling
+  - inform.friends
+  - inform.location
+  - inform.needhelp
+  - response.agree
+  - response.bad
+  - response.disagree
+  - response.dontknow
+  - response.maybe
+  - response.none
+  - response.ok
+  - service1.contactinfo
+  - service1.homepage
+  - service1.moreinfo
+  - service2.contactinfo
+  - service2.homepage
+  - service2.moreinfo
+  - service3.contactinfo
+  - service3.homepage
+  - service3.moreinfo
+  - show.contactinfo
+  - show.homepage
+  - show.moreinfo
+responses:
+  utter_agree:
+    - language: fi
+      text: Ymmärrän
+  utter_ask_age:
+    - language: fi
+      metadata: null
+      text: 'Olet siis riparilla, vai...?'
+  utter_ask_carousel_pick:
+    - language: fi
+      text: ''
+  utter_ask_chat_topic:
+    - language: fi
+      text: Mistä haluat jutella?
+  utter_ask_chat_with_specialist:
+    - language: fi
+      text: >-
+        mitä, jos juttelisit tästä toisen aikuisen kanssa jolla on kokemusta
+        nuorten haasteista? Hän pystyisi ehkä jeesaamaan.
+  utter_ask_city:
+    - language: fi
+      text: 'kerrotko vielä, että missä kaupungissa asut?'
+  utter_ask_contact_selected:
+    - buttons:
+        - payload: ''
+          title: ''
+          type: postback
+      language: fi
+      text: ''
+  utter_ask_discussed_at_home:
+    - language: fi
+      text: Toivot siis apua? Oletteko puhuneet kotona tästä asiasta?
+  utter_ask_family:
+    - language: fi
+      text: Entäs sun perhe? Onko sulla koti-ikävä?
+  utter_ask_friends:
+    - buttons:
+        - payload: /response.disagree
+          title: ei oo
+          type: postback
+        - payload: /response.dontknow
+          title: 'no, en tiiä'
+          type: postback
+        - payload: /response.agree
+          title: onneks on paljon
+          type: postback
+      language: fi
+      text: onko sulla paljon kavereita?
+  utter_ask_friends_in_camp:
+    - language: fi
+      text: 'entäs porukka, onko leirillä paljon tuttuja?'
+  utter_ask_miss_friends:
+    - language: fi
+      text: ikävöitkö heitä?
+  utter_ask_riparilainen:
+    - language: fi
+      metadata: null
+      text: ''
+  utter_ask_show_info:
+    - buttons:
+        - payload: '/show.moreinfo{"contact":"moreinfo"}'
+          title: Lisätietoja
+          type: postback
+        - payload: '/show.contactinfo{"contact":"contactinfo"}'
+          title: Yhteystiedot
+          type: postback
+        - payload: '/show.homepage{"contact":"homepage"}'
+          title: Palveluiden kotisivut
+          type: postback
+      language: fi
+      metadata: null
+      text: >-
+        Jos kiinnostuit, voit katsoa lisätietoja palveluista. Valitse mitä
+        tietoa kaipaisit:
+  utter_ask_situation_at_home:
+    - buttons:
+        - payload: /response.disagree
+          title: ei oo
+          type: postback
+        - payload: /response.maybe
+          title: on kai
+          type: postback
+        - payload: /response.agree
+          title: 'joo, ei mitään hätää'
+          type: postback
+      language: fi
+      text: Onko muuten kaikki hyvin kotona?
+  utter_ask_what_happened:
+    - language: fi
+      text: 'tapahtuiko hiljattain jotain, josta haluat jutella?'
+  utter_ask_why:
+    - language: fi
+      text: 'mitä luulet, miksi näin tapahtuu?'
+  utter_chat_confidentially:
+    - language: fi
+      text: Minulle voit kertoa elämästäsi luottamuksellisesti.
+  utter_cheerup_miss_friends:
+    - language: fi
+      text: 'Kohta näette taas, hymyy huuleen :)'
+  utter_greet:
+    - language: fi
+      text: Morjens! Olen Hytebotti.
+  utter_nice_to_hear:
+    - language: fi
+      text: kiva kuulla!
+  utter_valid_city:
+    - language: fi
+      text: kiitos!
+  utter_welcome:
+    - language: fi
+      text: Kiitos palautteesta!
+  utter_what_next:
+    - language: fi
+      metadata:
+        forceClose: false
+        forceOpen: false
+        linkTarget: _blank
+        pageChangeCallbacks: null
+        pageEventCallbacks: null
+        userInput: show
+      quick_replies:
+        - title: Palaa kotisivulle
+          type: web_url
+          url: 'https://fi.wikipedia.org/wiki/Revontulet'
+      text: Mitä haluat tehdä seuraavaksi?
+  utter_whats_up:
+    - language: fi
+      text: 'no, mikä meininki?'
+  utter_will_seek_info:
+    - language: fi
+      text: 'etsin sinulle tietoja, pieni hetki...'
+session_config: {}
+slots:
+  age:
+    type: unfeaturized
+  carousel_pick:
+    type: unfeaturized
+  city:
+    type: unfeaturized
+  disambiguation_message:
+    type: unfeaturized
+  fallback_language:
+    initial_value: fi
+    type: unfeaturized
+  family:
+    type: unfeaturized
+  friends:
+    type: unfeaturized
+  recommendation:
+    type: any
