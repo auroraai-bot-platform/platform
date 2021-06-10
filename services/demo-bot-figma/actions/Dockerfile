@@ -9,9 +9,9 @@ FROM ${RASA_SDK_IMAGE}
 # Change back to root user to install dependencies
 USER root
 
-COPY requirements.txt /app/requirements.txt
+COPY requirements.run /app/requirements.run
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.run
 
 COPY . /app/actions/
 
