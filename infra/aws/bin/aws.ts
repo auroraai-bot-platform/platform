@@ -7,14 +7,21 @@ import { Ec2Stack } from '../lib/ec2-stack';
 import { WebChatStack } from '../lib/web-chat-stack';
 import { CertificateStack } from '../lib/certificate-stack';
 
-const region = 'eu-north-1';
+const region = process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION || 'eu-north-1';
+const account = process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT;
+
 const envName = 'demo';
 const hostedZoneId = 'Z0251505KGHO1EGOLQNL';
 const domain = 'aaibot.link';
 const subDomain = `${envName}.${domain}`;
 
 const app = new cdk.App();
-const base = new BaseStack(app, 'BaseStack');
+const base = new BaseStack(app, 'BaseStack', {
+  env: {
+    region,
+    account: process.env.CDK_DEFAULT_ACCOUNT
+  }
+});
 
 const certificateStack = new CertificateStack(app, 'CertificateStack', {
   subDomain,
@@ -33,8 +40,13 @@ export const ec2stack = new Ec2Stack(app, 'Ec2Stack', {
   baseRepo: base.baseRepo,
   baseVpc: base.baseVpc,
   subDomain,
+  domain,
   hostedZoneId,
-  envName
+  envName,
+  env: {
+    region,
+    account: process.env.CDK_DEFAULT_ACCOUNT
+  }
 });
 
 new WebChatStack(app, 'WebChatStack', {
