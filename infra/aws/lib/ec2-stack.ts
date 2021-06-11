@@ -10,10 +10,10 @@ import * as route53 from '@aws-cdk/aws-route53';
 import * as acm from '@aws-cdk/aws-certificatemanager';
 
 interface Ec2Props extends BaseStackProps {
-    baseRepo: ecr.IRepository,
-    baseVpc: ec2.IVpc
+    baseRepo: ecr.IRepository;
+    baseVpc: ec2.IVpc;
+    hostedZoneId: string;
     subDomain: string;
-    zoneName: string;
   }
 
 const rasaPort = 5005;
@@ -21,9 +21,15 @@ const botfrontPort = 8888;
 
 export class Ec2Stack extends cdk.Stack {
   public readonly hostIp: string;
+  public readonly domain: string;
+  public readonly certificate: acm.Certificate;
+
   constructor(scope: cdk.Construct, id: string, props: Ec2Props) {
     super(scope, id, props);
     const prefix = createPrefix(props.envName, this.constructor.name);
+
+    const apiDomain = `api.${props.subDomain}`;
+
     const sg = ec2.SecurityGroup.fromSecurityGroupId(this, 'basesg', cdk.Fn.importValue('base-security-group-id'));
 
     const script = `
@@ -63,12 +69,10 @@ export class Ec2Stack extends cdk.Stack {
         value: host.instancePublicIp
     });
 
-    const hostedZone = new route53.HostedZone(this, `${prefix}hosted-zone`, {
-      zoneName: props.zoneName
-    });
+    const hostedZone = route53.HostedZone.fromHostedZoneId(this, 'hostedZone', props.hostedZoneId);
 
-    const cert = new acm.Certificate(this, '${prefix}-hosted-zone-certificate', {
-      domainName: props.subDomain,
+    const certificate = new acm.Certificate(this, `${prefix}hosted-zone-certificate`, {
+      domainName: apiDomain,
       validation: acm.CertificateValidation.fromDns(hostedZone)
     });
 
@@ -81,14 +85,14 @@ export class Ec2Stack extends cdk.Stack {
       port: rasaPort,
       protocol: elbv2.ApplicationProtocol.HTTPS,
       open: true,
-      certificates: [cert]
+      certificates: [certificate]
     });
 
     const botfrontListener = alb.addListener(`${prefix}botfront-listener`, {
       port: botfrontPort,
       protocol: elbv2.ApplicationProtocol.HTTPS,
       open: true,
-      certificates: [cert]
+      certificates: [certificate]
     });
 
     const rasaTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}rasa-targetgroup`, {
@@ -100,6 +104,7 @@ export class Ec2Stack extends cdk.Stack {
         enabled: true,
         protocol: elbv2.Protocol.HTTP
       },
+      vpc: props.baseVpc,
       targets: [new elbv2Targets.InstanceTarget(host, rasaPort)]
     });
 
@@ -112,6 +117,7 @@ export class Ec2Stack extends cdk.Stack {
         enabled: true,
         protocol: elbv2.Protocol.HTTP
       },
+      vpc: props.baseVpc,
       targets: [new elbv2Targets.InstanceTarget(host, botfrontPort)]
     });
 
@@ -128,5 +134,7 @@ export class Ec2Stack extends cdk.Stack {
     
 
     this.hostIp = host.instancePublicIp;
+    this.domain = apiDomain;
+    this.certificate = certificate;
   }
 }
