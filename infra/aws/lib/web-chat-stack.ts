@@ -3,6 +3,7 @@ import * as cloudfront from '@aws-cdk/aws-cloudfront';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as route53 from '@aws-cdk/aws-route53';
+import * as route53targets from '@aws-cdk/aws-route53-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager'
 
 import { BaseStackProps } from '../types/index';
@@ -63,10 +64,16 @@ export class WebChatStack extends cdk.Stack {
       ],
       viewerCertificate: cloudfront.ViewerCertificate.fromAcmCertificate(cert, {
         aliases: [
-          `${props.envName}.${props.domain}`
+          props.subDomain
         ],
         securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019
       })
+    });
+
+    new route53.ARecord(this, 'cf-route53', {
+      target: route53.RecordTarget.fromAlias(new route53targets.CloudFrontTarget(cloudFrontWebDistribution)),
+      zone: hostedZone,
+      recordName: props.subDomain
     });
 
   }

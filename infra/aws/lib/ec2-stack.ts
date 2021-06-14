@@ -10,6 +10,7 @@ import * as route53 from '@aws-cdk/aws-route53';
 import * as route53Targets from '@aws-cdk/aws-route53-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager';
 import * as ssm from '@aws-cdk/aws-ssm';
+import { ApplicationProtocol, ApplicationProtocolVersion } from '@aws-cdk/aws-elasticloadbalancingv2';
 
 interface Ec2Props extends BaseStackProps {
     baseRepo: ecr.IRepository,
@@ -76,6 +77,7 @@ export class Ec2Stack extends cdk.Stack {
       domainName: apiDomain,
       validation: acm.CertificateValidation.fromDns(hostedZone)
     });
+
     const alb = new elbv2.ApplicationLoadBalancer(this, `${prefix}alb`, {
       vpc: props.baseVpc,
       internetFacing: true
@@ -99,6 +101,7 @@ export class Ec2Stack extends cdk.Stack {
       targetType: elbv2.TargetType.INSTANCE,
       port: rasaPort,
       protocol: elbv2.ApplicationProtocol.HTTPS,
+      protocolVersion: elbv2.ApplicationProtocolVersion.HTTP2,
       targetGroupName: `${prefix}rasa-targetgroup1`,
       healthCheck: {
         enabled: true,
@@ -113,6 +116,7 @@ export class Ec2Stack extends cdk.Stack {
       port: botfrontPort,
       protocol: elbv2.ApplicationProtocol.HTTPS,
       targetGroupName: `${prefix}botfront-targetgroup1`,
+      protocolVersion: elbv2.ApplicationProtocolVersion.HTTP2,
       healthCheck: {
         enabled: true,
         protocol: elbv2.Protocol.HTTPS
@@ -139,6 +143,5 @@ export class Ec2Stack extends cdk.Stack {
 
     this.hostIp = host.instancePublicIp;
     this.domain = apiDomain;
-    // this.certificate = certificate;
   }
 }
