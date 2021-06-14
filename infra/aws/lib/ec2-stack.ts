@@ -9,13 +9,13 @@ import * as elbv2Targets from '@aws-cdk/aws-elasticloadbalancingv2-targets';
 import * as route53 from '@aws-cdk/aws-route53';
 import * as route53Targets from '@aws-cdk/aws-route53-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager';
+import * as ssm from '@aws-cdk/aws-ssm';
 
 interface Ec2Props extends BaseStackProps {
-    baseRepo: ecr.IRepository;
-    baseVpc: ec2.IVpc;
-    hostedZoneId: string;
-    subDomain: string;
-    domain: string;
+    baseRepo: ecr.IRepository,
+    baseVpc: ec2.IVpc,
+    subDomain: string,
+    domain: string
   }
 
 const rasaPort = 5005;
@@ -24,7 +24,6 @@ const botfrontPort = 8888;
 export class Ec2Stack extends cdk.Stack {
   public readonly hostIp: string;
   public readonly domain: string;
-  public readonly certificate: acm.Certificate;
 
   constructor(scope: cdk.Construct, id: string, props: Ec2Props) {
     super(scope, id, props);
@@ -71,14 +70,12 @@ export class Ec2Stack extends cdk.Stack {
         value: host.instancePublicIp
     });
 
-    // const hostedZone = route53.HostedZone.fromHostedZoneId(this, 'hostedZone', props.hostedZoneId);
     const hostedZone = route53.HostedZone.fromLookup(this, 'hostedZone', {domainName: props.domain});
-
-    // const certificate = new acm.Certificate(this, `${prefix}hosted-zone-certificate`, {
-    //   domainName: apiDomain,
-    //   validation: acm.CertificateValidation.fromDns(hostedZone)
-    // });
-
+    
+    const certificate = new acm.Certificate(this, `${prefix}hosted-zone-certificate`, {
+      domainName: apiDomain,
+      validation: acm.CertificateValidation.fromDns(hostedZone)
+    });
     const alb = new elbv2.ApplicationLoadBalancer(this, `${prefix}alb`, {
       vpc: props.baseVpc,
       internetFacing: true
@@ -86,39 +83,39 @@ export class Ec2Stack extends cdk.Stack {
 
     const rasaListener = alb.addListener(`${prefix}rasa-listener`, {
       port: rasaPort,
-      protocol: elbv2.ApplicationProtocol.HTTP,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
       open: true,
-      // certificates: [certificate]
+      certificates: [certificate]
     });
 
     const botfrontListener = alb.addListener(`${prefix}botfront-listener`, {
       port: botfrontPort,
-      protocol: elbv2.ApplicationProtocol.HTTP,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
       open: true,
-      // certificates: [certificate]
+      certificates: [certificate]
     });
 
-    const rasaTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}rasa-targetgroup`, {
+    const rasaTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}rasa-targetgroup1`, {
       targetType: elbv2.TargetType.INSTANCE,
       port: rasaPort,
-      protocol: elbv2.ApplicationProtocol.HTTP,
-      targetGroupName: `${prefix}rasa-targetgroup`,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      targetGroupName: `${prefix}rasa-targetgroup1`,
       healthCheck: {
         enabled: true,
-        protocol: elbv2.Protocol.HTTP
+        protocol: elbv2.Protocol.HTTPS
       },
       vpc: props.baseVpc,
       targets: [new elbv2Targets.InstanceTarget(host, rasaPort)]
     });
 
-    const botfrontTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}botfront-targetgroup`, {
+    const botfrontTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}botfront-targetgroup1`, {
       targetType: elbv2.TargetType.INSTANCE,
       port: botfrontPort,
-      protocol: elbv2.ApplicationProtocol.HTTP,
-      targetGroupName: `${prefix}botfront-targetgroup`,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      targetGroupName: `${prefix}botfront-targetgroup1`,
       healthCheck: {
         enabled: true,
-        protocol: elbv2.Protocol.HTTP
+        protocol: elbv2.Protocol.HTTPS
       },
       vpc: props.baseVpc,
       targets: [new elbv2Targets.InstanceTarget(host, botfrontPort)]
