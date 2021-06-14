@@ -433,7 +433,7 @@ responses:
       quick_replies:
         - title: Palaa kotisivulle
           type: web_url
-          url: 'https://fi.wikipedia.org/wiki/Revontulet'
+          url: 'https://www.figma.com/proto/JbKxMOWJN7WacISDhuywcN/MMK-ty%C3%B6p%C3%B6yt%C3%A4?page-id=114%3A383&node-id=456%3A6190&viewport=1301%2C2549%2C0.9640585780143738&scaling=scale-down'
       text: Mitä haluat tehdä seuraavaksi?
   utter_whats_up:
     - language: fi
