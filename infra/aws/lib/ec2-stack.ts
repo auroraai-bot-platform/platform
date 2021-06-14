@@ -105,7 +105,7 @@ export class Ec2Stack extends cdk.Stack {
       targetGroupName: `${prefix}rasa-targetgroup1`,
       healthCheck: {
         enabled: true,
-        protocol: elbv2.Protocol.HTTPS
+        protocol: elbv2.Protocol.HTTP
       },
       vpc: props.baseVpc,
       targets: [new elbv2Targets.InstanceTarget(host, rasaPort)]
@@ -119,7 +119,7 @@ export class Ec2Stack extends cdk.Stack {
       protocolVersion: elbv2.ApplicationProtocolVersion.HTTP2,
       healthCheck: {
         enabled: true,
-        protocol: elbv2.Protocol.HTTPS
+        protocol: elbv2.Protocol.HTTP
       },
       vpc: props.baseVpc,
       targets: [new elbv2Targets.InstanceTarget(host, botfrontPort)]
