@@ -9,8 +9,6 @@ import * as elbv2Targets from '@aws-cdk/aws-elasticloadbalancingv2-targets';
 import * as route53 from '@aws-cdk/aws-route53';
 import * as route53Targets from '@aws-cdk/aws-route53-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager';
-import * as ssm from '@aws-cdk/aws-ssm';
-import { ApplicationProtocol, ApplicationProtocolVersion } from '@aws-cdk/aws-elasticloadbalancingv2';
 
 interface Ec2Props extends BaseStackProps {
     baseRepo: ecr.IRepository,
