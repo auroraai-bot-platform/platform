@@ -48,7 +48,7 @@ export class Ec2Stack extends cdk.Stack {
 
     const userdata = ec2.UserData.custom(script);
 
-    const host = new ec2.Instance(this, 'botfront-full', {
+    const host = new ec2.Instance(this, 'botfront-full1', {
         instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.SMALL),
         machineImage: ec2.MachineImage.latestAmazonLinux({
             generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2,
@@ -76,9 +76,19 @@ export class Ec2Stack extends cdk.Stack {
       validation: acm.CertificateValidation.fromDns(hostedZone)
     });
 
+    const albSG = new ec2.SecurityGroup(this, `${prefix}alb-sg`, {
+      vpc: props.baseVpc,
+      allowAllOutbound: true,
+      securityGroupName: `${prefix}alb-sg`
+    });
+
+    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(rasaPort));
+    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(botfrontPort));
+
     const alb = new elbv2.ApplicationLoadBalancer(this, `${prefix}alb`, {
       vpc: props.baseVpc,
-      internetFacing: true
+      internetFacing: true,
+      securityGroup: albSG
     });
 
     const rasaListener = alb.addListener(`${prefix}rasa-listener`, {
@@ -95,30 +105,20 @@ export class Ec2Stack extends cdk.Stack {
       certificates: [certificate]
     });
 
-    const rasaTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}rasa-targetgroup1`, {
+    const rasaTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}rasa-targetgroup`, {
       targetType: elbv2.TargetType.INSTANCE,
       port: rasaPort,
-      protocol: elbv2.ApplicationProtocol.HTTPS,
-      protocolVersion: elbv2.ApplicationProtocolVersion.HTTP2,
-      targetGroupName: `${prefix}rasa-targetgroup1`,
-      healthCheck: {
-        enabled: true,
-        protocol: elbv2.Protocol.HTTP
-      },
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      protocolVersion: elbv2.ApplicationProtocolVersion.HTTP1,
       vpc: props.baseVpc,
       targets: [new elbv2Targets.InstanceTarget(host, rasaPort)]
     });
 
-    const botfrontTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}botfront-targetgroup1`, {
+    const botfrontTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}botfront-targetgroup`, {
       targetType: elbv2.TargetType.INSTANCE,
       port: botfrontPort,
-      protocol: elbv2.ApplicationProtocol.HTTPS,
-      targetGroupName: `${prefix}botfront-targetgroup1`,
-      protocolVersion: elbv2.ApplicationProtocolVersion.HTTP2,
-      healthCheck: {
-        enabled: true,
-        protocol: elbv2.Protocol.HTTP
-      },
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      protocolVersion: elbv2.ApplicationProtocolVersion.HTTP1,
       vpc: props.baseVpc,
       targets: [new elbv2Targets.InstanceTarget(host, botfrontPort)]
     });
