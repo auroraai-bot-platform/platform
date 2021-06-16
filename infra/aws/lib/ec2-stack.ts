@@ -30,7 +30,13 @@ export class Ec2Stack extends cdk.Stack {
 
     const apiDomain = `api.${props.subDomain}`;
 
-    const sg = ec2.SecurityGroup.fromSecurityGroupId(this, 'basesg', cdk.Fn.importValue('base-security-group-id'));
+    const hostSG = ec2.SecurityGroup.fromSecurityGroupId(this, 'basesg', cdk.Fn.importValue('base-security-group-id'));
+
+    const albSG = new ec2.SecurityGroup(this, `${prefix}alb-sg`, {
+      vpc: props.baseVpc,
+      allowAllOutbound: true,
+      securityGroupName: `${prefix}alb-sg`
+    });
 
     const script = `
     #!/bin/bash
@@ -61,9 +67,9 @@ export class Ec2Stack extends cdk.Stack {
         instanceName: `${prefix}botfront-full`
     });
 
-    host.addSecurityGroup(sg)
-    host.connections.allowFromAnyIpv4(ec2.Port.tcp(botfrontPort));
-    host.connections.allowFromAnyIpv4(ec2.Port.tcp(rasaPort));
+    host.addSecurityGroup(hostSG);
+    host.connections.allowFrom(albSG, ec2.Port.tcp(rasaPort));
+    host.connections.allowFrom(albSG, ec2.Port.tcp(botfrontPort));
 
     new CfnOutput(this, 'ip-address', {
         value: host.instancePublicIp
@@ -74,12 +80,6 @@ export class Ec2Stack extends cdk.Stack {
     const certificate = new acm.Certificate(this, `${prefix}hosted-zone-certificate`, {
       domainName: apiDomain,
       validation: acm.CertificateValidation.fromDns(hostedZone)
-    });
-
-    const albSG = new ec2.SecurityGroup(this, `${prefix}alb-sg`, {
-      vpc: props.baseVpc,
-      allowAllOutbound: true,
-      securityGroupName: `${prefix}alb-sg`
     });
 
     albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(rasaPort));
