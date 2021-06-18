@@ -27,7 +27,8 @@ export class WebChatStack extends cdk.Stack {
 
     new s3deploy.BucketDeployment(this, `${prefix}file-bucket-deployment`, {
       sources: [s3deploy.Source.asset('../../files')],
-      destinationBucket: fileBucket
+      destinationBucket: fileBucket,
+      destinationKeyPrefix: 'files'
     });
 
     const hostedZone = route53.HostedZone.fromLookup(this, 'hostedZone', {domainName: props.domain});
