@@ -1,12 +1,8 @@
 import requests
-from dotenv import load_dotenv
 import os
 
-load_dotenv()
-
-URL = os.getenv('AURORA_API_ENDPOINT')
-API_KEY = os.getenv('AURORA_API_KEY')
-
+URL = os.environ['AURORA_API_ENDPOINT']
+API_KEY = os.environ['AURORA_API_KEY']
 
 class ServiceRecommenderAPI():
     """
