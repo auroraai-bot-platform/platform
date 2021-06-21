@@ -2,6 +2,14 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Deployment
+* run `npm run build` to build the production app
+* go to build folder
+* copy all files to `s3://demo-webchat-frontend-bucket/` to make them accessible to the demo environment
+* go to cloudfront
+* select Cloudfront Distribution `E28X5JNQBID53C`
+* create a new Invalidations with Object Paths `*`
+
 ## Available Scripts
 
 In the project directory, you can run:
