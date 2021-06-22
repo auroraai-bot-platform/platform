@@ -1,0 +1,33 @@
+stories:
+  - story: Bussilippu
+    steps:
+      - intent: bus_ticket
+        user: tarviin bussilipun
+        entities: []
+      - action: utter_bus_ticket
+      - intent: response.location
+        user: turku
+        entities:
+          - city: Turku
+      - action: utter_bus_ticket_city
+    metadata:
+      group: kielimallitestit
+rules:
+  - rule: Kaveri
+    condition: []
+    steps:
+      - intent: friend
+        user: kaveri
+        entities: []
+      - action: utter_friend
+    metadata:
+      group: kielimallitestit
+  - rule: Ruoka
+    condition: []
+    steps:
+      - intent: food
+        user: haluan pizzaa
+        entities: []
+      - action: utter_food
+    metadata:
+      group: kielimallitestit
