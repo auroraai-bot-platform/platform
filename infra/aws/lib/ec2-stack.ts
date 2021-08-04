@@ -19,6 +19,7 @@ interface Ec2Props extends BaseStackProps {
 
 const rasaPort = 5005;
 const botfrontPort = 8888;
+const rasaActionsPort = 5055;
 
 export class Ec2Stack extends cdk.Stack {
   public readonly hostIp: string;
@@ -70,6 +71,8 @@ export class Ec2Stack extends cdk.Stack {
     host.addSecurityGroup(hostSG);
     host.connections.allowFrom(albSG, ec2.Port.tcp(rasaPort));
     host.connections.allowFrom(albSG, ec2.Port.tcp(botfrontPort));
+    host.connections.allowFrom(albSG, ec2.Port.tcp(rasaActionsPort));
+
 
     new CfnOutput(this, 'ip-address', {
         value: host.instancePublicIp
@@ -84,6 +87,7 @@ export class Ec2Stack extends cdk.Stack {
 
     albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(rasaPort));
     albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(botfrontPort));
+    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(rasaActionsPort));
 
     const alb = new elbv2.ApplicationLoadBalancer(this, `${prefix}alb`, {
       vpc: props.baseVpc,
@@ -100,6 +104,13 @@ export class Ec2Stack extends cdk.Stack {
 
     const botfrontListener = alb.addListener(`${prefix}botfront-listener`, {
       port: botfrontPort,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      open: true,
+      certificates: [certificate]
+    });
+
+    const rasaActionsListener = alb.addListener(`${prefix}rasa-actions-listener`, {
+      port: rasaActionsPort,
       protocol: elbv2.ApplicationProtocol.HTTPS,
       open: true,
       certificates: [certificate]
@@ -123,12 +134,25 @@ export class Ec2Stack extends cdk.Stack {
       targets: [new elbv2Targets.InstanceTarget(host, botfrontPort)]
     });
 
+    const rasaActionsTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}rasa-actions-targetgroup`, {
+      targetType: elbv2.TargetType.INSTANCE,
+      port: rasaActionsPort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      protocolVersion: elbv2.ApplicationProtocolVersion.HTTP1,
+      vpc: props.baseVpc,
+      targets: [new elbv2Targets.InstanceTarget(host, rasaActionsPort)]
+    });
+
     rasaListener.addTargetGroups(`${prefix}rasa-listener-assignment`, {
       targetGroups: [rasaTargetGroup]
     });
 
     botfrontListener.addTargetGroups(`${prefix}botfront-listener-assignment`, {
       targetGroups: [botfrontTargetGroup]
+    });
+
+    rasaActionsListener.addTargetGroups(`${prefix}rasa-actions-listener-assignment`, {
+      targetGroups: [rasaActionsTargetGroup]
     });
 
 

@@ -2,6 +2,7 @@ import * as cdk from '@aws-cdk/core';
 import * as cloudfront from '@aws-cdk/aws-cloudfront';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as s3 from '@aws-cdk/aws-s3';
+import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 import * as route53 from '@aws-cdk/aws-route53';
 import * as route53targets from '@aws-cdk/aws-route53-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager'
@@ -22,6 +23,13 @@ export class WebChatStack extends cdk.Stack {
     super(scope, id, props);
     const prefix = createPrefix(props.envName, this.constructor.name);
     const bucket = new s3.Bucket(this, `${prefix}frontend-bucket`, {bucketName: `${prefix}frontend-bucket`, publicReadAccess: false});
+    const fileBucket = new s3.Bucket(this, `${prefix}file-bucket`, {bucketName: `${prefix}file-bucket`, publicReadAccess: false});
+
+    new s3deploy.BucketDeployment(this, `${prefix}file-bucket-deployment`, {
+      sources: [s3deploy.Source.asset('../../files')],
+      destinationBucket: fileBucket,
+      destinationKeyPrefix: 'files'
+    });
 
     const hostedZone = route53.HostedZone.fromLookup(this, 'hostedZone', {domainName: props.domain});
 
@@ -34,6 +42,7 @@ export class WebChatStack extends cdk.Stack {
     const cloudfrontAI = new cloudfront.OriginAccessIdentity(this, `${prefix}distribution-accessidentity`, {
     });
     bucket.grantRead(cloudfrontAI);
+    fileBucket.grantRead(cloudfrontAI);
 
     const edgeLambda = new cloudfront.experimental.EdgeFunction(this, `${prefix}basicauth-lambda`, {
       runtime: lambda.Runtime.NODEJS_12_X,
@@ -44,6 +53,13 @@ export class WebChatStack extends cdk.Stack {
 
     const cloudFrontWebDistribution = new cloudfront.CloudFrontWebDistribution(this, `${prefix}distribution`, {
       originConfigs: [
+        {
+          s3OriginSource: {
+            s3BucketSource: fileBucket,
+            originAccessIdentity: cloudfrontAI
+          },
+          behaviors: [{pathPattern: '/files/*'}]
+        },
         {
           s3OriginSource: {
             s3BucketSource: bucket,
