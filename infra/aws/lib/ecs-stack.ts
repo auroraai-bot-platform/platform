@@ -4,13 +4,18 @@ import * as ecsp from '@aws-cdk/aws-ecs-patterns'
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ssm from '@aws-cdk/aws-ssm';
+import { BaseStackProps } from '../types';
+import * as route53 from '@aws-cdk/aws-route53';
+import * as route53Targets from '@aws-cdk/aws-route53-targets';
 import * as secrets from '@aws-cdk/aws-secretsmanager';
 import { ApplicationLoadBalancer } from '@aws-cdk/aws-elasticloadbalancingv2';
 import { RetentionDays } from '@aws-cdk/aws-logs';
 
-interface EcsProps extends cdk.StackProps {
+interface EcsProps extends BaseStackProps {
   baseRepo: ecr.IRepository,
-  baseVpc: ec2.IVpc
+  baseVpc: ec2.IVpc,
+  ecsSubDomain: string,
+  domain: string
 }
 
 export class EcsStack extends cdk.Stack {
@@ -38,6 +43,9 @@ export class EcsStack extends cdk.Stack {
     });
 
     const sg = ec2.SecurityGroup.fromSecurityGroupId(this, 'basesg', cdk.Fn.importValue('base-security-group-id'));
+
+    const hostedZone = route53.HostedZone.fromLookup(this, 'hostedZone', {domainName: props.domain});
+
 
     const basetd = new ecs.TaskDefinition(this, 'basetd', {
       cpu: '2048',
@@ -135,7 +143,9 @@ export class EcsStack extends cdk.Stack {
       publicLoadBalancer: true,
       listenerPort: 80,
       minHealthyPercent: 0,
-      maxHealthyPercent: 100
+      maxHealthyPercent: 100,
+      domainZone: hostedZone,
+      domainName: props.ecsSubDomain
     });
 
     dbSecret.grantRead(botfrontService.service.taskDefinition.taskRole);
