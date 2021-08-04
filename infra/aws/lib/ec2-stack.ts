@@ -55,17 +55,17 @@ export class Ec2Stack extends cdk.Stack {
 
     const userdata = ec2.UserData.custom(script);
 
-    const host = new ec2.Instance(this, 'botfront-full1', {
+    const host = new ec2.Instance(this, 'botfront-full', {
         instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.SMALL),
-        machineImage: ec2.MachineImage.latestAmazonLinux({
-            generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2,
-            cpuType: ec2.AmazonLinuxCpuType.X86_64
+        machineImage: ec2.MachineImage.genericLinux({
+          'eu-north-1': 'ami-0d34086b7da86a063'
         }),
         vpc: props.baseVpc,
         vpcSubnets: {subnetType: ec2.SubnetType.PUBLIC},
         keyName: 'aurora-ai',
         userData: userdata,
-        instanceName: `${prefix}botfront-full`
+        instanceName: `${prefix}botfront-full`,
+        userDataCausesReplacement: false
     });
 
     host.addSecurityGroup(hostSG);

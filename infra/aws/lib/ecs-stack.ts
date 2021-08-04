@@ -6,9 +6,8 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ssm from '@aws-cdk/aws-ssm';
 import { BaseStackProps } from '../types';
 import * as route53 from '@aws-cdk/aws-route53';
-import * as route53Targets from '@aws-cdk/aws-route53-targets';
 import * as secrets from '@aws-cdk/aws-secretsmanager';
-import { ApplicationLoadBalancer } from '@aws-cdk/aws-elasticloadbalancingv2';
+import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import { RetentionDays } from '@aws-cdk/aws-logs';
 
 interface EcsProps extends BaseStackProps {
@@ -29,17 +28,26 @@ export class EcsStack extends cdk.Stack {
       }
     });
 
+    const userSecret = new secrets.Secret(this, 'user-db-secret', {
+      description: 'Password to database for app',
+      generateSecretString: {
+        excludeCharacters: ':/?#[]@ '
+      }
+    });
+
     const cluster = new ecs.Cluster(this, "baseCluster", {
       vpc: props.baseVpc
     });
 
     const mongoSecret = new ssm.StringParameter(this, 'mongo-secret', {
-      stringValue: `mongodb://root:${dbSecret.secretValue.toString()}@127.0.0.1:27017/bf?authSource=admin`
+      stringValue: `mongodb://botfront:${userSecret.secretValue.toString()}@127.0.0.1:27017/bf?authSource=admin`
     });
 
-    const loadBalancer = new ApplicationLoadBalancer(this, 'botfrontlb', {
+    const repo = ecr.Repository.fromRepositoryName(this, 'ecrrepo', 'aurora-bot-images');
+
+    const loadBalancer = new elbv2.ApplicationLoadBalancer(this, 'botfrontlb', {
       vpc: props.baseVpc,
-      internetFacing: true
+      internetFacing: true,
     });
 
     const sg = ec2.SecurityGroup.fromSecurityGroupId(this, 'basesg', cdk.Fn.importValue('base-security-group-id'));
@@ -62,31 +70,35 @@ export class EcsStack extends cdk.Stack {
       environment: {
         PORT: '8888',
         MONGO_URL: mongoSecret.stringValue,
-        ROOT_URL: `http://${loadBalancer.loadBalancerDnsName}`
+        ROOT_URL: `https://${props.ecsSubDomain}`
       },
       logging: ecs.LogDriver.awsLogs({
         streamPrefix: 'botfront',
         logRetention: RetentionDays.ONE_DAY
       }),
+      essential: true,
     });
 
     basetd.addContainer('mongo', {
-      image: ecs.ContainerImage.fromRegistry('mongo:latest'),
+      image: ecs.ContainerImage.fromRegistry('mongo:4.4'),
       containerName: 'mongo',
       portMappings: [{
         containerPort: 27017
       }],
       environment: {
         MONGO_INITDB_ROOT_USERNAME: 'root',
-        MONGO_INITDB_DATABASE: 'bf'
+        MONGO_INITDB_DATABASE: 'bf',
+        MONGO_INITDB_USER: 'botfront'
       },
       secrets: {
-        MONGO_INITDB_ROOT_PASSWORD: ecs.Secret.fromSecretsManager(dbSecret)
+        MONGO_INITDB_ROOT_PASSWORD: ecs.Secret.fromSecretsManager(dbSecret),
+        MONGO_INITDB_PWD: ecs.Secret.fromSecretsManager(userSecret)
       },
       logging: ecs.LogDriver.awsLogs({
         streamPrefix: 'mongo',
         logRetention: RetentionDays.ONE_DAY
       }),
+      essential: true,
       memoryReservationMiB: 1024
     });
 
@@ -98,8 +110,9 @@ export class EcsStack extends cdk.Stack {
       }],
       environment: {
         BF_PROJECT_ID: 'bf',
-        BF_URL: `http://127.0.0.1:8080/graphql`,
+        BF_URL: `http://botfront-api:8080/graphql`,
       },
+      essential: true,
       logging: ecs.LogDriver.awsLogs({
         streamPrefix: 'rasa',
         logRetention: RetentionDays.ONE_DAY
@@ -141,7 +154,7 @@ export class EcsStack extends cdk.Stack {
       taskDefinition: basetd,
       openListener: true,
       publicLoadBalancer: true,
-      listenerPort: 80,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
       minHealthyPercent: 0,
       maxHealthyPercent: 100,
       domainZone: hostedZone,
@@ -152,7 +165,7 @@ export class EcsStack extends cdk.Stack {
     //botfrontService.loadBalancer.addSecurityGroup(sg);
 
     botfrontService.service.connections.allowFromAnyIpv4(
-      ec2.Port.tcp(8888), 'Inbound traffic'
+      ec2.Port.tcp(443), 'Inbound traffic'
     );
 
     dbSecret.grantRead(botfrontService.taskDefinition.taskRole);
