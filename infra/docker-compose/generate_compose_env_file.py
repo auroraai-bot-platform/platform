@@ -4,7 +4,7 @@ BASIC_CONFIGS = """# Botfront env variables
 # BF_PROJECT_ID needs to be same as your current Botfront project id
 
 IMAGES_CURRENT_BOTFRONT=botfront/botfront:v1.0.5
-IMAGES_CURRENT_RASA=botfront/rasa-for-botfront:v2.3.3-bf.3
+IMAGES_CURRENT_RASA=botfront/rasa-for-botfront:v2.3.3-bf.5
 IMAGES_CURRENT_DUCKLING=botfront/duckling:latest
 IMAGES_CURRENT_MONGO=mongo:latest
 IMAGES_CURRENT_ACTIONS=rasa/rasa-sdk:2.1.2
