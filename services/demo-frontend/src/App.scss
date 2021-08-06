@@ -1,0 +1,138 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: turquoise;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// colors
+
+$accent: #006EFD;
+$accent-light: #EBF3FF;
+$accent-dark: #00439B;
+
+$gray-80: #2E3238;
+$gray-50: #8F97A3;
+$gray-25: #B9BEC6;
+$gray-15: #D5D8DD;
+$gray-6: #EEEFF1;
+$gray-2: #F9FAFA;
+
+$signal-green: #00997F;
+$signal-yellow: #FFF066;
+$signal-red: #F82470;
+
+$black: #000000;
+$white: #ffffff;
+
+// fonts
+
+
+$font-family: 'IBM pex sans';
+
+$font-size-normal: 16pt;
+$font-size-small: 14pt;
+
+$font-weight-regular: 400;
+$font-weight-mediumbold: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$line-height: 20pt;
+
+
+/* definition */
+@font-face {
+  font-family: IBMPlexSans;
+  src: url('fonts/IBMPlexSans-Regular.ttf') format('truetype');
+  font-weight: $font-weight-regular;
+  font-style: normal;
+}
+@font-face {
+  font-family: IBMPlexSans;
+  src: url('fonts/IBMPlexSans-Medium.ttf') format('truetype');
+  font-weight: $font-weight-mediumbold;
+  font-style: normal;
+}
+@font-face {
+  font-family: IBMPlexSans;
+  src: url('fonts/IBMPlexSans-SemiBold.ttf') format('truetype');
+  font-weight: $font-weight-semibold;
+  font-style: normal;
+}
+@font-face {
+  font-family: IBMPlexSans;
+  src: url('fonts/IBMPlexSans-Bold.ttf') format('truetype');
+  font-weight: $font-weight-bold;
+  font-style: normal;
+}
+
+$font-family: IBMPlexSans;
+
+
+// app specific
+
+// string interpolation work around to avoid division via slash
+$speechbubble-font: #{$font-weight-regular} #{$font-size-normal}/#{$line-height} #{$font-family};
+$component-font: #{$font-weight-semibold} #{$font-size-normal}/#{$line-height} #{$font-family};
+$chatheading-font: #{$font-weight-bold} #{$font-size-small}/#{$line-height} #{$font-family};
+$chatlabel-font: #{$font-weight-mediumbold} #{$font-size-small}/#{$line-height} #{$font-family};
+
+$chat-widget-shadow-color: rgba(0, 0, 0, 0.1);
+
+.rw-conversation-container  {
+  box-shadow: 0px 0.5px 4px $chat-widget-shadow-color, 0px 8px 16px ;
+}
+
+.rw-conversation-container .rw-header {
+  background-color: $white;
+  .rw-title {
+    color: $accent;
+    font: $chatheading-font;
+  }
+}
+
+.rw-conversation-container .rw-response {
+  background-color: $gray-50;
+  font: $speechbubble-font;
+}
+
+.rw-conversation-container .rw-client {
+  background-color: $accent;
+  font: $speechbubble-font;
+}
+
+.rw-conversation-container .rw-sender {
+  font: $speechbubble-font;
+}

@@ -1,10 +1,6 @@
 name: figmademo
-namespace: bf-figma
+namespace: chitchat-aN7AYGHax
 defaultLanguage: fi
 nluThreshold: 0.75
 timezoneOffset: 0
 allowContextualQuestions: false
-instance:
-  name: Default Instance
-  host: 'http://rasa:5005'
-  projectId: znYuchRELryLqSzrX
