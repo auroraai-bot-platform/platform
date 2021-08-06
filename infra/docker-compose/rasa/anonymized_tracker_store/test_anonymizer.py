@@ -1,6 +1,7 @@
 import unittest
 from text_anonymizer import TextAnonymizer
 
+
 class TestAnonymizer(unittest.TestCase):
 
     def setUp(self):
@@ -12,8 +13,7 @@ class TestAnonymizer(unittest.TestCase):
 
     def test_phone_numbers(self):
         # These should be replaced by <phone> tag
-        positives = ['1234567',
-                     '05012345',
+        positives = ['05012345',
                      '050123456',
                      '0501234567',
                      '050 1234567',
@@ -53,6 +53,7 @@ class TestAnonymizer(unittest.TestCase):
                      '2014-01-01 12:34']
         for text in negatives:
             self.check(text, text)
+
 
 if __name__ == '__main__':
     unittest.main()
