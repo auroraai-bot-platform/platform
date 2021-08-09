@@ -15,7 +15,7 @@ class TextAnonymizer():
     def __init__(self) -> None:
         # Loose pattern potential phone numbers. Later we require that the
         # string contains at least 6 digits.
-        self.phone = re.compile('\(?\+?\d[\s\d()-]{6,}')
+        self.phone = re.compile('\(?\+?\d[\s\d()-]{5,}\d')
 
         self.ip = re.compile(
             '(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)', re.IGNORECASE)

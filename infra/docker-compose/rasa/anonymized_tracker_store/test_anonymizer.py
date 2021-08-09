@@ -32,8 +32,8 @@ class TestAnonymizer(unittest.TestCase):
             self.check(number, '<phone>')
 
     def test_multiple_phone_numbers(self):
-        self.check('Numeroni on 050-1234567, 040-654 3210, +358508734987, +358 50 8734 987.',
-                   'Numeroni on <phone>, <phone>, <phone>, <phone>.')
+        self.check('Numeroni on 050-1234567, 040-654 3210, +358508734987 tai +358 50 8734 987.',
+                   'Numeroni on <phone>, <phone>, <phone> tai <phone>.')
 
     def test_hetus(self):
         # These should be replaced by <phone> tag
