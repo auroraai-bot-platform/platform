@@ -82,4 +82,4 @@ volumes:
   botfront-db:
   models:
     external:
-      name: supported-rasa-pretrained-models
+      name: rasa-model-files
