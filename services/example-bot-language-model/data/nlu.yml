@@ -130,6 +130,32 @@ nlu:
       apua
     metadata:
       canonical: true
+- intent: hobby
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      etsin harrastusta
+    metadata:
+      canonical: true
+  - text: |
+      haluan uuden harrastuksen
+  - text: |
+      haluisin löytää harrastuksen
+  - text: |
+      haluun toimintaa
+  - text: |
+      mitään tekemistä
+- intent: response.hobby
+  metadata:
+    language: fi
+  examples: |
+    - haluisin aloittaa [soittamisen](hobby)
+    - haluisin oppia [soittaan kitaraa](hobby)
+    - [jalkapallosta](hobby)
+    - [lautapelit](hobby) on ihan jees
+    - [sähly](hobby) olis kivaa
+    - [urheilu](hobby) kiinnostaa
 - intent: response.location
   metadata:
     language: fi
@@ -231,6 +257,7 @@ nlu:
     - Mikkelissä
     - Mikkelistä
     - mikkeli
+    - mikkeliin
 - synonym: Oulu
   examples: |
     - ssa

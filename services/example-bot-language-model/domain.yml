@@ -10,10 +10,12 @@ actions:
   - utter_ask_feedback
   - utter_ask_friends
   - utter_ask_health
+  - utter_ask_hobby
   - utter_ask_show_services
   - utter_bus_ticket
   - utter_bus_ticket_city
   - utter_default
+  - utter_echo_hobby
   - utter_fallback
   - utter_food
   - utter_friend
@@ -34,6 +36,64 @@ actions:
 entities:
   - city
 forms:
+  entity_form:
+    collect_in_botfront: false
+    description: ''
+    graph_elements:
+      edges:
+        - condition: null
+          id: e1-hobby
+          source: '1'
+          target: hobby
+          type: condition
+        - condition: null
+          id: ehobby-city
+          source: hobby
+          target: city
+          type: condition
+      nodes:
+        - id: '1'
+          position:
+            x: 200
+            'y': 200
+          type: start
+        - id: hobby
+          position:
+            x: 120
+            'y': 340
+          slotName: hobby
+          type: slot
+        - id: city
+          position:
+            x: 120
+            'y': 490
+          slotName: city
+          type: slot
+    groupName: form_stories
+    name: entity_form
+    slots:
+      - filling:
+          - entity:
+              - hobby
+            group: null
+            intent:
+              - response.hobby
+            not_intent: []
+            role: null
+            type: from_entity
+          - intent: []
+            not_intent: []
+            type: from_text
+        name: hobby
+        utter_on_new_valid_slot: false
+      - filling:
+          - intent:
+              - response.location
+            not_intent: null
+            type: from_text
+        name: city
+        utter_on_new_valid_slot: false
+    updatedAt: 1629099006518
   howareyou_form:
     collect_in_botfront: null
     description: null
@@ -137,19 +197,19 @@ forms:
             - '0'
             - '10'
           operator: is_in
-    updatedAt: 1623934474843
+    updatedAt: 1628832411434
 intents:
   - bus_ticket
   - chitchat.ask_whoami
   - food
   - friend
+  - hobby
   - response.location
   - response.no
   - response.yes
 responses:
   utter_ask_city:
     - language: fi
-      metadata: null
       text: Mistäpäin olet?
   utter_ask_feedback:
     - language: fi
@@ -169,6 +229,10 @@ responses:
   utter_ask_health:
     - language: fi
       text: Onko sinulla terveyteen liittyviä huolia?
+  utter_ask_hobby:
+    - language: fi
+      metadata: null
+      text: Minkälaisesta tekemisestä olet kiinnostunut?
   utter_ask_show_services:
     - language: fi
       text: Haluaisitko että etsin alueeltasi tilanteeseesi liittyviä palveluita?
@@ -181,6 +245,9 @@ responses:
   utter_default:
     - language: fi
       text: Nyt en pysynyt kärryillä...
+  utter_echo_hobby:
+    - language: fi
+      text: 'Olet siis kiinnostunut {hobby} ja kotipaikkasi on {city}'
   utter_fallback:
     - language: fi
       text: Hei!
@@ -274,4 +341,6 @@ slots:
   friends:
     type: unfeaturized
   health:
+    type: unfeaturized
+  hobby:
     type: unfeaturized

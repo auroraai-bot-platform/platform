@@ -1,7 +1,7 @@
 stories:
   - story: Feedback
     steps:
-      - checkpoint: link-to-Feedback/ee8f6d37-e613-4ffb-b3d6-7c7dda50702e
+      - checkpoint: link-to-Feedback/e08f6198-11a0-4947-a76c-fa7d6b171572
       - action: utter_ask_feedback
       - checkpoint: Feedback__branches
     metadata:
@@ -12,7 +12,7 @@ stories:
       - intent: response.yes
         entities: []
       - action: utter_positive_feedback
-      - checkpoint: link-to-ReDo/eb58add2-7a8b-4d37-8186-096a5b060a91
+      - checkpoint: link-to-ReDo/88588163-b2ab-41da-b8c9-c1aadf03a9a2
     metadata:
       group: test
   - story: Feedback__New Branch 2
@@ -21,7 +21,7 @@ stories:
       - intent: response.no
         entities: []
       - action: utter_negative_feedback
-      - checkpoint: link-to-ReDo/eb58add2-7a8b-4d37-8186-096a5b060a91
+      - checkpoint: link-to-ReDo/88588163-b2ab-41da-b8c9-c1aadf03a9a2
     metadata:
       group: test
   - story: HappyPath
@@ -55,7 +55,7 @@ stories:
       - intent: response.no
         entities: []
       - action: utter_wont_see_services
-      - checkpoint: link-to-Feedback/ee8f6d37-e613-4ffb-b3d6-7c7dda50702e
+      - checkpoint: link-to-Feedback/e08f6198-11a0-4947-a76c-fa7d6b171572
     metadata:
       group: test
   - story: HappyPath__will discuss__wants services
@@ -64,7 +64,7 @@ stories:
       - intent: response.yes
         entities: []
       - action: action_show_services
-      - checkpoint: link-to-Feedback/ee8f6d37-e613-4ffb-b3d6-7c7dda50702e
+      - checkpoint: link-to-Feedback/e08f6198-11a0-4947-a76c-fa7d6b171572
     metadata:
       group: test
   - story: HappyPath__wont't discuss
@@ -73,12 +73,23 @@ stories:
       - intent: response.no
         entities: []
       - action: utter_wont_discuss
-      - checkpoint: link-to-Feedback/ee8f6d37-e613-4ffb-b3d6-7c7dda50702e
+      - checkpoint: link-to-Feedback/e08f6198-11a0-4947-a76c-fa7d6b171572
+    metadata:
+      group: test
+  - story: Hobby_form_story
+    steps:
+      - intent: hobby
+        user: etsin harrastusta
+        entities: []
+      - action: entity_form
+      - active_loop: entity_form
+      - active_loop: null
+      - action: utter_echo_hobby
     metadata:
       group: test
   - story: ReDo
     steps:
-      - checkpoint: link-to-ReDo/eb58add2-7a8b-4d37-8186-096a5b060a91
+      - checkpoint: link-to-ReDo/88588163-b2ab-41da-b8c9-c1aadf03a9a2
       - action: utter_try_again
       - checkpoint: ReDo__branches
     metadata:
