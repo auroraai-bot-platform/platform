@@ -112,7 +112,7 @@ export class EcsStack extends cdk.Stack {
       environment: {
         BF_PROJECT_ID: 'hH4Z8S7GXiHsp3PTP',
         PORT: '5005',
-        BF_URL: `http://botfront.${props.domain}`
+        BF_URL: `http://botfront.${props.domain}/graphql`
       },
       logging: ecs.LogDriver.awsLogs({
         streamPrefix: 'rasa',
