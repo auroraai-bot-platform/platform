@@ -9,6 +9,7 @@ import * as elbv2Targets from '@aws-cdk/aws-elasticloadbalancingv2-targets';
 import * as route53 from '@aws-cdk/aws-route53';
 import * as route53Targets from '@aws-cdk/aws-route53-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager';
+import * as iam from '@aws-cdk/aws-iam';
 
 interface Ec2Props extends BaseStackProps {
     baseRepo: ecr.IRepository,
@@ -51,21 +52,38 @@ export class Ec2Stack extends cdk.Stack {
     usermod -a -G docker ec2-user
     su ec2-user bash -c 'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash'
     su ec2-user bash -c 'source ~/.bashrc && nvm install lts/erbium'
+    usermod -a -G docker ssm-user
+    su ssm-user bash -c 'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash'
+    su ssm-user bash -c 'source ~/.bashrc && nvm install lts/erbium'
     `
 
     const userdata = ec2.UserData.custom(script);
 
-    const host = new ec2.Instance(this, 'botfront-full1', {
+    const role = new iam.Role(this, 'MyRole', {
+      assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com')
+    });
+
+    role.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'));
+
+    const host = new ec2.Instance(this, 'botfront-full', {
         instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.SMALL),
         machineImage: ec2.MachineImage.latestAmazonLinux({
             generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2,
-            cpuType: ec2.AmazonLinuxCpuType.X86_64
+            cpuType: ec2.AmazonLinuxCpuType.X86_64,
+            storage: ec2.AmazonLinuxStorage.GENERAL_PURPOSE
         }),
+        blockDevices: [
+          {
+            deviceName: '/dev/xvda',
+            volume: ec2.BlockDeviceVolume.ebs(20),
+          }
+        ],
         vpc: props.baseVpc,
         vpcSubnets: {subnetType: ec2.SubnetType.PUBLIC},
         keyName: 'aurora-ai',
         userData: userdata,
-        instanceName: `${prefix}botfront-full`
+        instanceName: `${prefix}botfront-full`,
+        role
     });
 
     host.addSecurityGroup(hostSG);
