@@ -1,7 +1,5 @@
-import React from 'react';
 import Widget from 'rasa-webchat';
 
-import logo from './logo.svg';
 import './App.scss';
 
 const onSocketEvent={
@@ -16,15 +14,14 @@ function App() {
       <header className="App-header">
         <Widget
           initPayload={"/get_started"}
-          socketUrl={"http://localhost:5005"}
+          socketUrl={"https://api.demo.aaibot.link:5005"}
           socketPath={"/socket.io/"}
           onSocketEvent={onSocketEvent}
           customData={{"language": "fi"}} // arbitrary custom data. Stay minimal as this will be added to the socket
-          title="<strong>hh11</strong>"
+          title="Hytebotti"
           subtitle={null}
-          inputTextFieldHint="inputTextFieldHint"
+          inputTextFieldHint="Kirjoita jotain..."
         />
-        <img src={logo} className="App-logo" alt="logo" />
       </header>
     </div>
   );
