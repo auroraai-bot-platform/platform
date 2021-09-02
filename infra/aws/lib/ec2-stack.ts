@@ -1,5 +1,4 @@
 import * as cdk from '@aws-cdk/core';
-import * as ecr from '@aws-cdk/aws-ecr'
 import * as ec2 from '@aws-cdk/aws-ec2';
 import { CfnOutput } from '@aws-cdk/core';
 import { BaseStackProps } from '../types';
@@ -10,17 +9,19 @@ import * as route53 from '@aws-cdk/aws-route53';
 import * as route53Targets from '@aws-cdk/aws-route53-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager';
 import * as iam from '@aws-cdk/aws-iam';
+import { IApplicationLoadBalancer } from '@aws-cdk/aws-elasticloadbalancingv2';
 
 interface Ec2Props extends BaseStackProps {
-    baseRepo: ecr.IRepository,
+    baseAlb: IApplicationLoadBalancer,
     baseVpc: ec2.IVpc,
     subDomain: string,
-    domain: string
+    domain: string,
+    ports: {
+      botfront: number;
+      rasa: number;
+      actions: number;
+    }
   }
-
-const rasaPort = 5005;
-const botfrontPort = 8888;
-const rasaActionsPort = 5055;
 
 export class Ec2Stack extends cdk.Stack {
   public readonly hostIp: string;
@@ -33,102 +34,65 @@ export class Ec2Stack extends cdk.Stack {
     const apiDomain = `api.${props.subDomain}`;
 
     const hostSG = ec2.SecurityGroup.fromSecurityGroupId(this, 'basesg', cdk.Fn.importValue('base-security-group-id'));
+    const albSG = ec2.SecurityGroup.fromSecurityGroupId(this, 'albsg', cdk.Fn.importValue('alb-security-group-id'));
 
-    const albSG = new ec2.SecurityGroup(this, `${prefix}alb-sg`, {
-      vpc: props.baseVpc,
-      allowAllOutbound: true,
-      securityGroupName: `${prefix}alb-sg`
-    });
-
-    const script = `
-    #!/bin/bash
-    yum update -y
-    amazon-linux-extras install docker python3.8 -y
-    yum install git curl -y
-    service docker start
-    chkconfig docker on
-    curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-    chmod +x /usr/local/bin/docker-compose
-    usermod -a -G docker ec2-user
-    su ec2-user bash -c 'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash'
-    su ec2-user bash -c 'source ~/.bashrc && nvm install lts/erbium'
-    usermod -a -G docker ssm-user
-    su ssm-user bash -c 'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash'
-    su ssm-user bash -c 'source ~/.bashrc && nvm install lts/erbium'
-    `
-
-    const userdata = ec2.UserData.custom(script);
-
-    const role = new iam.Role(this, 'MyRole', {
+    const role = new iam.Role(this, `${prefix}BaseRole`, {
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com')
     });
 
     role.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'));
+    role.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonEC2ContainerRegistryReadOnly'));
 
-    const host = new ec2.Instance(this, 'botfront-full', {
-        instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.SMALL),
-        machineImage: ec2.MachineImage.latestAmazonLinux({
-            generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2,
-            cpuType: ec2.AmazonLinuxCpuType.X86_64,
-            storage: ec2.AmazonLinuxStorage.GENERAL_PURPOSE
-        }),
-        blockDevices: [
-          {
-            deviceName: '/dev/xvda',
-            volume: ec2.BlockDeviceVolume.ebs(20),
-          }
-        ],
+    const host = new ec2.Instance(this, `${prefix}botfront-full`, {
+        instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.MEDIUM),
+        machineImage: ec2.MachineImage.genericLinux({
+          'eu-north-1': 'ami-02ef1b7a57947599c'
+        }
+        ),
         vpc: props.baseVpc,
         vpcSubnets: {subnetType: ec2.SubnetType.PUBLIC},
         keyName: 'aurora-ai',
-        userData: userdata,
         instanceName: `${prefix}botfront-full`,
         role
     });
 
     host.addSecurityGroup(hostSG);
-    host.connections.allowFrom(albSG, ec2.Port.tcp(rasaPort));
-    host.connections.allowFrom(albSG, ec2.Port.tcp(botfrontPort));
-    host.connections.allowFrom(albSG, ec2.Port.tcp(rasaActionsPort));
+    host.connections.allowFrom(albSG, ec2.Port.tcp(props.ports.rasa));
+    host.connections.allowFrom(albSG, ec2.Port.tcp(props.ports.botfront));
+    host.connections.allowFrom(albSG, ec2.Port.tcp(props.ports.actions));
 
 
     new CfnOutput(this, 'ip-address', {
         value: host.instancePublicIp
     });
 
-    const hostedZone = route53.HostedZone.fromLookup(this, 'hostedZone', {domainName: props.domain});
+    const hostedZone = route53.HostedZone.fromLookup(this, `${prefix}hostedZone`, {domainName: props.domain});
     
     const certificate = new acm.Certificate(this, `${prefix}hosted-zone-certificate`, {
       domainName: apiDomain,
       validation: acm.CertificateValidation.fromDns(hostedZone)
     });
 
-    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(rasaPort));
-    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(botfrontPort));
-    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(rasaActionsPort));
+    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(props.ports.rasa));
+    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(props.ports.botfront));
+    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(props.ports.actions));
 
-    const alb = new elbv2.ApplicationLoadBalancer(this, `${prefix}alb`, {
-      vpc: props.baseVpc,
-      internetFacing: true,
-      securityGroup: albSG
-    });
-
-    const rasaListener = alb.addListener(`${prefix}rasa-listener`, {
-      port: rasaPort,
+    const rasaListener = props.baseAlb.addListener(`${prefix}rasa-listener`, {
+      port: props.ports.rasa,
       protocol: elbv2.ApplicationProtocol.HTTPS,
       open: true,
       certificates: [certificate]
     });
 
-    const botfrontListener = alb.addListener(`${prefix}botfront-listener`, {
-      port: botfrontPort,
+    const botfrontListener = props.baseAlb.addListener(`${prefix}botfront-listener`, {
+      port: props.ports.botfront,
       protocol: elbv2.ApplicationProtocol.HTTPS,
       open: true,
       certificates: [certificate]
     });
 
-    const rasaActionsListener = alb.addListener(`${prefix}rasa-actions-listener`, {
-      port: rasaActionsPort,
+    const rasaActionsListener = props.baseAlb.addListener(`${prefix}rasa-actions-listener`, {
+      port: props.ports.actions,
       protocol: elbv2.ApplicationProtocol.HTTPS,
       open: true,
       certificates: [certificate]
@@ -136,29 +100,29 @@ export class Ec2Stack extends cdk.Stack {
 
     const rasaTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}rasa-targetgroup`, {
       targetType: elbv2.TargetType.INSTANCE,
-      port: rasaPort,
+      port: props.ports.rasa,
       protocol: elbv2.ApplicationProtocol.HTTP,
       protocolVersion: elbv2.ApplicationProtocolVersion.HTTP1,
       vpc: props.baseVpc,
-      targets: [new elbv2Targets.InstanceTarget(host, rasaPort)]
+      targets: [new elbv2Targets.InstanceTarget(host, props.ports.rasa)]
     });
 
     const botfrontTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}botfront-targetgroup`, {
       targetType: elbv2.TargetType.INSTANCE,
-      port: botfrontPort,
+      port: props.ports.botfront,
       protocol: elbv2.ApplicationProtocol.HTTP,
       protocolVersion: elbv2.ApplicationProtocolVersion.HTTP1,
       vpc: props.baseVpc,
-      targets: [new elbv2Targets.InstanceTarget(host, botfrontPort)]
+      targets: [new elbv2Targets.InstanceTarget(host, props.ports.botfront)]
     });
 
     const rasaActionsTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}rasa-actions-targetgroup`, {
       targetType: elbv2.TargetType.INSTANCE,
-      port: rasaActionsPort,
+      port: props.ports.actions,
       protocol: elbv2.ApplicationProtocol.HTTP,
       protocolVersion: elbv2.ApplicationProtocolVersion.HTTP1,
       vpc: props.baseVpc,
-      targets: [new elbv2Targets.InstanceTarget(host, rasaActionsPort)]
+      targets: [new elbv2Targets.InstanceTarget(host, props.ports.actions)]
     });
 
     rasaListener.addTargetGroups(`${prefix}rasa-listener-assignment`, {
@@ -176,8 +140,8 @@ export class Ec2Stack extends cdk.Stack {
 
     new route53.ARecord(this, 'AliasRecord', {
       zone: hostedZone,
-      recordName: 'api.demo',
-      target: route53.RecordTarget.fromAlias(new route53Targets.LoadBalancerTarget(alb))
+      recordName: `api.${props.envName}`,
+      target: route53.RecordTarget.fromAlias(new route53Targets.LoadBalancerTarget(props.baseAlb))
     });
     
 

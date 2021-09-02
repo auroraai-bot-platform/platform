@@ -8,9 +8,13 @@ import { WebChatStack } from '../lib/web-chat-stack';
 const region = process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION || 'eu-north-1';
 const account = process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT;
 
-const envName = 'demo';
+// Base domain
 const domain = 'aaibot.link';
+
+// Environments
+const envName = 'demo';
 const subDomain = `${envName}.${domain}`;
+const demoPorts = {'botfront': 8888, 'rasa': 5005, 'actions': 5055}
 
 const app = new cdk.App();
 const base = new BaseStack(app, 'BaseStack', {
@@ -20,16 +24,11 @@ const base = new BaseStack(app, 'BaseStack', {
   }
 });
 
-/** 
- * This doesn't work yet since the setup is difficult 
- * in separated environment */ 
-/* new EcsStack(app, 'EcsStack', {
-  baseRepo: base.baseRepo,
-  baseVpc: base.baseVpc
-}); */
+
 const ec2stack = new Ec2Stack(app, 'Ec2Stack', {
-  baseRepo: base.baseRepo,
+  baseAlb: base.baseAlb,
   baseVpc: base.baseVpc,
+  ports: demoPorts,
   subDomain,
   domain,
   envName,
