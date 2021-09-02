@@ -1,0 +1,7 @@
+title: testbot
+subtitle: Happy to help
+inputTextFieldHint: Type your message...
+initPayload: /get_started
+hideWhenNotConnected: true
+customData:
+  language: fi

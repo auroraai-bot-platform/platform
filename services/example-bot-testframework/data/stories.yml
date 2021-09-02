@@ -1,0 +1,58 @@
+stories:
+  - story: HappyPath
+    steps:
+      - or:
+          - intent: greet
+            entities: []
+          - intent: get_started
+            entities: []
+      - action: utter_howcanihelp
+      - intent: askjoke
+        entities: []
+      - action: utter_willijoke
+      - checkpoint: HappyPath__branches
+    metadata:
+      group: stories
+  - story: HappyPath__New Branch 1
+    steps:
+      - checkpoint: HappyPath__branches
+      - intent: agree
+        entities: []
+      - action: utter_joke
+      - intent: laughter
+        entities: []
+      - action: utter_ok
+    metadata:
+      group: stories
+  - story: HappyPath__New Branch 2
+    steps:
+      - checkpoint: HappyPath__branches
+      - intent: diagree
+        entities: []
+      - action: utter_nocando
+    metadata:
+      group: stories
+  - story: UnhappyPath
+    steps:
+      - or:
+          - intent: greet
+            user: hei
+            entities: []
+          - intent: get_started
+            entities: []
+      - action: utter_howcanihelp
+      - intent: diagree
+        entities: []
+      - action: utter_ok
+    metadata:
+      group: stories
+rules:
+  - rule: WhatYouCanDo
+    condition: []
+    steps:
+      - intent: ask_whatyoucan
+        user: no mitä sinä osaat?
+        entities: []
+      - action: utter_icanjoke
+    metadata:
+      group: stories
