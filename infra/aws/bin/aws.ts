@@ -14,7 +14,9 @@ const domain = 'aaibot.link';
 // Environments
 const envName = 'demo';
 const subDomain = `${envName}.${domain}`;
-const demoPorts = {'botfront': 8888, 'rasa': 5005, 'actions': 5055}
+
+const hyteEnvName = 'hyte';
+const hyteSubDomain = `${hyteEnvName}.${domain}`;
 
 const app = new cdk.App();
 const base = new BaseStack(app, 'BaseStack', {
@@ -24,11 +26,9 @@ const base = new BaseStack(app, 'BaseStack', {
   }
 });
 
-
+// Demo env
 const ec2stack = new Ec2Stack(app, 'Ec2Stack', {
-  baseAlb: base.baseAlb,
   baseVpc: base.baseVpc,
-  ports: demoPorts,
   subDomain,
   domain,
   envName,
@@ -43,6 +43,29 @@ new WebChatStack(app, 'WebChatStack', {
   rasaIp: ec2stack.hostIp,
   domain,
   subDomain,
+  env: {
+    region,
+    account
+  }
+});
+
+// Hyte env
+const hyteStack = new Ec2Stack(app, 'HyteStack', {
+  baseVpc: base.baseVpc,
+  subDomain: hyteSubDomain,
+  domain,
+  envName: hyteEnvName,
+  env: {
+    region,
+    account
+  }
+});
+
+new WebChatStack(app, 'HyteWebChatStack', {
+  envName: hyteEnvName,
+  rasaIp: hyteStack.hostIp,
+  domain,
+  subDomain: hyteSubDomain,
   env: {
     region,
     account

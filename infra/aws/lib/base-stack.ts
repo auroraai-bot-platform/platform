@@ -4,8 +4,7 @@ import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 
 export class BaseStack extends cdk.Stack {
   public readonly baseVpc: ec2.IVpc
-  public readonly baseAlb: elbv2.IApplicationLoadBalancer
-  //public readonly baseSecurityGroup: ec2.ISecurityGroup
+
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -33,24 +32,6 @@ export class BaseStack extends cdk.Stack {
       description: 'Security group in Stack A',
       exportName: 'base-security-group-id',
       value: baseSecurityGroup.securityGroupId
-    });
-
-    const albSG = new ec2.SecurityGroup(this, `alb-sg`, {
-      vpc: this.baseVpc,
-      allowAllOutbound: true,
-      securityGroupName: `alb-sg`
-    });
-
-    new cdk.CfnOutput(this, 'alb-sg-id-output', {
-      description: 'Security group for load balancer',
-      exportName: 'alb-security-group-id',
-      value: albSG.securityGroupId
-    });
-
-    this.baseAlb = new elbv2.ApplicationLoadBalancer(this, `basealb`, {
-      vpc: this.baseVpc,
-      internetFacing: true,
-      securityGroup: albSG
     });
 
   }

@@ -9,18 +9,11 @@ import * as route53 from '@aws-cdk/aws-route53';
 import * as route53Targets from '@aws-cdk/aws-route53-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager';
 import * as iam from '@aws-cdk/aws-iam';
-import { IApplicationLoadBalancer } from '@aws-cdk/aws-elasticloadbalancingv2';
 
 interface Ec2Props extends BaseStackProps {
-    baseAlb: IApplicationLoadBalancer,
     baseVpc: ec2.IVpc,
     subDomain: string,
     domain: string,
-    ports: {
-      botfront: number;
-      rasa: number;
-      actions: number;
-    }
   }
 
 export class Ec2Stack extends cdk.Stack {
@@ -31,10 +24,10 @@ export class Ec2Stack extends cdk.Stack {
     super(scope, id, props);
     const prefix = createPrefix(props.envName, this.constructor.name);
 
+    const ports = {'rasa': 5005, 'botfront': 8888, 'actions': 5055}
     const apiDomain = `api.${props.subDomain}`;
 
     const hostSG = ec2.SecurityGroup.fromSecurityGroupId(this, 'basesg', cdk.Fn.importValue('base-security-group-id'));
-    const albSG = ec2.SecurityGroup.fromSecurityGroupId(this, 'albsg', cdk.Fn.importValue('alb-security-group-id'));
 
     const role = new iam.Role(this, `${prefix}BaseRole`, {
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com')
@@ -42,6 +35,18 @@ export class Ec2Stack extends cdk.Stack {
 
     role.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'));
     role.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonEC2ContainerRegistryReadOnly'));
+
+    const albSG = new ec2.SecurityGroup(this, `${prefix}alb-sg`, {
+      vpc: props.baseVpc,
+      allowAllOutbound: true,
+      securityGroupName: `${prefix}alb-sg`
+    });
+
+    const alb = new elbv2.ApplicationLoadBalancer(this, `${prefix}alb`, {
+      vpc: props.baseVpc,
+      internetFacing: true,
+      securityGroup: albSG
+    });
 
     const host = new ec2.Instance(this, `${prefix}botfront-full`, {
         instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.MEDIUM),
@@ -57,9 +62,9 @@ export class Ec2Stack extends cdk.Stack {
     });
 
     host.addSecurityGroup(hostSG);
-    host.connections.allowFrom(albSG, ec2.Port.tcp(props.ports.rasa));
-    host.connections.allowFrom(albSG, ec2.Port.tcp(props.ports.botfront));
-    host.connections.allowFrom(albSG, ec2.Port.tcp(props.ports.actions));
+    host.connections.allowFrom(albSG, ec2.Port.tcp(ports.rasa));
+    host.connections.allowFrom(albSG, ec2.Port.tcp(ports.botfront));
+    host.connections.allowFrom(albSG, ec2.Port.tcp(ports.actions));
 
 
     new CfnOutput(this, 'ip-address', {
@@ -73,26 +78,26 @@ export class Ec2Stack extends cdk.Stack {
       validation: acm.CertificateValidation.fromDns(hostedZone)
     });
 
-    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(props.ports.rasa));
-    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(props.ports.botfront));
-    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(props.ports.actions));
+    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(ports.rasa));
+    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(ports.botfront));
+    albSG.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(ports.actions));
 
-    const rasaListener = props.baseAlb.addListener(`${prefix}rasa-listener`, {
-      port: props.ports.rasa,
+    const rasaListener = alb.addListener(`${prefix}rasa-listener`, {
+      port: ports.rasa,
       protocol: elbv2.ApplicationProtocol.HTTPS,
       open: true,
       certificates: [certificate]
     });
 
-    const botfrontListener = props.baseAlb.addListener(`${prefix}botfront-listener`, {
-      port: props.ports.botfront,
+    const botfrontListener = alb.addListener(`${prefix}botfront-listener`, {
+      port: ports.botfront,
       protocol: elbv2.ApplicationProtocol.HTTPS,
       open: true,
       certificates: [certificate]
     });
 
-    const rasaActionsListener = props.baseAlb.addListener(`${prefix}rasa-actions-listener`, {
-      port: props.ports.actions,
+    const rasaActionsListener = alb.addListener(`${prefix}rasa-actions-listener`, {
+      port: ports.actions,
       protocol: elbv2.ApplicationProtocol.HTTPS,
       open: true,
       certificates: [certificate]
@@ -100,29 +105,29 @@ export class Ec2Stack extends cdk.Stack {
 
     const rasaTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}rasa-targetgroup`, {
       targetType: elbv2.TargetType.INSTANCE,
-      port: props.ports.rasa,
+      port: ports.rasa,
       protocol: elbv2.ApplicationProtocol.HTTP,
       protocolVersion: elbv2.ApplicationProtocolVersion.HTTP1,
       vpc: props.baseVpc,
-      targets: [new elbv2Targets.InstanceTarget(host, props.ports.rasa)]
+      targets: [new elbv2Targets.InstanceTarget(host, ports.rasa)]
     });
 
     const botfrontTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}botfront-targetgroup`, {
       targetType: elbv2.TargetType.INSTANCE,
-      port: props.ports.botfront,
+      port: ports.botfront,
       protocol: elbv2.ApplicationProtocol.HTTP,
       protocolVersion: elbv2.ApplicationProtocolVersion.HTTP1,
       vpc: props.baseVpc,
-      targets: [new elbv2Targets.InstanceTarget(host, props.ports.botfront)]
+      targets: [new elbv2Targets.InstanceTarget(host, ports.botfront)]
     });
 
     const rasaActionsTargetGroup = new elbv2.ApplicationTargetGroup(this, `${prefix}rasa-actions-targetgroup`, {
       targetType: elbv2.TargetType.INSTANCE,
-      port: props.ports.actions,
+      port: ports.actions,
       protocol: elbv2.ApplicationProtocol.HTTP,
       protocolVersion: elbv2.ApplicationProtocolVersion.HTTP1,
       vpc: props.baseVpc,
-      targets: [new elbv2Targets.InstanceTarget(host, props.ports.actions)]
+      targets: [new elbv2Targets.InstanceTarget(host, ports.actions)]
     });
 
     rasaListener.addTargetGroups(`${prefix}rasa-listener-assignment`, {
@@ -138,10 +143,10 @@ export class Ec2Stack extends cdk.Stack {
     });
 
 
-    new route53.ARecord(this, 'AliasRecord', {
+    new route53.ARecord(this, `${prefix}AliasRecord`, {
       zone: hostedZone,
       recordName: `api.${props.envName}`,
-      target: route53.RecordTarget.fromAlias(new route53Targets.LoadBalancerTarget(props.baseAlb))
+      target: route53.RecordTarget.fromAlias(new route53Targets.LoadBalancerTarget(alb))
     });
     
 
