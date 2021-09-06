@@ -52,8 +52,7 @@ export class Ec2Stack extends cdk.Stack {
         instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.MEDIUM),
         machineImage: ec2.MachineImage.genericLinux({
           'eu-north-1': 'ami-02ef1b7a57947599c'
-        }
-        ),
+        }),
         vpc: props.baseVpc,
         vpcSubnets: {subnetType: ec2.SubnetType.PUBLIC},
         keyName: 'aurora-ai',
