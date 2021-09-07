@@ -1,0 +1,11 @@
+# Introduction
+Experimental [NLG](https://rasa.com/docs/rasa/nlg/) add-on for Rasa (botfront-for-rasa) container which automatically detects users messages' language (e.g Finnish, Swedish, English) and sends bot's response message in the detected language if response exists in that language. Language detection is done by using [Fasttext language detection](https://fasttext.cc/docs/en/language-identification.html) model. Other language detection alternatives exists and there could be better options available too. Challenge with the most language detection libraries is that they don't work so well for very short texts containing for example only one to two words (which is common in chat language). Thus, this is an experimental feature and could be developed more in the future if needed. Benefit of this add-on is that the user doesn't have to change the bot's language settings for example at the website if the user wants to use different language with the chatbot (chatbot of course needs to be multilingual at the first place to really support this). It would also be cool if the chatbot could switch the language automatically on the fly if the user changes her language :)
+
+The language detecting NLG is modified from the Botfront's default NLG. Only modifications made are in the `graphql.py` file inside the `lang_detect_nlg` folder.
+
+# Getting Started Locally
+1.	You need to download the used Fasttext model (about 125 MB) and place it inside the `lang_detect_nlg` folder. You can download it from this link `https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin` and the model filename inside the folder should be `lid.176.bin`
+2.  Build this Rasa (botfront-for-rasa) container and use it with Botfront
+3.  Go to Botfront project settings and choose `Endpoints` tab
+4.  Modify the `nlg` setting and change the `type` to `lang_detect_nlg.graphql.GraphQLNaturalLanguageGenerator`
+5.  Next, you can add new languages at Botfront, add training data and message responses for those languages, and train the model with multilingual language model NLU config. After that, the bot should be able to respond with correct language message if user changes her language on the fly.

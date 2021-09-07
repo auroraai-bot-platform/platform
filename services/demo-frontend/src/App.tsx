@@ -1,8 +1,6 @@
-import React from 'react';
 import Widget from 'rasa-webchat';
 
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
 
 const onSocketEvent={
   'bot_uttered': () => console.log('the bot said something'),
@@ -20,20 +18,10 @@ function App() {
           socketPath={"/socket.io/"}
           onSocketEvent={onSocketEvent}
           customData={{"language": "fi"}} // arbitrary custom data. Stay minimal as this will be added to the socket
-          title={"Title"}
+          title="Hytebotti"
+          subtitle={null}
+          inputTextFieldHint="Kirjoita jotain..."
         />
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );

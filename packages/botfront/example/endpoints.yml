@@ -1,0 +1,11 @@
+nlg:
+  type: rasa_addons.core.nlg.GraphQLNaturalLanguageGenerator
+  url: 'http://localhost:8080/graphql'
+action_endpoint:
+  url: 'http://actions:5055/webhook'
+tracker_store:
+  store_type: rasa_addons.core.tracker_stores.botfront.BotfrontTrackerStore
+  url: 'http://localhost:8080/graphql'
+# tracker_store:
+#   store_type: mongod
+#   url: mongodb://localhost:27017

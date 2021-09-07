@@ -1,0 +1,2 @@
+# Add python dependencies here.
+fasttext
