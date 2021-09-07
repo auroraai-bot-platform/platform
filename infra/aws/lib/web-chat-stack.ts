@@ -31,9 +31,9 @@ export class WebChatStack extends cdk.Stack {
       destinationKeyPrefix: 'files'
     });
 
-    const hostedZone = route53.HostedZone.fromLookup(this, 'hostedZone', {domainName: props.domain});
+    const hostedZone = route53.HostedZone.fromLookup(this, `${prefix}hostedZone`, {domainName: props.domain});
 
-    const cert = new acm.DnsValidatedCertificate(this, 'httpscert', {
+    const cert = new acm.DnsValidatedCertificate(this, `${prefix}httpscert`, {
       domainName: props.subDomain,
       hostedZone,
       region: 'us-east-1'
@@ -86,7 +86,7 @@ export class WebChatStack extends cdk.Stack {
       })
     });
 
-    new route53.ARecord(this, 'cf-route53', {
+    new route53.ARecord(this, `${prefix}cf-route53`, {
       target: route53.RecordTarget.fromAlias(new route53targets.CloudFrontTarget(cloudFrontWebDistribution)),
       zone: hostedZone,
       recordName: props.subDomain
