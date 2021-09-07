@@ -58,7 +58,7 @@ class Gazette(Component):
                 # entity["gazette_matches"] = [
                 #     {"value": value, "score": num} for value, num in matches
                 # ]
-                new_entities.append(entity)
+            new_entities.append(entity)
 
         message.set("entities", new_entities, add_to_output=True)
 
