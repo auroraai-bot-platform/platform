@@ -4,13 +4,13 @@ import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecsp from '@aws-cdk/aws-ecs-patterns';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import { BaseStackProps } from '../types';
+import { createPrefix } from './utilities';
 import * as route53 from '@aws-cdk/aws-route53';
 import * as secrets from '@aws-cdk/aws-secretsmanager';
 import * as servicediscovery from '@aws-cdk/aws-servicediscovery';
 import { RetentionDays } from '@aws-cdk/aws-logs';
 
 interface EcsProps extends BaseStackProps {
-  baseRepo: ecr.IRepository,
   baseVpc: ec2.IVpc,
   ecsSubDomain: string,
   domain: string
@@ -19,32 +19,35 @@ interface EcsProps extends BaseStackProps {
 export class EcsStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: EcsProps) {
     super(scope, id, props);
+    const prefix = createPrefix(props.envName, this.constructor.name);
 
-    const mongoConnectionString = secrets.Secret.fromSecretNameV2(this, 'db-secret', 'botfront/mongo/connectionstring');
+    const mongoConnectionString = secrets.Secret.fromSecretNameV2(this, `${prefix}db-secret`, 'botfront/mongo/connectionstring');
 
-    const repo = ecr.Repository.fromRepositoryName(this, 'ecrrepo', 'aurora-bot-images');
+    const rasaRepo = ecr.Repository.fromRepositoryName(this, `${prefix}rasaRepo`, 'rasa-private');
+    // const botfrontRepo = ecr.Repository.fromRepositoryName(this, 'botfrontRepo', 'botfront-private');
+    // const actionsRepo = ecr.Repository.fromRepositoryName(this, 'actionsRepo', 'actions-private');
 
-    const sg = ec2.SecurityGroup.fromSecurityGroupId(this, 'basesg', cdk.Fn.importValue('base-security-group-id'));
+    const sg = ec2.SecurityGroup.fromSecurityGroupId(this, `${prefix}basesg`, cdk.Fn.importValue('base-security-group-id'));
 
-    const hostedZone = route53.HostedZone.fromLookup(this, 'hostedZone', {domainName: props.domain});
+    const hostedZone = route53.HostedZone.fromLookup(this, `${prefix}hostedZone`, {domainName: props.domain});
 
-    const privateZone = new servicediscovery.PrivateDnsNamespace(this, 'internalZone', {
+    const privateZone = new servicediscovery.PrivateDnsNamespace(this, `${prefix}internalZone`, {
       name: 'service.internal',
       vpc: props.baseVpc
     });
 
-    const cluster = new ecs.Cluster(this, "baseCluster", {
+    const cluster = new ecs.Cluster(this, `${prefix}baseCluster`, {
       vpc: props.baseVpc
     });
 
     // BOTFRONT
-    const botfronttd = new ecs.TaskDefinition(this, 'botfronttd', {
+    const botfronttd = new ecs.TaskDefinition(this, `${prefix}botfronttd`, {
       cpu: '1024',
       memoryMiB: '2048',
       compatibility:  ecs.Compatibility.FARGATE
     });
 
-    botfronttd.addContainer('botfront', {
+    botfronttd.addContainer(`${prefix}botfront`, {
       image: ecs.ContainerImage.fromRegistry('botfront/botfront:v1.0.5'),
       containerName: 'botfront',
       portMappings: [{
@@ -66,7 +69,7 @@ export class EcsStack extends cdk.Stack {
       essential: true,
     });
 
-    const botfrontsg = new ec2.SecurityGroup(this, 'botfrontsg', {
+    const botfrontsg = new ec2.SecurityGroup(this, `${prefix}botfrontsg`, {
       allowAllOutbound: true,
       securityGroupName: 'botfrontSecurityGroup',
       vpc: props.baseVpc,
@@ -74,7 +77,7 @@ export class EcsStack extends cdk.Stack {
 
     botfrontsg.connections.allowFromAnyIpv4(ec2.Port.tcp(80));
 
-    const botfrontService = new ecsp.ApplicationLoadBalancedFargateService(this, 'botfrontservice', {
+    const botfrontService = new ecsp.ApplicationLoadBalancedFargateService(this, `${prefix}botfrontservice`, {
       cluster,
       taskDefinition: botfronttd,
       securityGroups: [botfrontsg],
@@ -88,7 +91,7 @@ export class EcsStack extends cdk.Stack {
     });
 
     // RASA
-    const rasasg = new ec2.SecurityGroup(this, 'rasasg', {
+    const rasasg = new ec2.SecurityGroup(this, `${prefix}rasasg`, {
       allowAllOutbound: true,
       securityGroupName: 'rasaSecurityGroup',
       vpc: props.baseVpc,
@@ -96,14 +99,14 @@ export class EcsStack extends cdk.Stack {
 
     rasasg.connections.allowFromAnyIpv4(ec2.Port.tcp(80));
 
-    const rasatd = new ecs.TaskDefinition(this, 'rasatd', {
+    const rasatd = new ecs.TaskDefinition(this, `${prefix}rasatd`, {
       cpu: '1024',
       memoryMiB: '2048',
       compatibility:  ecs.Compatibility.FARGATE
     });
 
-    rasatd.addContainer('rasa', {
-      image: ecs.ContainerImage.fromRegistry('botfront/rasa-for-botfront:v2.3.3-bf.3'),
+    rasatd.addContainer(`${prefix}rasa`, {
+      image: ecs.ContainerImage.fromEcrRepository(rasaRepo),
       containerName: 'rasa',
       portMappings: [{
         hostPort: 5005,
@@ -112,7 +115,7 @@ export class EcsStack extends cdk.Stack {
       environment: {
         BF_PROJECT_ID: 'hH4Z8S7GXiHsp3PTP',
         PORT: '5005',
-        BF_URL: `http://botfront.${props.domain}/graphql`
+        BF_URL: `http://botfront.service.internal:8888/graphql`
       },
       logging: ecs.LogDriver.awsLogs({
         streamPrefix: 'rasa',
@@ -120,7 +123,7 @@ export class EcsStack extends cdk.Stack {
       })
     });
 
-    const rasaservice = new ecsp.ApplicationLoadBalancedFargateService(this, 'rasaservice', {
+    const rasaservice = new ecsp.ApplicationLoadBalancedFargateService(this, `${prefix}rasaservice`, {
       cluster,
       taskDefinition: rasatd,
       securityGroups: [rasasg],
@@ -132,6 +135,9 @@ export class EcsStack extends cdk.Stack {
       domainZone: hostedZone,
       domainName: 'rasa'
     });
+
+    rasaservice.service.connections.allowFrom(botfrontService.service, ec2.Port.tcp(5005));
+    botfrontService.service.connections.allowFrom(rasaservice.service, ec2.Port.tcp(8888));
 
     /* const rasaservice = new ecs.FargateService(this, 'rasaservice', {
       cluster,
