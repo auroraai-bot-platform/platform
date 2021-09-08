@@ -1,0 +1,13 @@
+stories:
+  - story: happy_path
+    steps:
+      - intent: get_started
+        entities: []
+      - action: utter_intro
+      - action: Entiteetit_form
+      - active_loop: Entiteetit_form
+      - active_loop: null
+      - action: utter_echo
+    metadata:
+      group: Entiteetit
+rules: []

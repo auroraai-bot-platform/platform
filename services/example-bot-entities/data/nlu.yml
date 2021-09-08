@@ -1,0 +1,43 @@
+version: "2.0"
+nlu:
+- intent: response.city
+  metadata:
+    language: fi
+  examples: |
+    - alueelta [espoo](city)
+    - asun [helsingissä](city)
+    - asun [tampereella](city)
+    - etsin harrastusta [rovanimellä](city)
+    - [hangon](city) seudulla
+    - hengaan [vantaalla](city)
+    - [joensuun](city) alueelta
+    - [kotkassa](city) oleilen
+    - [lahden](city) alueelta
+    - löytyykö [raumalta](city) jotain
+    - olen [helsingistä](city)
+    - olen [iisalmessa](city)
+    - olen [kuopiosta](city)
+    - oleskelen [jyväskylässä](city)
+    - [oulun](city) seudulta
+    - [porin](city) seudulta
+    - [sipoosta](city) päin
+    - [tampereelta](city) etsin
+    - [turussa](city) vaikutan
+    - [vaasan](city) alueella
+    - [vantaalta](city) kotoisin
+- intent: response.hobby
+  metadata:
+    language: fi
+  examples: |
+    - etin [urheilujoukkueita](hobby)
+    - etsin [kamppailulajeja](hobby)
+    - haluaisin oppia [kitaransoittoa](hobby)
+    - harrastan [maalausta](hobby) jotain samanlaista
+    - [jalkapallo](hobby) kiinnostaa
+    - [joukkuepelit](hobby) olis kivoja
+    - [laulu](hobby) ja [tanssi](hobby) kiinnostaa
+    - [lentopallo](hobby) ja [yleisurheilu](hobby) ja [juoksu](hobby) ois kaikki ok
+    - löytyykö [ratsastusta](hobby)
+    - onko [kuorolaulua](hobby)
+    - onko täällä [lautapelejä](hobby)
+    - [sähly](hobby) olis kivaa

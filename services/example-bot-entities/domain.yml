@@ -1,0 +1,112 @@
+actions:
+  - action_botfront_disambiguation
+  - action_botfront_disambiguation_followup
+  - action_botfront_fallback
+  - action_botfront_mapping
+  - utter_ask_city
+  - utter_ask_hobby
+  - utter_default
+  - utter_echo
+  - utter_intro
+entities:
+  - city
+  - hobby
+forms:
+  Entiteetit_form:
+    collect_in_botfront: false
+    description: ''
+    graph_elements:
+      edges:
+        - condition: null
+          id: e1-hobby
+          source: '1'
+          target: hobby
+          type: condition
+        - condition: null
+          id: ehobby-city
+          source: hobby
+          target: city
+          type: condition
+      nodes:
+        - id: '1'
+          position:
+            x: 200
+            'y': 200
+          type: start
+        - id: hobby
+          position:
+            x: 120
+            'y': 360
+          slotName: hobby
+          type: slot
+        - id: city
+          position:
+            x: 120
+            'y': 500
+          slotName: city
+          type: slot
+    groupName: Entiteetit
+    name: Entiteetit_form
+    slots:
+      - filling:
+          - entity:
+              - hobby
+            group: null
+            intent:
+              - response.hobby
+            not_intent: null
+            role: null
+            type: from_entity
+        name: hobby
+        utter_on_new_valid_slot: false
+      - filling:
+          - entity:
+              - city
+            group: null
+            intent: null
+            not_intent: null
+            role: null
+            type: from_entity
+        name: city
+        utter_on_new_valid_slot: false
+    updatedAt: 1631015003054
+intents:
+  - response.hobby:
+      use_entities:
+        - hobby
+  - response.city:
+      use_entities:
+        - city
+  - get_started
+responses:
+  utter_ask_city:
+    - language: fi
+      metadata: null
+      text: Mistä päin haluat löytää palveluita?
+  utter_ask_hobby:
+    - language: fi
+      metadata: null
+      text: Mistä olet kiinnostunut?
+  utter_default:
+    - language: fi
+      text: Nyt en oikein ymmärtänyt.
+  utter_echo:
+    - language: fi
+      text: >-
+        Olet siis kiinnostunut {hobby}, ja haluat löytää palveluita alueelta
+        {city}.
+  utter_intro:
+    - language: fi
+      metadata: null
+      text: 'Hei, olen palvelubotti ja autan sinua löytämään harrastuksia läheltäsi.'
+session_config: {}
+slots:
+  city:
+    type: unfeaturized
+  disambiguation_message:
+    type: unfeaturized
+  fallback_language:
+    initial_value: fi
+    type: unfeaturized
+  hobby:
+    type: unfeaturized
