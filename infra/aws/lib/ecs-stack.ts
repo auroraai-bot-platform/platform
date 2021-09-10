@@ -2,6 +2,7 @@ import * as cdk from '@aws-cdk/core';
 import * as ecr from '@aws-cdk/aws-ecr';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecsp from '@aws-cdk/aws-ecs-patterns';
+import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import { BaseStackProps } from '../types';
 import { createPrefix } from './utilities';
@@ -24,8 +25,8 @@ export class EcsStack extends cdk.Stack {
     const mongoConnectionString = secrets.Secret.fromSecretNameV2(this, `${prefix}db-secret`, 'botfront/mongo/connectionstring');
 
     const rasaRepo = ecr.Repository.fromRepositoryName(this, `${prefix}rasaRepo`, 'rasa-private');
-    // const botfrontRepo = ecr.Repository.fromRepositoryName(this, 'botfrontRepo', 'botfront-private');
-    // const actionsRepo = ecr.Repository.fromRepositoryName(this, 'actionsRepo', 'actions-private');
+    const botfrontRepo = ecr.Repository.fromRepositoryName(this, 'botfrontRepo', 'botfront-private');
+    const actionsRepo = ecr.Repository.fromRepositoryName(this, 'actionsRepo', 'actions-private');
 
     const sg = ec2.SecurityGroup.fromSecurityGroupId(this, `${prefix}basesg`, cdk.Fn.importValue('base-security-group-id'));
 
@@ -37,8 +38,14 @@ export class EcsStack extends cdk.Stack {
     });
 
     const cluster = new ecs.Cluster(this, `${prefix}baseCluster`, {
-      vpc: props.baseVpc
+      vpc: props.baseVpc,
+      containerInsights: true
     });
+
+    const loadBalancer = new elbv2.ApplicationLoadBalancer(this, `${prefix}loadbalancer`, {
+      vpc: props.baseVpc,
+      internetFacing: true
+    })
 
     // BOTFRONT
     const botfronttd = new ecs.TaskDefinition(this, `${prefix}botfronttd`, {
@@ -48,14 +55,21 @@ export class EcsStack extends cdk.Stack {
     });
 
     botfronttd.addContainer(`${prefix}botfront`, {
-      image: ecs.ContainerImage.fromRegistry('botfront/botfront:v1.0.5'),
+      image: ecs.ContainerImage.fromEcrRepository(botfrontRepo),
       containerName: 'botfront',
-      portMappings: [{
-        hostPort: 8888,
-        containerPort: 8888
-      }],
+      portMappings: [
+        {
+          hostPort: 8888,
+          containerPort: 8888
+        }, 
+        {
+          hostPort: 3030,
+          containerPort: 3030
+        }
+      ],
       environment: {
         PORT: '8888',
+        REST_API_PORT: '3030',
         APPLICATION_LOG_LEVEL: 'debug',
         ROOT_URL: `http://botfront.${props.domain}`
       },
@@ -83,11 +97,12 @@ export class EcsStack extends cdk.Stack {
       securityGroups: [botfrontsg],
       cloudMapOptions: {
         cloudMapNamespace: privateZone,
-        name: 'botfront'
+        name: `${prefix}botfront`
       },
-      publicLoadBalancer: true,
+      listenerPort: 80,
+      loadBalancer,
       domainZone: hostedZone,
-      domainName: 'botfront'
+      domainName: prefix
     });
 
     // RASA
@@ -115,7 +130,7 @@ export class EcsStack extends cdk.Stack {
       environment: {
         BF_PROJECT_ID: 'hH4Z8S7GXiHsp3PTP',
         PORT: '5005',
-        BF_URL: `http://botfront.service.internal:8888/graphql`
+        BF_URL: `http://${prefix}botfront.service.internal:8888/graphql`
       },
       logging: ecs.LogDriver.awsLogs({
         streamPrefix: 'rasa',
@@ -123,17 +138,36 @@ export class EcsStack extends cdk.Stack {
       })
     });
 
+/*     rasatd.addContainer(`${prefix}actions`, {
+      image: ecs.ContainerImage.fromEcrRepository(actionsRepo),
+      containerName: 'actions',
+      portMappings: [{
+        hostPort: 5055,
+        containerPort: 5055
+      }],
+      environment: {
+        PORT: '5055',
+        BF_URL: `http://botfront.service.internal:8888/graphql`
+      },
+      logging: ecs.LogDriver.awsLogs({
+        streamPrefix: 'actions',
+        logRetention: RetentionDays.ONE_DAY
+      })
+    }); */
+
     const rasaservice = new ecsp.ApplicationLoadBalancedFargateService(this, `${prefix}rasaservice`, {
       cluster,
       taskDefinition: rasatd,
       securityGroups: [rasasg],
       cloudMapOptions: {
         cloudMapNamespace: privateZone,
-        name: 'rasa'
+        name: `${prefix}rasa`
       },
+      listenerPort: 5005,
+      loadBalancer,
       publicLoadBalancer: true,
       domainZone: hostedZone,
-      domainName: 'rasa'
+      domainName: prefix
     });
 
     rasaservice.service.connections.allowFrom(botfrontService.service, ec2.Port.tcp(5005));
