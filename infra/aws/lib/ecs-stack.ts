@@ -1,15 +1,14 @@
 import * as cdk from '@aws-cdk/core';
 import * as ecr from '@aws-cdk/aws-ecr';
 import * as ecs from '@aws-cdk/aws-ecs';
-import * as ecsp from '@aws-cdk/aws-ecs-patterns';
 import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import { BaseStackProps } from '../types';
 import { createPrefix } from './utilities';
 import * as route53 from '@aws-cdk/aws-route53';
 import * as secrets from '@aws-cdk/aws-secretsmanager';
-import * as servicediscovery from '@aws-cdk/aws-servicediscovery';
 import { RetentionDays } from '@aws-cdk/aws-logs';
+import { LoadBalancerTarget } from '@aws-cdk/aws-route53-targets';
 
 interface EcsProps extends BaseStackProps {
   baseVpc: ec2.IVpc,
@@ -30,22 +29,27 @@ export class EcsStack extends cdk.Stack {
 
     const sg = ec2.SecurityGroup.fromSecurityGroupId(this, `${prefix}basesg`, cdk.Fn.importValue('base-security-group-id'));
 
-    const hostedZone = route53.HostedZone.fromLookup(this, `${prefix}hostedZone`, {domainName: props.domain});
-
-    const privateZone = new servicediscovery.PrivateDnsNamespace(this, `${prefix}internalZone`, {
-      name: 'service.internal',
-      vpc: props.baseVpc
-    });
+    const zone = route53.HostedZone.fromLookup(this, `${prefix}hostedZone`, {domainName: props.domain});
 
     const cluster = new ecs.Cluster(this, `${prefix}baseCluster`, {
       vpc: props.baseVpc,
-      containerInsights: true
+      containerInsights: true,
+      defaultCloudMapNamespace: {
+        name: `${prefix}.internal`,
+        vpc: props.baseVpc
+      }
     });
 
     const loadBalancer = new elbv2.ApplicationLoadBalancer(this, `${prefix}loadbalancer`, {
       vpc: props.baseVpc,
       internetFacing: true
-    })
+    });
+
+    new route53.ARecord(this, `${prefix}record`, {
+      zone,
+      target: route53.RecordTarget.fromAlias(new LoadBalancerTarget(loadBalancer)),
+      recordName: prefix
+    });
 
     // BOTFRONT
     const botfronttd = new ecs.TaskDefinition(this, `${prefix}botfronttd`, {
@@ -71,13 +75,13 @@ export class EcsStack extends cdk.Stack {
         PORT: '8888',
         REST_API_PORT: '3030',
         APPLICATION_LOG_LEVEL: 'debug',
-        ROOT_URL: `http://botfront.${props.domain}`
+        ROOT_URL: `http://${prefix}.${props.domain}`
       },
       secrets: {
         MONGO_URL: ecs.Secret.fromSecretsManager(mongoConnectionString)
       },
       logging: ecs.LogDriver.awsLogs({
-        streamPrefix: 'botfront',
+        streamPrefix: prefix,
         logRetention: RetentionDays.ONE_DAY
       }),
       essential: true,
@@ -91,18 +95,29 @@ export class EcsStack extends cdk.Stack {
 
     botfrontsg.connections.allowFromAnyIpv4(ec2.Port.tcp(80));
 
-    const botfrontService = new ecsp.ApplicationLoadBalancedFargateService(this, `${prefix}botfrontservice`, {
+    const botfrontService = new ecs.FargateService(this, `${prefix}botfrontservice`, {
       cluster,
       taskDefinition: botfronttd,
       securityGroups: [botfrontsg],
       cloudMapOptions: {
-        cloudMapNamespace: privateZone,
-        name: `${prefix}botfront`
-      },
-      listenerPort: 80,
+        name: 'botfront'
+      }
+    });
+
+    const listener = new elbv2.ApplicationListener(this, `${prefix}botfrontlistener`, {
       loadBalancer,
-      domainZone: hostedZone,
-      domainName: prefix
+      port: 80
+    })
+
+    const tg = new elbv2.ApplicationTargetGroup(this, `${prefix}botfronttg`, {
+      targets: [botfrontService],
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      vpc: props.baseVpc,
+      port: 8888
+    });
+
+    listener.addTargetGroups(`${prefix}botfrontaddtg`, {
+      targetGroups: [tg]
     });
 
     // RASA
@@ -130,10 +145,10 @@ export class EcsStack extends cdk.Stack {
       environment: {
         BF_PROJECT_ID: 'hH4Z8S7GXiHsp3PTP',
         PORT: '5005',
-        BF_URL: `http://${prefix}botfront.service.internal:8888/graphql`
+        BF_URL: `http://botfront.${prefix}.internal:8888/graphql`
       },
       logging: ecs.LogDriver.awsLogs({
-        streamPrefix: 'rasa',
+        streamPrefix: prefix,
         logRetention: RetentionDays.ONE_DAY
       })
     });
@@ -155,23 +170,38 @@ export class EcsStack extends cdk.Stack {
       })
     }); */
 
-    const rasaservice = new ecsp.ApplicationLoadBalancedFargateService(this, `${prefix}rasaservice`, {
+    const rasaservice = new ecs.FargateService(this, `${prefix}rasaservice`, {
       cluster,
       taskDefinition: rasatd,
       securityGroups: [rasasg],
       cloudMapOptions: {
-        cloudMapNamespace: privateZone,
-        name: `${prefix}rasa`
-      },
-      listenerPort: 5005,
-      loadBalancer,
-      publicLoadBalancer: true,
-      domainZone: hostedZone,
-      domainName: prefix
+        name: 'rasa'
+      }
     });
 
-    rasaservice.service.connections.allowFrom(botfrontService.service, ec2.Port.tcp(5005));
-    botfrontService.service.connections.allowFrom(rasaservice.service, ec2.Port.tcp(8888));
+    const listener2 = new elbv2.ApplicationListener(this, `${prefix}rasalistener`, {
+      loadBalancer,
+      port: 5005,
+      protocol: elbv2.ApplicationProtocol.HTTP
+    })
+
+    const tg2 = new elbv2.ApplicationTargetGroup(this, `${prefix}rasatg`, {
+      targets: [rasaservice],
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      vpc: props.baseVpc,
+      port: 5005
+    });
+
+    listener2.addTargetGroups(`${prefix}rasaaddtg`, {
+      targetGroups: [tg2]
+    });
+
+    rasaservice.connections.allowFrom(loadBalancer, ec2.Port.tcp(5005));
+    loadBalancer.connections.allowTo(rasaservice, ec2.Port.tcp(5005));
+    loadBalancer.connections.allowTo(botfrontService, ec2.Port.tcp(8888));
+    botfrontService.connections.allowFrom(loadBalancer, ec2.Port.tcp(80));
+    rasaservice.connections.allowFrom(botfrontService, ec2.Port.tcp(5005));
+    botfrontService.connections.allowFrom(rasaservice, ec2.Port.tcp(8888));
 
     /* const rasaservice = new ecs.FargateService(this, 'rasaservice', {
       cluster,
