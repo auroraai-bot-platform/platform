@@ -130,8 +130,8 @@ export class EcsStack extends cdk.Stack {
     rasasg.connections.allowFromAnyIpv4(ec2.Port.tcp(80));
 
     const rasatd = new ecs.TaskDefinition(this, `${prefix}rasatd`, {
-      cpu: '1024',
-      memoryMiB: '2048',
+      cpu: '2048',
+      memoryMiB: '4096',
       compatibility:  ecs.Compatibility.FARGATE
     });
 
