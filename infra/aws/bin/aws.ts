@@ -18,7 +18,7 @@ const subDomain = `${envName}.${domain}`;
 const hyteEnvName = 'hyte';
 const hyteSubDomain = `${hyteEnvName}.${domain}`;
 
-const ecsEnvName = 'ecs'
+const ecsEnvName = 'hyte-ecs'
 const ecsSubDomain = `${ecsEnvName}.${domain}`;
 
 const app = new cdk.App();

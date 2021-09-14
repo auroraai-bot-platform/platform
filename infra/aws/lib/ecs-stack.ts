@@ -35,7 +35,7 @@ export class EcsStack extends cdk.Stack {
       vpc: props.baseVpc,
       containerInsights: true,
       defaultCloudMapNamespace: {
-        name: `${prefix}.internal`,
+        name: 'service.internal',
         vpc: props.baseVpc
       }
     });
@@ -48,7 +48,7 @@ export class EcsStack extends cdk.Stack {
     new route53.ARecord(this, `${prefix}record`, {
       zone,
       target: route53.RecordTarget.fromAlias(new LoadBalancerTarget(loadBalancer)),
-      recordName: prefix
+      recordName: props.envName
     });
 
     // BOTFRONT
@@ -60,7 +60,7 @@ export class EcsStack extends cdk.Stack {
 
     botfronttd.addContainer(`${prefix}botfront`, {
       image: ecs.ContainerImage.fromEcrRepository(botfrontRepo),
-      containerName: 'botfront',
+      containerName: `${prefix}botfront`,
       portMappings: [
         {
           hostPort: 8888,
@@ -81,7 +81,7 @@ export class EcsStack extends cdk.Stack {
         MONGO_URL: ecs.Secret.fromSecretsManager(mongoConnectionString)
       },
       logging: ecs.LogDriver.awsLogs({
-        streamPrefix: prefix,
+        streamPrefix: `${prefix}botfront`,
         logRetention: RetentionDays.ONE_DAY
       }),
       essential: true,
@@ -100,7 +100,7 @@ export class EcsStack extends cdk.Stack {
       taskDefinition: botfronttd,
       securityGroups: [botfrontsg],
       cloudMapOptions: {
-        name: 'botfront'
+        name: `${prefix}botfront`
       }
     });
 
@@ -135,9 +135,13 @@ export class EcsStack extends cdk.Stack {
       compatibility:  ecs.Compatibility.FARGATE
     });
 
+    rasatd.addVolume({
+      name: `${prefix}rasavolume`,
+    });
+
     rasatd.addContainer(`${prefix}rasa`, {
       image: ecs.ContainerImage.fromEcrRepository(rasaRepo),
-      containerName: 'rasa',
+      containerName: `${prefix}rasa`,
       portMappings: [{
         hostPort: 5005,
         containerPort: 5005
@@ -145,13 +149,19 @@ export class EcsStack extends cdk.Stack {
       environment: {
         BF_PROJECT_ID: 'hH4Z8S7GXiHsp3PTP',
         PORT: '5005',
-        BF_URL: `http://botfront.${prefix}.internal:8888/graphql`
+        BF_URL: `http://${prefix}botfront.service.internal:8888/graphql`
       },
       logging: ecs.LogDriver.awsLogs({
-        streamPrefix: prefix,
+        streamPrefix: `${prefix}rasa`,
         logRetention: RetentionDays.ONE_DAY
       })
-    });
+    }).addMountPoints(
+      {
+        containerPath: '/app/models',
+        sourceVolume: `${prefix}rasavolume`,
+        readOnly: false
+      }
+    );
 
 /*     rasatd.addContainer(`${prefix}actions`, {
       image: ecs.ContainerImage.fromEcrRepository(actionsRepo),
@@ -175,7 +185,7 @@ export class EcsStack extends cdk.Stack {
       taskDefinition: rasatd,
       securityGroups: [rasasg],
       cloudMapOptions: {
-        name: 'rasa'
+        name: `${prefix}rasa`
       }
     });
 
