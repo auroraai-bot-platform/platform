@@ -2,7 +2,7 @@
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
 import { BaseStack } from '../lib/base-stack';
-//import { EcsStack } from '../lib/ecs-stack';
+import { EcsStack } from '../lib/ecs-stack';
 import { Ec2Stack } from '../lib/ec2-stack';
 import { WebChatStack } from '../lib/web-chat-stack';
 const region = process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION || 'eu-north-1';
@@ -17,6 +17,9 @@ const subDomain = `${envName}.${domain}`;
 
 const hyteEnvName = 'hyte';
 const hyteSubDomain = `${hyteEnvName}.${domain}`;
+
+const ecsEnvName = 'hyte-ecs'
+const ecsSubDomain = `${ecsEnvName}.${domain}`;
 
 const app = new cdk.App();
 const base = new BaseStack(app, 'BaseStack', {
@@ -66,6 +69,17 @@ new WebChatStack(app, 'HyteWebChatStack', {
   rasaIp: hyteStack.hostIp,
   domain,
   subDomain: hyteSubDomain,
+  env: {
+    region,
+    account
+  }
+});
+
+new EcsStack(app, 'EcsStack', {
+  envName: ecsEnvName,
+  baseVpc: base.baseVpc,
+  ecsSubDomain,
+  domain,
   env: {
     region,
     account
