@@ -3,6 +3,7 @@ import * as ecr from '@aws-cdk/aws-ecr';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as ec2 from '@aws-cdk/aws-ec2';
+import * as acm from '@aws-cdk/aws-certificatemanager';
 import { BaseStackProps } from '../types';
 import { createPrefix } from './utilities';
 import * as route53 from '@aws-cdk/aws-route53';
@@ -12,7 +13,7 @@ import { LoadBalancerTarget } from '@aws-cdk/aws-route53-targets';
 
 interface EcsProps extends BaseStackProps {
   baseVpc: ec2.IVpc,
-  ecsSubDomain: string,
+  subDomain: string,
   domain: string
 }
 
@@ -30,6 +31,11 @@ export class EcsStack extends cdk.Stack {
     const sg = ec2.SecurityGroup.fromSecurityGroupId(this, `${prefix}basesg`, cdk.Fn.importValue('base-security-group-id'));
 
     const zone = route53.HostedZone.fromLookup(this, `${prefix}hostedZone`, {domainName: props.domain});
+
+    const certificate = new acm.Certificate(this, `${prefix}hosted-zone-certificate`, {
+      domainName: props.subDomain,
+      validation: acm.CertificateValidation.fromDns(zone)
+    });
 
     const cluster = new ecs.Cluster(this, `${prefix}baseCluster`, {
       vpc: props.baseVpc,
@@ -106,8 +112,9 @@ export class EcsStack extends cdk.Stack {
 
     const listener = new elbv2.ApplicationListener(this, `${prefix}botfrontlistener`, {
       loadBalancer,
-      port: 80
-    })
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      certificates: [certificate]
+    });
 
     const tg = new elbv2.ApplicationTargetGroup(this, `${prefix}botfronttg`, {
       targets: [botfrontService],
@@ -192,7 +199,8 @@ export class EcsStack extends cdk.Stack {
     const listener2 = new elbv2.ApplicationListener(this, `${prefix}rasalistener`, {
       loadBalancer,
       port: 5005,
-      protocol: elbv2.ApplicationProtocol.HTTP
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      certificates: [certificate]
     })
 
     const tg2 = new elbv2.ApplicationTargetGroup(this, `${prefix}rasatg`, {
@@ -209,7 +217,7 @@ export class EcsStack extends cdk.Stack {
     rasaservice.connections.allowFrom(loadBalancer, ec2.Port.tcp(5005));
     loadBalancer.connections.allowTo(rasaservice, ec2.Port.tcp(5005));
     loadBalancer.connections.allowTo(botfrontService, ec2.Port.tcp(8888));
-    botfrontService.connections.allowFrom(loadBalancer, ec2.Port.tcp(80));
+    botfrontService.connections.allowFrom(loadBalancer, ec2.Port.tcp(443));
     rasaservice.connections.allowFrom(botfrontService, ec2.Port.tcp(5005));
     botfrontService.connections.allowFrom(rasaservice, ec2.Port.tcp(8888));
 
