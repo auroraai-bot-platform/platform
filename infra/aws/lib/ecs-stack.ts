@@ -81,7 +81,7 @@ export class EcsStack extends cdk.Stack {
         PORT: '8888',
         REST_API_PORT: '3030',
         APPLICATION_LOG_LEVEL: 'debug',
-        ROOT_URL: `http://${prefix}.${props.domain}`
+        ROOT_URL: `https://${props.envName}.${props.domain}`
       },
       secrets: {
         MONGO_URL: ecs.Secret.fromSecretsManager(mongoConnectionString)
