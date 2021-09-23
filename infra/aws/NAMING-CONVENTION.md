@@ -21,9 +21,9 @@ There are a couple of basic rules to follow, when creating new names for the inf
 
 * The name of the resource follows a strict pattern from broad terms to narrow terms from left to right
 * Use only lower case letters for words
-* Seperate words of a single term by a `-` (dash)
+* Separate words of a single term by a `-` (dash)
 * Separate terms by a single `.` (dot)
-* Do not use abbrevations
+* Do not use abbreviations
 * Use shorter rather than longer words
 
 ### Examples
