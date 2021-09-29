@@ -12,7 +12,8 @@ import { BaseStackProps } from '../types';
 
 interface EcsBaseProps extends BaseStackProps {
   domain: string,
-  subDomain: string
+  subDomain: string,
+  actionsRepoCount: number
 }
 
 export class EcsBaseStack extends cdk.Stack {
@@ -38,19 +39,19 @@ export class EcsBaseStack extends cdk.Stack {
 
     new ecr.Repository(this, `${prefix}ecr-repository-botfront`, {
       imageScanOnPush: true,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
       repositoryName: `${props.envName}-botfront`
     });
 
-    new ecr.Repository(this, `${prefix}ecr-repository-actions`, {
-      imageScanOnPush: true,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
-      repositoryName: `${props.envName}-actions`
-    });
+    for (let i = 0; i < props.actionsRepoCount; i++) {
+      new ecr.Repository(this, `${prefix}ecr-repository-actions-${i}`, {
+        imageScanOnPush: true,
+        repositoryName: `${props.envName}-actions-${i}`
+      });
+    }
+
 
     new ecr.Repository(this, `${prefix}ecr-repository-rasa`, {
       imageScanOnPush: true,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
       repositoryName: `${props.envName}-rasa`
     });
 

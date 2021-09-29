@@ -20,12 +20,12 @@ const hyteSubDomain = `${hyteEnvName}.${domain}`;
 const hyteEcsEnvName = 'hyte-ecs';
 const hyteEcsSubDomain = `${hyteEcsEnvName}.${domain}`;
 const hyteWebChatSubDomain = `chat.${hyteEcsSubDomain}`;
-const hyteEcsrasaBots = [{port: 5005, project: 'HFqcqN9LEiDo8u2N7'}]
+const hyteEcsrasaBots = [{port: 5005, project: 'HFqcqN9LEiDo8u2N7'}];
 
-const demoEcsEnvName = 'demo-ecs';
-const demoEcsSubDomain = `${demoEcsEnvName}.${domain}`;
-const demoWebChatSubDomain = `chat.${demoEcsSubDomain}`;
-const demoEcsrasaBots = [{port: 5005, project: 'hH4Z8S7GXiHsp3PTP'}]
+const demoEnvName = 'demo';
+const demoSubDomain = `${demoEnvName}.${domain}`;
+const demoWebChatSubDomain = `chat.${demoSubDomain}`;
+const demoRasaBots = [{port: 5005, project: 'hH4Z8S7GXiHsp3PTP'}];
 
 const app = new cdk.App();
 const base = new BaseStack(app, 'BaseStack', {
@@ -61,18 +61,19 @@ new WebChatStack(app, 'HyteWebChatStack', {
 
 // Demo-ecs env
 const demoEcsBaseStack = new EcsBaseStack(app, 'DemoEcsBaseStack', {
-  envName: demoEcsEnvName,
-  subDomain: demoEcsSubDomain,
+  envName: demoEnvName,
+  actionsRepoCount: demoRasaBots.length,
+  subDomain: demoSubDomain,
   domain,
   env: {
     region,
     account
   }
 });
-cdk.Tags.of(demoEcsBaseStack).add('environment', demoEcsEnvName)
+cdk.Tags.of(demoEcsBaseStack).add('environment', demoEnvName)
 
 const demoEcsBfStack = new EcsBfStack(app, 'DemoEcsBfStack', {
-  envName: demoEcsEnvName,
+  envName: demoEnvName,
   baseCluster: demoEcsBaseStack.baseCluster,
   baseCertificate: demoEcsBaseStack.baseCertificate,
   baseLoadbalancer: demoEcsBaseStack.baseLoadBalancer,
@@ -83,25 +84,25 @@ const demoEcsBfStack = new EcsBfStack(app, 'DemoEcsBfStack', {
     account
   }
 });
-cdk.Tags.of(demoEcsBfStack).add('environment', demoEcsEnvName)
+cdk.Tags.of(demoEcsBfStack).add('environment', demoEnvName)
 
 let stack;
-for (let i = 0; i < demoEcsrasaBots.length; i++) {
+for (let i = 0; i < demoRasaBots.length; i++) {
   stack = new EcsRasaStack(app, `DemoEcsRasaStack-${i}`, {
-    envName: demoEcsEnvName,
+    envName: demoEnvName,
     baseCluster: demoEcsBaseStack.baseCluster,
     baseVpc: demoEcsBaseStack.baseVpc,
     baseLoadbalancer: demoEcsBaseStack.baseLoadBalancer,
     baseCertificate: demoEcsBaseStack.baseCertificate,
     botfrontService: demoEcsBfStack.botfrontService,
-    port: demoEcsrasaBots[i].port,
-    projectId: demoEcsrasaBots[i].project,
+    port: demoRasaBots[i].port,
+    projectId: demoRasaBots[i].project,
     env: {
       region,
       account
     }
   });
-  cdk.Tags.of(stack).add('environment', demoEcsEnvName)
+  cdk.Tags.of(stack).add('environment', demoEnvName)
   
 }
 
@@ -109,6 +110,7 @@ for (let i = 0; i < demoEcsrasaBots.length; i++) {
 const hyteEcsBaseStack = new EcsBaseStack(app, 'HyteEcsBaseStack', {
   envName: hyteEcsEnvName,
   subDomain: hyteEcsSubDomain,
+  actionsRepoCount: hyteEcsrasaBots.length,
   domain,
   env: {
     region,
