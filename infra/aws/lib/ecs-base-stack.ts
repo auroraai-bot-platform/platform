@@ -13,7 +13,11 @@ import { BaseStackProps } from '../types';
 interface EcsBaseProps extends BaseStackProps {
   domain: string,
   subDomain: string,
-  actionsRepoCount: number
+  ecrRepos: {
+    port: number;
+    project: string;
+    customerName: string;
+  }[]
 }
 
 export class EcsBaseStack extends cdk.Stack {
@@ -42,18 +46,19 @@ export class EcsBaseStack extends cdk.Stack {
       repositoryName: `${props.envName}-botfront`
     });
 
-    for (let i = 0; i < props.actionsRepoCount; i++) {
-      new ecr.Repository(this, `${prefix}ecr-repository-actions-${i}`, {
+    for (let i = 0; i < props.ecrRepos.length; i++) {
+      new ecr.Repository(this, `${prefix}ecr-repository-actions-${props.ecrRepos[i].customerName}-${props.ecrRepos[i].project}`, {
         imageScanOnPush: true,
-        repositoryName: `${props.envName}-actions-${i}`
+        repositoryName: `${props.envName}-actions-${props.ecrRepos[i].customerName}-${props.ecrRepos[i].project}`
       });
     }
 
-
-    new ecr.Repository(this, `${prefix}ecr-repository-rasa`, {
-      imageScanOnPush: true,
-      repositoryName: `${props.envName}-rasa`
-    });
+    for (let i = 0; i < props.ecrRepos.length; i++) {
+      new ecr.Repository(this, `${prefix}ecr-repository-rasa-${props.ecrRepos[i].customerName}-${props.ecrRepos[i].project}`, {
+        imageScanOnPush: true,
+        repositoryName: `${props.envName}-rasa-${props.ecrRepos[i].customerName}-${props.ecrRepos[i].project}`
+      });
+    }
 
     new secret.Secret(this, `${prefix}secretsmanager-secret`, {
       secretName: `dev/${props.envName}mongo/connectionstring`

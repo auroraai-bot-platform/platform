@@ -25,7 +25,7 @@ const customerRasaBots = [{port: 5005, project: 'HFqcqN9LEiDo8u2N7', customerNam
 const demoEnvName = 'demo';
 const demoSubDomain = `${demoEnvName}.${domain}`;
 const demoWebChatSubDomain = `chat.${demoSubDomain}`;
-const demoRasaBots = [{port: 5005, project: 'hH4Z8S7GXiHsp3PTP'}];
+const demoRasaBots = [{port: 5005, project: 'hH4Z8S7GXiHsp3PTP', customerName: 'demo-1'}];
 
 const app = new cdk.App();
 const base = new BaseStack(app, 'BaseStack', {
@@ -63,7 +63,7 @@ new WebChatStack(app, 'HyteWebChatStack', {
 // Demo-ecs env
 const demoEcsBaseStack = new EcsBaseStack(app, 'DemoBaseStack', {
   envName: demoEnvName,
-  actionsRepoCount: demoRasaBots.length,
+  ecrRepos: demoRasaBots,
   subDomain: demoSubDomain,
   domain,
   env: {
@@ -111,7 +111,7 @@ for (let i = 0; i < demoRasaBots.length; i++) {
 const customerBaseStack = new EcsBaseStack(app, 'CustomerBaseStack', {
   envName: customerEnvName,
   subDomain: customerSubDomain,
-  actionsRepoCount: customerRasaBots.length,
+  ecrRepos: customerRasaBots,
   domain,
   env: {
     region,
