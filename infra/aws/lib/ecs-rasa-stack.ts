@@ -22,8 +22,8 @@ export class EcsRasaStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: EcsRasaProps) {
     super(scope, id, props);
     const prefix = createPrefix(props.envName, this.constructor.name);
-    const rasarepo = ecr.Repository.fromRepositoryName(this, `${prefix}repository-rasa`, `${props.envName}rasa`);
-    const actionsrepo = ecr.Repository.fromRepositoryName(this, `${prefix}repository-actions`, `${props.envName}actions`);
+    const rasarepo = ecr.Repository.fromRepositoryName(this, `${prefix}repository-rasa`, `${props.envName}-rasa`);
+    const actionsrepo = ecr.Repository.fromRepositoryName(this, `${prefix}repository-actions`, `${props.envName}-actions`);
     const rasasg = new ec2.SecurityGroup(this, `${prefix}securitygroup-rasa`, {
       allowAllOutbound: true,
       vpc: props.baseVpc

@@ -17,10 +17,10 @@ const domain = 'aaibot.link';
 const hyteEnvName = 'hyte';
 const hyteSubDomain = `${hyteEnvName}.${domain}`;
 
-const hyteEcsEnvName = 'hyte-ecs';
-const hyteEcsSubDomain = `${hyteEcsEnvName}.${domain}`;
-const hyteWebChatSubDomain = `chat.${hyteEcsSubDomain}`;
-const hyteEcsrasaBots = [{port: 5005, project: 'HFqcqN9LEiDo8u2N7'}];
+const customerEnvName = 'customer';
+const customerSubDomain = `${customerEnvName}.${domain}`;
+const customerWebChatSubDomain = `chat.${customerSubDomain}`;
+const customerRasaBots = [{port: 5005, project: 'HFqcqN9LEiDo8u2N7', customerName: 'hyte'}];
 
 const demoEnvName = 'demo';
 const demoSubDomain = `${demoEnvName}.${domain}`;
@@ -48,6 +48,7 @@ const hyteStack = new Ec2Stack(app, 'HyteStack', {
   }
 });
 
+// Destroy this when hyte-ecs is ok
 new WebChatStack(app, 'HyteWebChatStack', {
   envName: hyteEnvName,
   rasaIp: hyteStack.hostIp,
@@ -60,7 +61,7 @@ new WebChatStack(app, 'HyteWebChatStack', {
 });
 
 // Demo-ecs env
-const demoEcsBaseStack = new EcsBaseStack(app, 'DemoEcsBaseStack', {
+const demoEcsBaseStack = new EcsBaseStack(app, 'DemoBaseStack', {
   envName: demoEnvName,
   actionsRepoCount: demoRasaBots.length,
   subDomain: demoSubDomain,
@@ -72,7 +73,7 @@ const demoEcsBaseStack = new EcsBaseStack(app, 'DemoEcsBaseStack', {
 });
 cdk.Tags.of(demoEcsBaseStack).add('environment', demoEnvName)
 
-const demoEcsBfStack = new EcsBfStack(app, 'DemoEcsBfStack', {
+const demoEcsBfStack = new EcsBfStack(app, 'DemoBfStack', {
   envName: demoEnvName,
   baseCluster: demoEcsBaseStack.baseCluster,
   baseCertificate: demoEcsBaseStack.baseCertificate,
@@ -88,7 +89,7 @@ cdk.Tags.of(demoEcsBfStack).add('environment', demoEnvName)
 
 let stack;
 for (let i = 0; i < demoRasaBots.length; i++) {
-  stack = new EcsRasaStack(app, `DemoEcsRasaStack-${i}`, {
+  stack = new EcsRasaStack(app, `DemoRasaStack-${i}`, {
     envName: demoEnvName,
     baseCluster: demoEcsBaseStack.baseCluster,
     baseVpc: demoEcsBaseStack.baseVpc,
@@ -106,48 +107,48 @@ for (let i = 0; i < demoRasaBots.length; i++) {
   
 }
 
-// Hyte ecs env
-const hyteEcsBaseStack = new EcsBaseStack(app, 'HyteEcsBaseStack', {
-  envName: hyteEcsEnvName,
-  subDomain: hyteEcsSubDomain,
-  actionsRepoCount: hyteEcsrasaBots.length,
+// customer ecs env
+const customerBaseStack = new EcsBaseStack(app, 'CustomerBaseStack', {
+  envName: customerEnvName,
+  subDomain: customerSubDomain,
+  actionsRepoCount: customerRasaBots.length,
   domain,
   env: {
     region,
     account
   }
 });
-cdk.Tags.of(hyteEcsBaseStack).add('environment', hyteEcsEnvName)
+cdk.Tags.of(customerBaseStack).add('environment', customerEnvName)
 
-const hyteEcsBfStack = new EcsBfStack(app, 'HyteEcsBfStack', {
-  envName: hyteEcsEnvName,
-  baseCluster: hyteEcsBaseStack.baseCluster,
-  baseCertificate: hyteEcsBaseStack.baseCertificate,
-  baseLoadbalancer: hyteEcsBaseStack.baseLoadBalancer,
-  baseVpc: hyteEcsBaseStack.baseVpc,
+const customerBfStack = new EcsBfStack(app, 'CustomerBfStack', {
+  envName: customerEnvName,
+  baseCluster: customerBaseStack.baseCluster,
+  baseCertificate: customerBaseStack.baseCertificate,
+  baseLoadbalancer: customerBaseStack.baseLoadBalancer,
+  baseVpc: customerBaseStack.baseVpc,
   domain,
   env: {
     region,
     account
   }
 });
-cdk.Tags.of(hyteEcsBfStack).add('environment', hyteEcsEnvName)
+cdk.Tags.of(customerBfStack).add('environment', customerEnvName)
 
-for (let i = 0; i < hyteEcsrasaBots.length; i++) {
-  stack = new EcsRasaStack(app, `HyteEcsRasaStack-${i}`, {
-    envName: hyteEcsEnvName,
-    baseCluster: hyteEcsBaseStack.baseCluster,
-    baseVpc: hyteEcsBaseStack.baseVpc,
-    baseLoadbalancer: hyteEcsBaseStack.baseLoadBalancer,
-    baseCertificate: hyteEcsBaseStack.baseCertificate,
-    botfrontService: hyteEcsBfStack.botfrontService,
-    port: hyteEcsrasaBots[i].port,
-    projectId: hyteEcsrasaBots[i].project,
+for (let i = 0; i < customerRasaBots.length; i++) {
+  stack = new EcsRasaStack(app, `${customerRasaBots[i].customerName}RasaStack-${i}`, {
+    envName: customerRasaBots[i].customerName,
+    baseCluster: customerBaseStack.baseCluster,
+    baseVpc: customerBaseStack.baseVpc,
+    baseLoadbalancer: customerBaseStack.baseLoadBalancer,
+    baseCertificate: customerBaseStack.baseCertificate,
+    botfrontService: customerBfStack.botfrontService,
+    port: customerRasaBots[i].port,
+    projectId: customerRasaBots[i].project,
     env: {
       region,
       account
     }
   });
-  cdk.Tags.of(stack).add('environment', hyteEcsEnvName)
+  cdk.Tags.of(stack).add('environment', customerRasaBots[i].customerName)
   
 }
