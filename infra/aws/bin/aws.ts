@@ -98,6 +98,7 @@ for (let i = 0; i < demoRasaBots.length; i++) {
     botfrontService: demoEcsBfStack.botfrontService,
     port: demoRasaBots[i].port,
     projectId: demoRasaBots[i].project,
+    customerName: demoRasaBots[i].customerName,
     env: {
       region,
       account
@@ -144,6 +145,7 @@ for (let i = 0; i < customerRasaBots.length; i++) {
     botfrontService: customerBfStack.botfrontService,
     port: customerRasaBots[i].port,
     projectId: customerRasaBots[i].project,
+    customerName: customerRasaBots[i].customerName,
     env: {
       region,
       account
