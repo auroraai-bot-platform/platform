@@ -14,13 +14,14 @@ const account = process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUN
 const domain = 'aaibot.link';
 
 // Environments
+// RasaBots customerName must be unique!
 const hyteEnvName = 'hyte';
 const hyteSubDomain = `${hyteEnvName}.${domain}`;
 
 const customerEnvName = 'customer';
 const customerSubDomain = `${customerEnvName}.${domain}`;
 const customerWebChatSubDomain = `chat.${customerSubDomain}`;
-const customerRasaBots = [{port: 5005, project: 'HFqcqN9LEiDo8u2N7', customerName: 'hyte'}];
+const customerRasaBots = [{port: 5005, project: 'HFqcqN9LEiDo8u2N7', customerName: 'hyte-firstbot'}];
 
 const demoEnvName = 'demo';
 const demoSubDomain = `${demoEnvName}.${domain}`;
@@ -89,7 +90,7 @@ cdk.Tags.of(demoEcsBfStack).add('environment', demoEnvName)
 
 let stack;
 for (let i = 0; i < demoRasaBots.length; i++) {
-  stack = new EcsRasaStack(app, `DemoRasaStack-${i}`, {
+  stack = new EcsRasaStack(app, `DemoRasaStack-${demoRasaBots[i].customerName}`, {
     envName: demoEnvName,
     baseCluster: demoEcsBaseStack.baseCluster,
     baseVpc: demoEcsBaseStack.baseVpc,
@@ -104,7 +105,7 @@ for (let i = 0; i < demoRasaBots.length; i++) {
       account
     }
   });
-  cdk.Tags.of(stack).add('environment', demoEnvName)
+  cdk.Tags.of(stack).add('environment', demoRasaBots[i].customerName)
   
 }
 
@@ -136,8 +137,8 @@ const customerBfStack = new EcsBfStack(app, 'CustomerBfStack', {
 cdk.Tags.of(customerBfStack).add('environment', customerEnvName)
 
 for (let i = 0; i < customerRasaBots.length; i++) {
-  stack = new EcsRasaStack(app, `${customerRasaBots[i].customerName}RasaStack-${i}`, {
-    envName: customerRasaBots[i].customerName,
+  stack = new EcsRasaStack(app, `CustomerRasaStack-${customerRasaBots[i].customerName}`, {
+    envName: customerEnvName,
     baseCluster: customerBaseStack.baseCluster,
     baseVpc: customerBaseStack.baseVpc,
     baseLoadbalancer: customerBaseStack.baseLoadBalancer,

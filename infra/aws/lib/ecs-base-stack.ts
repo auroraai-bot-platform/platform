@@ -47,16 +47,16 @@ export class EcsBaseStack extends cdk.Stack {
     });
 
     for (let i = 0; i < props.ecrRepos.length; i++) {
-      new ecr.Repository(this, `${prefix}ecr-repository-actions-${props.ecrRepos[i].customerName}-${props.ecrRepos[i].project}`, {
+      new ecr.Repository(this, `${prefix}ecr-repository-actions-${props.ecrRepos[i].customerName}`, {
         imageScanOnPush: true,
-        repositoryName: `${props.envName}-actions-${props.ecrRepos[i].customerName}-${props.ecrRepos[i].project}`
+        repositoryName: `${props.envName}-actions-${props.ecrRepos[i].customerName}`
       });
     }
 
     for (let i = 0; i < props.ecrRepos.length; i++) {
-      new ecr.Repository(this, `${prefix}ecr-repository-rasa-${props.ecrRepos[i].customerName}-${props.ecrRepos[i].project}`, {
+      new ecr.Repository(this, `${prefix}ecr-repository-rasa-${props.ecrRepos[i].customerName}`, {
         imageScanOnPush: true,
-        repositoryName: `${props.envName}-rasa-${props.ecrRepos[i].customerName}-${props.ecrRepos[i].project}`
+        repositoryName: `${props.envName}-rasa-${props.ecrRepos[i].customerName}`
       });
     }
 
@@ -66,7 +66,7 @@ export class EcsBaseStack extends cdk.Stack {
 
     this.baseCluster = new ecs.Cluster(this, `${prefix}ecs-cluster`, {
       vpc: this.baseVpc,
-      clusterName: `${props.envName}cluster`,
+      clusterName: `${props.envName}-cluster`,
       containerInsights: true,
       defaultCloudMapNamespace: {
         name: `${props.envName}service.internal`,
