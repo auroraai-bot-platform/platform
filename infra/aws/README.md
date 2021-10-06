@@ -42,6 +42,8 @@ Additionally, each resource should have following tags:
 - Navigate to the CDK folder `infra/aws`
 - Run `npm run build`
 - Run `cdk diff` to output the changes to infrastructure
+- Target certain stack `cdk deploy 'Customer*'` to make all changes that relate to it
+- - If you're starting a new stack deploy `'stackname'Base*` first in order to get the repositories and secrets done before other components
 - Run `cdk deploy '*'` to deploy everything
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
