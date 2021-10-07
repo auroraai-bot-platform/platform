@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import * as ssm from '@aws-cdk/aws-ssm';
 import { BaseStack } from '../lib/base-stack';
 import { Ec2Stack } from '../lib/ec2-stack';
 import { EcsBaseStack } from '../lib/ecs-base-stack';

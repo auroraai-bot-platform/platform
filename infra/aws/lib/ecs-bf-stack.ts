@@ -5,7 +5,6 @@ import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as acm from '@aws-cdk/aws-certificatemanager';
 import * as secrets from '@aws-cdk/aws-secretsmanager';
-import * as ssm from '@aws-cdk/aws-ssm';
 
 import { BaseStackProps } from '../types';
 import { createPrefix } from './utilities';
