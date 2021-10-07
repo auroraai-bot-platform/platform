@@ -27,12 +27,12 @@ const hyteSubDomain = `${hyteEnvName}.${domain}`;
 const customerEnvName = 'customer';
 const customerSubDomain = `${customerEnvName}.${domain}`;
 const customerWebChatSubDomain = `chat.${customerSubDomain}`;
-const customerRasaBots: RasaBot[] = [{port: 5005, projectId: 'HFqcqN9LEiDo8u2N7', customerName: 'hyte-firstbot'}];
+const customerRasaBots: RasaBot[] = [{rasaPort: 5005, actionsPort: 5055, projectId: 'HFqcqN9LEiDo8u2N7', customerName: 'hyte-firstbot'}];
 
 const demoEnvName = 'demo';
 const demoSubDomain = `${demoEnvName}.${domain}`;
 const demoWebChatSubDomain = `chat.${demoSubDomain}`;
-const demoRasaBots: RasaBot[] = [{port: 5006, projectId: 'hH4Z8S7GXiHsp3PTP', customerName: 'demo-1'}];
+const demoRasaBots: RasaBot[] = []; // {rasaPort: 5006, actionsPort: 5055, projectId: 'hH4Z8S7GXiHsp3PTP', customerName: 'demo-1'}];
 
 const app = new cdk.App();
 const base = new BaseStack(app, 'BaseStack', {

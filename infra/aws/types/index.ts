@@ -5,7 +5,8 @@ export interface BaseStackProps extends cdk.StackProps {
 }
 
 export interface RasaBot {
+  actionsPort: number;
   customerName: string;
-  port: number;
   projectId: string;
+  rasaPort: number;
 }
