@@ -104,10 +104,7 @@ export class EcsRasaStack extends cdk.Stack {
       });
 
       rasaservice.connections.allowFrom(props.baseLoadbalancer, ec2.Port.tcp(rasaBot.rasaPort));
-      //props.baseLoadbalancer.connections.allowTo(rasaservice, ec2.Port.tcp(rasaBot.port));
       rasaservice.connections.allowFrom(props.botfrontService, ec2.Port.tcp(rasaBot.rasaPort));
-      //rasaservice.connections.allowFromAnyIpv4(ec2.Port.tcp(rasaBot.port));
-      //props.botfrontService.connections.allowFrom(rasaservice, ec2.Port.tcp(8888));
     }
   }
 }
