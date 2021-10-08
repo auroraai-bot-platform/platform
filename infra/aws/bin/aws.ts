@@ -7,8 +7,13 @@ import { EcsBaseStack } from '../lib/ecs-base-stack';
 import { WebChatStack } from '../lib/web-chat-stack';
 import { EcsBfStack } from '../lib/ecs-bf-stack';
 import { EcsRasaStack } from '../lib/ecs-rasa-stack';
+import { RasaBot } from '../types';
+
+
 const region = process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION || 'eu-north-1';
 const account = process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT;
+
+console.log({account});
 
 // Base domain
 const domain = 'aaibot.link';
@@ -21,12 +26,12 @@ const hyteSubDomain = `${hyteEnvName}.${domain}`;
 const customerEnvName = 'customer';
 const customerSubDomain = `${customerEnvName}.${domain}`;
 const customerWebChatSubDomain = `chat.${customerSubDomain}`;
-const customerRasaBots = [{port: 5005, project: 'HFqcqN9LEiDo8u2N7', customerName: 'hyte-firstbot'}];
+const customerRasaBots: RasaBot[] = [{rasaPort: 5005, actionsPort: 5055, projectId: 'HFqcqN9LEiDo8u2N7', customerName: 'hyte-firstbot'}];
 
 const demoEnvName = 'demo';
 const demoSubDomain = `${demoEnvName}.${domain}`;
 const demoWebChatSubDomain = `chat.${demoSubDomain}`;
-const demoRasaBots = [{port: 5005, project: 'hH4Z8S7GXiHsp3PTP', customerName: 'demo-1'}];
+const demoRasaBots: RasaBot[] = []; // {rasaPort: 5006, actionsPort: 5055, projectId: 'hH4Z8S7GXiHsp3PTP', customerName: 'demo-1'}];
 
 const app = new cdk.App();
 const base = new BaseStack(app, 'BaseStack', {
@@ -84,30 +89,27 @@ const demoEcsBfStack = new EcsBfStack(app, 'DemoBfStack', {
   env: {
     region,
     account
-  }
+  },
+  mongoSecret: demoEcsBaseStack.mongoSecret
 });
 cdk.Tags.of(demoEcsBfStack).add('environment', demoEnvName)
 
-let stack;
-for (let i = 0; i < demoRasaBots.length; i++) {
-  stack = new EcsRasaStack(app, `DemoRasaStack-${demoRasaBots[i].customerName}`, {
+const demoRasaBotStack = new EcsRasaStack(app, `DemoRasaStack`, {
     envName: demoEnvName,
     baseCluster: demoEcsBaseStack.baseCluster,
     baseVpc: demoEcsBaseStack.baseVpc,
     baseLoadbalancer: demoEcsBaseStack.baseLoadBalancer,
     baseCertificate: demoEcsBaseStack.baseCertificate,
     botfrontService: demoEcsBfStack.botfrontService,
-    port: demoRasaBots[i].port,
-    projectId: demoRasaBots[i].project,
-    customerName: demoRasaBots[i].customerName,
+    rasaBots: demoRasaBots,
     env: {
       region,
       account
     }
   });
-  cdk.Tags.of(stack).add('environment', demoRasaBots[i].customerName)
-  
-}
+
+  cdk.Tags.of(demoRasaBotStack).add('environment', demoEnvName);
+
 
 // customer ecs env
 const customerBaseStack = new EcsBaseStack(app, 'CustomerBaseStack', {
@@ -132,26 +134,24 @@ const customerBfStack = new EcsBfStack(app, 'CustomerBfStack', {
   env: {
     region,
     account
-  }
+  },
+  mongoSecret: customerBaseStack.mongoSecret
 });
+
 cdk.Tags.of(customerBfStack).add('environment', customerEnvName)
 
-for (let i = 0; i < customerRasaBots.length; i++) {
-  stack = new EcsRasaStack(app, `CustomerRasaStack-${customerRasaBots[i].customerName}`, {
-    envName: customerEnvName,
-    baseCluster: customerBaseStack.baseCluster,
-    baseVpc: customerBaseStack.baseVpc,
-    baseLoadbalancer: customerBaseStack.baseLoadBalancer,
-    baseCertificate: customerBaseStack.baseCertificate,
-    botfrontService: customerBfStack.botfrontService,
-    port: customerRasaBots[i].port,
-    projectId: customerRasaBots[i].project,
-    customerName: customerRasaBots[i].customerName,
-    env: {
-      region,
-      account
-    }
-  });
-  cdk.Tags.of(stack).add('environment', customerRasaBots[i].customerName)
-  
-}
+const customerRasaBotStack = new EcsRasaStack(app, `CustomerRasaStack`, {
+  envName: customerEnvName,
+  baseCluster: customerBaseStack.baseCluster,
+  baseVpc: customerBaseStack.baseVpc,
+  baseLoadbalancer: customerBaseStack.baseLoadBalancer,
+  baseCertificate: customerBaseStack.baseCertificate,
+  botfrontService: customerBfStack.botfrontService,
+  rasaBots: customerRasaBots,
+  env: {
+    region,
+    account
+  }
+});
+
+cdk.Tags.of(demoRasaBotStack).add('environment', demoEnvName);

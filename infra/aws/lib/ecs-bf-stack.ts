@@ -4,9 +4,10 @@ import * as ecs from '@aws-cdk/aws-ecs';
 import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as acm from '@aws-cdk/aws-certificatemanager';
+import * as secrets from '@aws-cdk/aws-secretsmanager';
+
 import { BaseStackProps } from '../types';
 import { createPrefix } from './utilities';
-import * as secrets from '@aws-cdk/aws-secretsmanager';
 import { RetentionDays } from '@aws-cdk/aws-logs';
 
 interface EcsBfProps extends BaseStackProps {
@@ -15,6 +16,7 @@ interface EcsBfProps extends BaseStackProps {
   baseLoadbalancer: elbv2.ApplicationLoadBalancer,
   baseCertificate: acm.Certificate
   domain: string
+  mongoSecret: secrets.Secret;
 }
 
 export class EcsBfStack extends cdk.Stack {
@@ -25,7 +27,6 @@ export class EcsBfStack extends cdk.Stack {
 
     const prefix = createPrefix(props.envName, this.constructor.name);
     const bfrepo = ecr.Repository.fromRepositoryName(this, `${prefix}repository-botfront`, `${props.envName}-botfront`);
-    const mongoConnectionString = secrets.Secret.fromSecretNameV2(this, `${prefix}secret-db`, `dev/${props.envName}mongo/connectionstring`);
 
     const botfronttd = new ecs.TaskDefinition(this, `${prefix}taskdefinition-botfront`, {
       cpu: '1024',
@@ -52,7 +53,7 @@ export class EcsBfStack extends cdk.Stack {
         ROOT_URL: `https://${props.envName}.${props.domain}`
       },
       secrets: {
-        MONGO_URL: ecs.Secret.fromSecretsManager(mongoConnectionString)
+        MONGO_URL: ecs.Secret.fromSecretsManager(props.mongoSecret)
       },
       logging: ecs.LogDriver.awsLogs({
         streamPrefix: `${prefix}botfront`,
