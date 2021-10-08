@@ -11,7 +11,8 @@ To easily identify and find resources in AWS, all resources should follow a stri
 
 The prefix consists of following parts:
 - Environment - e.g. DEMO
-- Stack Name  - e.g. BOTFRONT.sStack names should describe the containing functionality. Stacks should describe a modular piece of functionality.
+- Stack Name  - e.g. BOTFRONT
+  - Stack names should describe the containing functionality. Stacks should describe a modular piece of functionality.
 
 Rules:
 - Each part should use only characters or numbers. E.g. `dev`, `compute`
@@ -43,7 +44,7 @@ Additionally, each resource should have following tags:
 - Run `npm run build`
 - Run `cdk diff` to output the changes to infrastructure
 - Target certain stack `cdk deploy 'Customer*'` to make all changes that relate to it
-- - If you're starting a new stack deploy `'stackname'Base*` first in order to get the repositories and secrets done before other components
+  - If you're starting a new cluster deploy `'stackname'Base*` first in order to get the repositories and secrets done before other components
 - Run `cdk deploy '*'` to deploy everything
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
