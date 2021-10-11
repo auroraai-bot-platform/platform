@@ -31,15 +31,15 @@ export class WebChatStack extends cdk.Stack {
       destinationKeyPrefix: 'files'
     });
 
-    const hostedZone = route53.HostedZone.fromLookup(this, `${prefix}hostedZone`, {domainName: props.domain});
+    const hostedZone = route53.HostedZone.fromLookup(this, `${prefix}hosted-zone`, {domainName: props.domain});
 
-    const cert = new acm.DnsValidatedCertificate(this, `${prefix}httpscert`, {
+    const cert = new acm.DnsValidatedCertificate(this, `${prefix}https-certificate`, {
       domainName: props.subDomain,
       hostedZone,
       region: 'us-east-1'
     });
 
-    const cloudfrontAI = new cloudfront.OriginAccessIdentity(this, `${prefix}distribution-accessidentity`, {
+    const cloudfrontAI = new cloudfront.OriginAccessIdentity(this, `${prefix}distribution-access-identity`, {
     });
     bucket.grantRead(cloudfrontAI);
     fileBucket.grantRead(cloudfrontAI);
