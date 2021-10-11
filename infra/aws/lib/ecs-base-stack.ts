@@ -6,18 +6,15 @@ import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as route53 from '@aws-cdk/aws-route53';
 import * as route53t from '@aws-cdk/aws-route53-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager';
-import * as secret from '@aws-cdk/aws-secretsmanager';
+import * as secrets from '@aws-cdk/aws-secretsmanager';
 import { createPrefix } from './utilities';
-import { BaseStackProps } from '../types';
+import { BaseStackProps, RasaBot } from '../types';
+import { RemovalPolicy } from '@aws-cdk/core';
 
 interface EcsBaseProps extends BaseStackProps {
   domain: string,
   subDomain: string,
-  ecrRepos: {
-    port: number;
-    project: string;
-    customerName: string;
-  }[]
+  ecrRepos: RasaBot[]
 }
 
 export class EcsBaseStack extends cdk.Stack {
@@ -25,6 +22,7 @@ export class EcsBaseStack extends cdk.Stack {
   public readonly baseCluster: ecs.Cluster;
   public readonly baseLoadBalancer: elbv2.ApplicationLoadBalancer;
   public readonly baseCertificate: acm.Certificate;
+  public readonly mongoSecret: secrets.Secret;
 
   constructor(scope: cdk.Construct, id: string, props: EcsBaseProps) {
     super(scope, id, props);
@@ -49,19 +47,24 @@ export class EcsBaseStack extends cdk.Stack {
     for (let i = 0; i < props.ecrRepos.length; i++) {
       new ecr.Repository(this, `${prefix}ecr-repository-actions-${props.ecrRepos[i].customerName}`, {
         imageScanOnPush: true,
-        repositoryName: `${props.envName}-actions-${props.ecrRepos[i].customerName}`
+        repositoryName: `${props.envName}-actions-${props.ecrRepos[i].customerName}`,
+        removalPolicy: RemovalPolicy.DESTROY,
       });
     }
 
     for (let i = 0; i < props.ecrRepos.length; i++) {
       new ecr.Repository(this, `${prefix}ecr-repository-rasa-${props.ecrRepos[i].customerName}`, {
         imageScanOnPush: true,
-        repositoryName: `${props.envName}-rasa-${props.ecrRepos[i].customerName}`
+        repositoryName: `${props.envName}-rasa-${props.ecrRepos[i].customerName}`,
+        removalPolicy: RemovalPolicy.DESTROY,
       });
     }
 
-    new secret.Secret(this, `${prefix}secretsmanager-secret`, {
-      secretName: `dev/${props.envName}mongo/connectionstring`
+
+    const mongoSecretName = `${prefix}mongo-connectionstring`;
+
+    this.mongoSecret = new secrets.Secret(this, mongoSecretName, {
+      secretName: mongoSecretName
     });
 
     this.baseCluster = new ecs.Cluster(this, `${prefix}ecs-cluster`, {
