@@ -8,11 +8,17 @@ import { WebChatStack } from '../lib/web-chat-stack';
 import { EcsBfStack } from '../lib/ecs-bf-stack';
 import { EcsRasaStack } from '../lib/ecs-rasa-stack';
 import { RasaBot } from '../types';
-import { createEnvironment } from '../envs/environment';
+import { createEnvironment, DefaultRepositories } from '../envs/environment';
 
 
 const region = process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION || 'eu-north-1';
 const account = process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT || '';
+
+const defaultRepositories: DefaultRepositories = {
+  actionsRepository: '530123621479.dkr.ecr.eu-north-1.amazonaws.com/actions-private:latest',
+  botfrontRepository: '530123621479.dkr.ecr.eu-north-1.amazonaws.com/botfront-private:latest',
+  rasaBotRepository: '530123621479.dkr.ecr.eu-north-1.amazonaws.com/rasa-private:latest',
+};
 
 console.log({account});
 
@@ -44,6 +50,7 @@ const base = new BaseStack(app, 'BaseStack', {
 
 const env = createEnvironment(app, {
   domain,
+  defaultRepositories,
   env: {account, region},
   envName: demoEnvName,
   rasaBots: demoRasaBots,
@@ -86,7 +93,8 @@ const customerBaseStack = new EcsBaseStack(app, 'CustomerBaseStack', {
   env: {
     region,
     account
-  }
+  },
+  defaultRepositories
 });
 cdk.Tags.of(customerBaseStack).add('environment', customerEnvName)
 

@@ -13,18 +13,27 @@ export interface EnvironmentConfiguration {
   envName: string;
   rasaBots: RasaBot[];
   subDomain: string;
+  defaultRepositories: DefaultRepositories
+}
+
+export interface DefaultRepositories {
+  botfrontRepository: string;
+  rasaBotRepository: string;
+  actionsRepository: string;
 }
 
 export function createEnvironment(app: cdk.App, config: EnvironmentConfiguration) {
   
 // Demo-ecs env
 const ecsBaseStack = new EcsBaseStack(app, 'DemoBaseStack', {
+  defaultRepositories: config.defaultRepositories,
   envName: config.envName,
   ecrRepos: config.rasaBots,
   subDomain: config.subDomain,
   domain: config.domain,
   env: config.env,
 });
+
 cdk.Tags.of(ecsBaseStack).add('environment', config.envName)
 
 const ecsBfStack = new EcsBfStack(app, 'DemoBfStack', {
