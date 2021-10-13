@@ -25,7 +25,7 @@ export interface DefaultRepositories {
 export function createEnvironment(app: cdk.App, config: EnvironmentConfiguration) {
   
 // Demo-ecs env
-const ecsBaseStack = new EcsBaseStack(app, 'DemoBaseStack', {
+const ecsBaseStack = new EcsBaseStack(app, `${config.envName}-base-stack`, {
   defaultRepositories: config.defaultRepositories,
   envName: config.envName,
   ecrRepos: config.rasaBots,
@@ -36,7 +36,7 @@ const ecsBaseStack = new EcsBaseStack(app, 'DemoBaseStack', {
 
 cdk.Tags.of(ecsBaseStack).add('environment', config.envName)
 
-const ecsBfStack = new EcsBfStack(app, 'DemoBfStack', {
+const ecsBfStack = new EcsBfStack(app, `${config.envName}-botfront-stack`, {
   envName: config.envName,
   baseCluster: ecsBaseStack.baseCluster,
   baseCertificate: ecsBaseStack.baseCertificate,
@@ -48,7 +48,7 @@ const ecsBfStack = new EcsBfStack(app, 'DemoBfStack', {
 });
 cdk.Tags.of(ecsBfStack).add('environment', config.envName)
 
-const rasaBotStack = new EcsRasaStack(app, `DemoRasaStack`, {
+const rasaBotStack = new EcsRasaStack(app, `${config.envName}-rasa-stack`, {
     envName: config.envName,
     baseCluster: ecsBaseStack.baseCluster,
     baseVpc: ecsBaseStack.baseVpc,
@@ -61,5 +61,5 @@ const rasaBotStack = new EcsRasaStack(app, `DemoRasaStack`, {
 
   cdk.Tags.of(rasaBotStack).add('environment', config.envName);
 
-  return [ecsBaseStack, EcsBfStack, rasaBotStack];
+  return { ecsBaseStack, EcsBfStack, rasaBotStack };
 }

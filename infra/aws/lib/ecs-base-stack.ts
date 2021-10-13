@@ -46,7 +46,7 @@ export class EcsBaseStack extends cdk.Stack {
     const bfRepo = new ecr.Repository(this, `${prefix}ecr-repository-botfront`, {
       imageScanOnPush: true,
       repositoryName: `${props.envName}-botfront`,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
     });
 
     new ecrdeploy.ECRDeployment(this, `${prefix}deploy-bf-image`, {
@@ -59,7 +59,7 @@ export class EcsBaseStack extends cdk.Stack {
       const rasaRepo = new ecr.Repository(this, `${prefix}ecr-repository-rasa-${ecrRepoConfig.customerName}`, {
         imageScanOnPush: true,
         repositoryName: `${props.envName}-rasa-${ecrRepoConfig.customerName}`,
-        removalPolicy: cdk.RemovalPolicy.DESTROY,
+        removalPolicy: cdk.RemovalPolicy.RETAIN,
       });
 
       new ecrdeploy.ECRDeployment(this, `${prefix}deploy-rasa-image-${ecrRepoConfig.customerName}`, {
@@ -70,7 +70,7 @@ export class EcsBaseStack extends cdk.Stack {
       const actionsRepo = new ecr.Repository(this, `${prefix}ecr-repository-actions-${ecrRepoConfig.customerName}`, {
         imageScanOnPush: true,
         repositoryName: `${props.envName}-actions-${ecrRepoConfig.customerName}`,
-        removalPolicy: cdk.RemovalPolicy.DESTROY,
+        removalPolicy: cdk.RemovalPolicy.RETAIN,
       });
 
       new ecrdeploy.ECRDeployment(this, `${prefix}deploy-actions-image-${ecrRepoConfig.customerName}`, {
