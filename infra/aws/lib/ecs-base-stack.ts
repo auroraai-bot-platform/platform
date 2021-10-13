@@ -7,14 +7,18 @@ import * as route53 from '@aws-cdk/aws-route53';
 import * as route53t from '@aws-cdk/aws-route53-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager';
 import * as secrets from '@aws-cdk/aws-secretsmanager';
+
+import * as ecrdeploy from 'cdk-ecr-deployment';
+
 import { createPrefix } from './utilities';
 import { BaseStackProps, RasaBot } from '../types';
-import { RemovalPolicy } from '@aws-cdk/core';
+import { DefaultRepositories } from '../envs/environment';
 
 interface EcsBaseProps extends BaseStackProps {
-  domain: string,
-  subDomain: string,
-  ecrRepos: RasaBot[]
+  defaultRepositories: DefaultRepositories;
+  domain: string;
+  subDomain: string;
+  ecrRepos: RasaBot[];
 }
 
 export class EcsBaseStack extends cdk.Stack {
@@ -39,24 +43,39 @@ export class EcsBaseStack extends cdk.Stack {
       validation: acm.CertificateValidation.fromDns(zone)
     });
 
-    new ecr.Repository(this, `${prefix}ecr-repository-botfront`, {
+    const bfRepo = new ecr.Repository(this, `${prefix}ecr-repository-botfront`, {
       imageScanOnPush: true,
-      repositoryName: `${props.envName}-botfront`
+      repositoryName: `${props.envName}-botfront`,
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
     });
 
-    for (let i = 0; i < props.ecrRepos.length; i++) {
-      new ecr.Repository(this, `${prefix}ecr-repository-actions-${props.ecrRepos[i].customerName}`, {
-        imageScanOnPush: true,
-        repositoryName: `${props.envName}-actions-${props.ecrRepos[i].customerName}`,
-        removalPolicy: RemovalPolicy.DESTROY,
-      });
-    }
+    new ecrdeploy.ECRDeployment(this, `${prefix}deploy-bf-image`, {
+      src: new ecrdeploy.DockerImageName(props.defaultRepositories.botfrontRepository),
+      dest: new ecrdeploy.DockerImageName(`${bfRepo.repositoryUri}:latest`),
+    });
 
-    for (let i = 0; i < props.ecrRepos.length; i++) {
-      new ecr.Repository(this, `${prefix}ecr-repository-rasa-${props.ecrRepos[i].customerName}`, {
+
+    for (const ecrRepoConfig of props.ecrRepos) {
+      const rasaRepo = new ecr.Repository(this, `${prefix}ecr-repository-rasa-${ecrRepoConfig.customerName}`, {
         imageScanOnPush: true,
-        repositoryName: `${props.envName}-rasa-${props.ecrRepos[i].customerName}`,
-        removalPolicy: RemovalPolicy.DESTROY,
+        repositoryName: `${props.envName}-rasa-${ecrRepoConfig.customerName}`,
+        removalPolicy: cdk.RemovalPolicy.RETAIN,
+      });
+
+      new ecrdeploy.ECRDeployment(this, `${prefix}deploy-rasa-image-${ecrRepoConfig.customerName}`, {
+        src: new ecrdeploy.DockerImageName(props.defaultRepositories.rasaBotRepository),
+        dest: new ecrdeploy.DockerImageName(`${rasaRepo.repositoryUri}:latest`),
+      });
+
+      const actionsRepo = new ecr.Repository(this, `${prefix}ecr-repository-actions-${ecrRepoConfig.customerName}`, {
+        imageScanOnPush: true,
+        repositoryName: `${props.envName}-actions-${ecrRepoConfig.customerName}`,
+        removalPolicy: cdk.RemovalPolicy.RETAIN,
+      });
+
+      new ecrdeploy.ECRDeployment(this, `${prefix}deploy-actions-image-${ecrRepoConfig.customerName}`, {
+        src: new ecrdeploy.DockerImageName(props.defaultRepositories.actionsRepository),
+        dest: new ecrdeploy.DockerImageName(`${actionsRepo.repositoryUri}:latest`),
       });
     }
 
