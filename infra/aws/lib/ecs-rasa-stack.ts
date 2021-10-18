@@ -43,6 +43,7 @@ export class EcsRasaStack extends cdk.Stack {
           hostPort: rasaBot.rasaPort,
           containerPort: rasaBot.rasaPort
         }],
+        command: ["rasa", "run", "--enable-api", "--debug",  "--port", rasaBot.rasaPort.toString()],
         environment: {
           BF_PROJECT_ID: rasaBot.projectId,
           PORT: rasaBot.rasaPort.toString(),
@@ -67,9 +68,10 @@ export class EcsRasaStack extends cdk.Stack {
           hostPort: rasaBot.actionsPort,
           containerPort: rasaBot.actionsPort
         }],
+        command: ["start", "--actions", "actions", "--debug", "--port", rasaBot.actionsPort.toString()],
         environment: {
           PORT: rasaBot.actionsPort.toString(),
-          BF_URL: `http://botfront.service.internal:8888/graphql`
+          BF_URL: `http://botfront.${props.envName}service.internal:8888/graphql`
         },
         logging: ecs.LogDriver.awsLogs({
           streamPrefix: `${prefix}rasa-${rasaBot.customerName}`,
@@ -105,6 +107,7 @@ export class EcsRasaStack extends cdk.Stack {
 
       rasaservice.connections.allowFrom(props.baseLoadbalancer, ec2.Port.tcp(rasaBot.rasaPort));
       rasaservice.connections.allowFrom(props.botfrontService, ec2.Port.tcp(rasaBot.rasaPort));
+      rasaservice.connections.allowFrom(props.botfrontService, ec2.Port.tcp(rasaBot.actionsPort));
     }
   }
 }
