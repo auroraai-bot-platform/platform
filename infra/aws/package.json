@@ -38,6 +38,7 @@
     "@aws-cdk/aws-secretsmanager": "^1.128.0",
     "@aws-cdk/aws-ssm": "^1.128.0",
     "@aws-cdk/core": "^1.128.0",
+    "cdk-ecr-deployment": "^0.0.80",
     "source-map-support": "^0.5.20"
   }
 }
