@@ -10,7 +10,6 @@ import { EcsRasaStack } from '../lib/ecs-rasa-stack';
 import { RasaBot } from '../types';
 import { createEnvironment, DefaultRepositories } from '../envs/environment';
 
-
 const region = process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION || 'eu-north-1';
 const account = process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT || '';
 
@@ -40,6 +39,12 @@ const demoSubDomain = `${demoEnvName}.${domain}`;
 const demoWebChatSubDomain = `chat.${demoSubDomain}`;
 const demoRasaBots: RasaBot[] = [{rasaPort: 5006, actionsPort: 5055, projectId: 'hH4Z8S7GXiHsp3PTP', customerName: 'demo-1'}];
 
+
+const testEnvName = 'test';
+const testSubDomain = `${testEnvName}.${domain}`;
+const testWebChatSubDomain = `chat.${demoSubDomain}`;
+const testRasaBots: RasaBot[] = [{rasaPort: 5006, actionsPort: 5055, projectId: 'test-project', customerName: 'test-1'}];
+
 const app = new cdk.App();
 const base = new BaseStack(app, 'BaseStack', {
   env: {
@@ -66,27 +71,11 @@ const customerenv = createEnvironment(app, {
   subDomain: customerSubDomain
 });
 
-// Hyte env
-// Destroy this when hyte-ecs is ok
-const hyteStack = new Ec2Stack(app, 'HyteStack', {
-  baseVpc: base.baseVpc,
-  subDomain: hyteSubDomain,
+const testEnv = createEnvironment(app, {
   domain,
-  envName: hyteEnvName,
-  env: {
-    region,
-    account
-  }
-});
-
-// Destroy this when hyte-ecs is ok
-new WebChatStack(app, 'HyteWebChatStack', {
-  envName: hyteEnvName,
-  rasaIp: hyteStack.hostIp,
-  domain,
-  subDomain: hyteSubDomain,
-  env: {
-    region,
-    account
-  }
+  defaultRepositories,
+  env: {account, region},
+  envName: testEnvName,
+  rasaBots: testRasaBots,
+  subDomain: testSubDomain
 });

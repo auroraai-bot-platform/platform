@@ -7,23 +7,33 @@ import * as route53 from '@aws-cdk/aws-route53';
 import * as route53targets from '@aws-cdk/aws-route53-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager'
 
-import { BaseStackProps } from '../types/index';
+import { BaseStackProps, RasaBot } from '../types/index';
 import { createPrefix } from './utilities';
 
 interface WebChatProps extends BaseStackProps {
-  rasaIp: string,
-  domain: string,
-  subDomain: string
+  domain: string;
+  rasaBots: RasaBot[];
+  subDomain: string;
 }
 
 
+const frontendVersion = '0.0.1';
+const sourceBucketName = 'aurora-source-code-bucket';
 export class WebChatStack extends cdk.Stack {
-  
+
   constructor(scope: cdk.Construct, id: string, props: WebChatProps) {
     super(scope, id, props);
     const prefix = createPrefix(props.envName, this.constructor.name);
-    const bucket = new s3.Bucket(this, `${prefix}frontend-bucket`, {bucketName: `${prefix}frontend-bucket`, publicReadAccess: false});
-    const fileBucket = new s3.Bucket(this, `${prefix}file-bucket`, {bucketName: `${prefix}file-bucket`, publicReadAccess: false});
+    // const bucket = new s3.Bucket(this, `${prefix}frontend-bucket`, { bucketName: `${prefix}frontend-bucket`, publicReadAccess: false });
+    const fileBucket = new s3.Bucket(this, `${prefix}file-bucket`, { bucketName: `${prefix}file-bucket`, publicReadAccess: false });
+
+    const cloudfrontAI = new cloudfront.OriginAccessIdentity(this, `${prefix}distribution-access-identity`, {
+    });
+
+    const bucket = s3.Bucket.fromBucketName(this, sourceBucketName, sourceBucketName);
+
+    bucket.grantRead(cloudfrontAI);
+    fileBucket.grantRead(cloudfrontAI);
 
     new s3deploy.BucketDeployment(this, `${prefix}file-bucket-deployment`, {
       sources: [s3deploy.Source.asset('../../files')],
@@ -31,66 +41,55 @@ export class WebChatStack extends cdk.Stack {
       destinationKeyPrefix: 'files'
     });
 
-    const hostedZone = route53.HostedZone.fromLookup(this, `${prefix}hosted-zone`, {domainName: props.domain});
+    const hostedZone = route53.HostedZone.fromLookup(this, `${prefix}hosted-zone`, { domainName: props.domain });
 
-    const cert = new acm.DnsValidatedCertificate(this, `${prefix}https-certificate`, {
-      domainName: props.subDomain,
-      hostedZone,
-      region: 'us-east-1'
-    });
+    for (const rasaBot of props.rasaBots) {
 
-    const cloudfrontAI = new cloudfront.OriginAccessIdentity(this, `${prefix}distribution-access-identity`, {
-    });
-    bucket.grantRead(cloudfrontAI);
-    fileBucket.grantRead(cloudfrontAI);
+      const rasaBotDomain = `${rasaBot.customerName}.${props.subDomain}`;
 
-    const edgeLambda = new cloudfront.experimental.EdgeFunction(this, `${prefix}basicauth-lambda`, {
-      runtime: lambda.Runtime.NODEJS_12_X,
-      code: new lambda.AssetCode('../../packages/basic-auth-lambda'),
-      handler: 'index.handler',
-      functionName: `${prefix}basicauth-lambda`,
-    });
+      const cert = new acm.DnsValidatedCertificate(this, `${prefix}https-certificate-${rasaBot.customerName}`, {
+        domainName: rasaBotDomain,
+        hostedZone,
+        region: 'us-east-1'
+      });
 
-    const cloudFrontWebDistribution = new cloudfront.CloudFrontWebDistribution(this, `${prefix}distribution`, {
-      originConfigs: [
-        {
-          s3OriginSource: {
-            s3BucketSource: fileBucket,
-            originAccessIdentity: cloudfrontAI
+      const cloudFrontWebDistribution = new cloudfront.CloudFrontWebDistribution(this, `${prefix}frontend-distribution-${rasaBot.customerName}`, {
+        defaultRootObject: 'index.html',
+        originConfigs: [
+          {
+            s3OriginSource: {
+              s3BucketSource: fileBucket,
+              originAccessIdentity: cloudfrontAI
+            },
+            behaviors: [{ pathPattern: `/files/*` }]
           },
-          behaviors: [{pathPattern: '/files/*'}]
-        },
-        {
-          s3OriginSource: {
-            s3BucketSource: bucket,
-            originAccessIdentity: cloudfrontAI
-          },
-          behaviors: [
-            {
-              isDefaultBehavior: true,
-              lambdaFunctionAssociations: [
-                {
-                  eventType: cloudfront.LambdaEdgeEventType.VIEWER_REQUEST,
-                  lambdaFunction: edgeLambda
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      viewerCertificate: cloudfront.ViewerCertificate.fromAcmCertificate(cert, {
-        aliases: [
-          props.subDomain
+          {
+            s3OriginSource: {
+              originAccessIdentity: cloudfrontAI,
+              originPath: `/${rasaBot.customerName}`,
+              s3BucketSource: bucket,
+            },
+            behaviors: [
+              {
+                isDefaultBehavior: true,
+              }
+            ]
+          }
         ],
-        securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019
-      })
-    });
+        viewerCertificate: cloudfront.ViewerCertificate.fromAcmCertificate(cert, {
+          aliases: [
+            props.subDomain
+          ],
+          securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019
+        })
+      });
 
-    new route53.ARecord(this, `${prefix}cf-route53`, {
-      target: route53.RecordTarget.fromAlias(new route53targets.CloudFrontTarget(cloudFrontWebDistribution)),
-      zone: hostedZone,
-      recordName: props.subDomain
-    });
+      new route53.ARecord(this, `${prefix}cf-route53-${rasaBot.customerName}`, {
+        target: route53.RecordTarget.fromAlias(new route53targets.CloudFrontTarget(cloudFrontWebDistribution)),
+        zone: hostedZone,
+        recordName: props.subDomain
+      });
 
+    }
   }
 }
