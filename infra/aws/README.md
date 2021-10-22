@@ -77,3 +77,7 @@ You can create your own account in Botfront after login.
 * URL: `https://dfu5c3kd1h37l.cloudfront.net/`
 * Login: `demouser`
 * Password: `AURORAai2021`
+
+## Testing
+
+Snapshot tests catch all the changes. Resource tests only catch the changes that are written out there.
