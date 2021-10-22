@@ -33,7 +33,8 @@ test('Create base-stack with one bot', () => {
     defaultRepositories
   });
   // THEN
-  expectCDK(teststack).to(countResources('AWS::EC2::VPC', 1)
+  // Specific
+/*   expectCDK(teststack).to(countResources('AWS::EC2::VPC', 1)
   .and(countResources('AWS::EC2::Subnet', 4))
   .and(countResources('AWS::EC2::RouteTable', 4))
   .and(countResources('AWS::EC2::SubnetRouteTableAssociation', 4))
@@ -52,8 +53,10 @@ test('Create base-stack with one bot', () => {
   .and(countResources('AWS::ElasticLoadBalancingV2::LoadBalancer', 1))
   .and(countResources('AWS::SecretsManager::Secret', 1))
   .and(countResources('AWS::EC2::SecurityGroup', 1))
-  .and(countResources('AWS::Route53::RecordSet', 1))
-  );
+  .and(countResources('AWS::Route53::RecordSet', 1)) 
+  );  */
+  // Snapshot
+  expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
 });
 
 test('Create base-stack with two bots', () => {
@@ -76,7 +79,7 @@ test('Create base-stack with two bots', () => {
     defaultRepositories
   });
   // THEN
-  expectCDK(teststack).to(countResources('AWS::EC2::VPC', 1)
+  /* expectCDK(teststack).to(countResources('AWS::EC2::VPC', 1)
   .and(countResources('AWS::EC2::Subnet', 4))
   .and(countResources('AWS::EC2::RouteTable', 4))
   .and(countResources('AWS::EC2::SubnetRouteTableAssociation', 4))
@@ -102,35 +105,6 @@ test('Create base-stack with two bots', () => {
   .and(countResources('AWS::SecretsManager::Secret', 1))
   .and(countResources('AWS::EC2::SecurityGroup', 1))
   .and(countResources('AWS::Route53::RecordSet', 1))
-  );
+  ); */
+  expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
 });
-
-// TODO: Write tests that are able to fail to succeed, no good way to do that currently
-/* test('Check teststack with same customerNames', () => {
-  const app = new cdk.App();
-  ecrRepos = [
-    {rasaPort: 1, actionsPort: 2, projectId: 'veryrealid', customerName: 'veryrealcustomer'},
-    {rasaPort: 3, actionsPort: 4, projectId: 'veryrealid', customerName: 'veryrealcustomer2'}
-  ];
-
-  // WHEN
-  const teststack = new EcsBaseStack(app, 'MyTestStack', {
-    envName,
-    subDomain,
-    ecrRepos,
-    domain,
-    env: {
-      region,
-      account
-    },
-    defaultRepositories
-  });
-  // THEN
-  expect(() =>  {
-
-  })
-  expect(() => {
-       SynthUtils.synthesize(teststack)
-   }).toThrowError()
-});
- */

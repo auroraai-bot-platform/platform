@@ -1,5 +1,5 @@
 
-import { expect as expectCDK, haveResource, countResources, countResourcesLike } from '@aws-cdk/assert';
+import { expect as expectCDK, haveResource, countResources, countResourcesLike, SynthUtils } from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
 import { EcsRasaStack } from '../lib/ecs-rasa-stack';
 import { EcsBfStack } from '../lib/ecs-bf-stack';
@@ -62,7 +62,7 @@ test('Create rasa-stack with one bot', () => {
     rasaBots: ecrRepos
   });
   // THEN
-  expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 1)
+/*   expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 1)
   .and(countResources('AWS::IAM::Role', 2))
   .and(countResources('AWS::IAM::Policy', 1))
   .and(countResources('AWS::ECS::Service', 1))
@@ -70,7 +70,8 @@ test('Create rasa-stack with one bot', () => {
   .and(countResources('AWS::EC2::SecurityGroup', 1))
   .and(countResources('AWS::ElasticLoadBalancingV2::Listener', 1))
   .and(countResources('AWS::ElasticLoadBalancingV2::TargetGroup', 1))
-  );
+  ); */
+  expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
 });
 
 test('Create rasa-stack with two bots', () => {
@@ -119,7 +120,7 @@ test('Create rasa-stack with two bots', () => {
     rasaBots: ecrRepos
   });
   // THEN
-  expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 2)
+/*   expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 2)
   .and(countResources('AWS::IAM::Role', 4))
   .and(countResources('AWS::IAM::Policy', 2))
   .and(countResources('AWS::ECS::Service', 2))
@@ -127,5 +128,6 @@ test('Create rasa-stack with two bots', () => {
   .and(countResources('AWS::EC2::SecurityGroup', 2))
   .and(countResources('AWS::ElasticLoadBalancingV2::Listener', 2))
   .and(countResources('AWS::ElasticLoadBalancingV2::TargetGroup', 2))
-  );
+  ); */
+  expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
 });
