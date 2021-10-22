@@ -48,13 +48,22 @@ const base = new BaseStack(app, 'BaseStack', {
   }
 });
 
-const env = createEnvironment(app, {
+const demoenv = createEnvironment(app, {
   domain,
   defaultRepositories,
   env: {account, region},
   envName: demoEnvName,
   rasaBots: demoRasaBots,
   subDomain: demoSubDomain
+});
+
+const customerenv = createEnvironment(app, {
+  domain,
+  defaultRepositories,
+  env: {account, region},
+  envName: customerEnvName,
+  rasaBots: customerRasaBots,
+  subDomain: customerSubDomain
 });
 
 // Hyte env
@@ -81,50 +90,3 @@ new WebChatStack(app, 'HyteWebChatStack', {
     account
   }
 });
-
-
-
-// customer ecs env
-const customerBaseStack = new EcsBaseStack(app, 'CustomerBaseStack', {
-  envName: customerEnvName,
-  subDomain: customerSubDomain,
-  ecrRepos: customerRasaBots,
-  domain,
-  env: {
-    region,
-    account
-  },
-  defaultRepositories
-});
-cdk.Tags.of(customerBaseStack).add('environment', customerEnvName)
-
-const customerBfStack = new EcsBfStack(app, 'CustomerBfStack', {
-  envName: customerEnvName,
-  baseCluster: customerBaseStack.baseCluster,
-  baseCertificate: customerBaseStack.baseCertificate,
-  baseLoadbalancer: customerBaseStack.baseLoadBalancer,
-  baseVpc: customerBaseStack.baseVpc,
-  domain,
-  env: {
-    region,
-    account
-  },
-  mongoSecret: customerBaseStack.mongoSecret
-});
-
-cdk.Tags.of(customerBfStack).add('environment', customerEnvName)
-
-const customerRasaBotStack = new EcsRasaStack(app, `CustomerRasaStack`, {
-  envName: customerEnvName,
-  baseCluster: customerBaseStack.baseCluster,
-  baseVpc: customerBaseStack.baseVpc,
-  baseLoadbalancer: customerBaseStack.baseLoadBalancer,
-  baseCertificate: customerBaseStack.baseCertificate,
-  botfrontService: customerBfStack.botfrontService,
-  rasaBots: customerRasaBots,
-  env: {
-    region,
-    account
-  }
-});
-

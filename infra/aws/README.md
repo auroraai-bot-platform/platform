@@ -6,6 +6,15 @@
 - Create CI/CD to get chatbot into the environment
 - Print relevant info to console
 
+## Manual steps
+
+### Creating
+- Allow NAT gateway's elastic IP to mongodb (Does not stop deployment)
+- Populate secret of the environment in secretsmanager (Does not stop deployment)
+
+### Deleting
+- Empty and delete ECR repos manually if you destroy environments (After deleting)
+
 ## Naming Convention
 To easily identify and find resources in AWS, all resources should follow a strict convention on naming and tagging.
 
