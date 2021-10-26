@@ -1,3 +1,6 @@
+
+import * as fs from 'fs-extra';
+
 import * as cdk from '@aws-cdk/core';
 import * as cloudfront from '@aws-cdk/aws-cloudfront';
 import * as lambda from '@aws-cdk/aws-lambda';
@@ -18,7 +21,6 @@ interface WebChatProps extends BaseStackProps {
   rasaBots: RasaBot[];
   subDomain: string;
 }
-
 
 const frontendVersion = '0.0.3';
 const sourceBucketName = 'auroraai-source-code-bucket';
@@ -53,7 +55,6 @@ export class WebChatStack extends cdk.Stack {
       codeBucket.policy.document.addStatements(policyStatement);
     }
 
-
     new s3deploy.BucketDeployment(this, `${prefix}file-bucket-deployment`, {
       sources: [s3deploy.Source.asset('../../files')],
       destinationBucket: fileBucket,
@@ -68,10 +69,16 @@ export class WebChatStack extends cdk.Stack {
       region: 'us-east-1'
     });
 
+    // clear up the temp folder
+    fs.removeSync(`temp/${prefix}`);
+
     for (const rasaBot of props.rasaBots) {
 
       const rasaBotDomain = `${rasaBot.customerName}.${props.subDomain}`;
 
+      // write rasa config files to temp folder for the deployment
+      fs.mkdirSync(`temp/${prefix}/${rasaBot.customerName}/config`, { recursive: true });
+      fs.writeFileSync(`temp/${prefix}/${rasaBot.customerName}/config/rasa-config.json`, `{"url": "${props.subDomain}:${rasaBot.rasaPort}", "language": "fi"}`);
 
       const cloudFrontWebDistribution = new cloudfront.CloudFrontWebDistribution(this, `${prefix}frontend-distribution-${rasaBot.customerName}`, {
         defaultRootObject: 'index.html',
@@ -101,11 +108,11 @@ export class WebChatStack extends cdk.Stack {
               }
             ]
           },
-          { 
+          {
             s3OriginSource: {
               originAccessIdentity: cloudfrontAI,
               s3BucketSource: frontendBucket,
-              originPath: `/frontend-rasa-config/${props.envName}/${rasaBot.customerName}`,
+              originPath: `/frontend-rasa-config/${rasaBot.customerName}`,
             },
             behaviors: [
               {
@@ -129,5 +136,12 @@ export class WebChatStack extends cdk.Stack {
       });
 
     }
+
+    new s3deploy.BucketDeployment(this, `${prefix}frontend-bucket-deployment`, {
+      sources: [s3deploy.Source.asset(`temp/${prefix}`)],
+      destinationBucket: frontendBucket,
+      destinationKeyPrefix: 'frontend-rasa-config',
+      prune: false
+    });
   }
 }
