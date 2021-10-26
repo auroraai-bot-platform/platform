@@ -85,7 +85,7 @@ export class EcsRasaStack extends cdk.Stack {
         cloudMapOptions: {
           name: `rasa-${rasaBot.customerName}`
         },
-        serviceName: `${prefix}service-rasa-${rasaBot.customerName}`
+        serviceName: `${props.envName}-service-rasa-${rasaBot.customerName}`
       });
 
       const listener = new elbv2.ApplicationListener(this, `${prefix}listener-rasa-${rasaBot.customerName}`, {

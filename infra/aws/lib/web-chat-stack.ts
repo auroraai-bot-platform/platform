@@ -9,6 +9,9 @@ import * as acm from '@aws-cdk/aws-certificatemanager'
 
 import { BaseStackProps, RasaBot } from '../types/index';
 import { createPrefix } from './utilities';
+import { version } from 'process';
+import { PolicyStatement } from '@aws-cdk/aws-iam';
+import { BucketPolicy } from '@aws-cdk/aws-s3';
 
 interface WebChatProps extends BaseStackProps {
   domain: string;
@@ -17,23 +20,39 @@ interface WebChatProps extends BaseStackProps {
 }
 
 
-const frontendVersion = '0.0.1';
-const sourceBucketName = 'aurora-source-code-bucket';
+const frontendVersion = '0.0.3';
+const sourceBucketName = 'auroraai-source-code-bucket';
 export class WebChatStack extends cdk.Stack {
+  public readonly rasaBotAddressMap: Map<RasaBot, string> = new Map<RasaBot, string>();
 
   constructor(scope: cdk.Construct, id: string, props: WebChatProps) {
     super(scope, id, props);
     const prefix = createPrefix(props.envName, this.constructor.name);
-    // const bucket = new s3.Bucket(this, `${prefix}frontend-bucket`, { bucketName: `${prefix}frontend-bucket`, publicReadAccess: false });
+    const frontendBucket = new s3.Bucket(this, `${prefix}frontend-bucket`, { bucketName: `${prefix}frontend-bucket`, publicReadAccess: false });
     const fileBucket = new s3.Bucket(this, `${prefix}file-bucket`, { bucketName: `${prefix}file-bucket`, publicReadAccess: false });
 
     const cloudfrontAI = new cloudfront.OriginAccessIdentity(this, `${prefix}distribution-access-identity`, {
     });
 
-    const bucket = s3.Bucket.fromBucketName(this, sourceBucketName, sourceBucketName);
+    const codeBucket = s3.Bucket.fromBucketName(this, sourceBucketName, sourceBucketName);
 
-    bucket.grantRead(cloudfrontAI);
+    frontendBucket.grantRead(cloudfrontAI);
     fileBucket.grantRead(cloudfrontAI);
+
+    const policyStatement = new PolicyStatement();
+    policyStatement.addActions('s3:GetBucket*');
+    policyStatement.addActions('s3:GetObject*');
+    policyStatement.addActions('s3:List*');
+    policyStatement.addResources(codeBucket.bucketArn);
+    policyStatement.addResources(`${codeBucket.bucketArn}/*`);
+    policyStatement.addCanonicalUserPrincipal(cloudfrontAI.cloudFrontOriginAccessIdentityS3CanonicalUserId);
+
+    if (!codeBucket.policy) {
+      new BucketPolicy(this, 'Policy', { bucket: codeBucket }).document.addStatements(policyStatement);
+    } else {
+      codeBucket.policy.document.addStatements(policyStatement);
+    }
+
 
     new s3deploy.BucketDeployment(this, `${prefix}file-bucket-deployment`, {
       sources: [s3deploy.Source.asset('../../files')],
@@ -43,18 +62,25 @@ export class WebChatStack extends cdk.Stack {
 
     const hostedZone = route53.HostedZone.fromLookup(this, `${prefix}hosted-zone`, { domainName: props.domain });
 
+    const cert = new acm.DnsValidatedCertificate(this, `${prefix}wildcard-https-certificate`, {
+      domainName: `*.${props.subDomain}`,
+      hostedZone,
+      region: 'us-east-1'
+    });
+
     for (const rasaBot of props.rasaBots) {
 
       const rasaBotDomain = `${rasaBot.customerName}.${props.subDomain}`;
 
-      const cert = new acm.DnsValidatedCertificate(this, `${prefix}https-certificate-${rasaBot.customerName}`, {
-        domainName: rasaBotDomain,
-        hostedZone,
-        region: 'us-east-1'
-      });
 
       const cloudFrontWebDistribution = new cloudfront.CloudFrontWebDistribution(this, `${prefix}frontend-distribution-${rasaBot.customerName}`, {
         defaultRootObject: 'index.html',
+        errorConfigurations: [{
+          errorCode: 404,
+          errorCachingMinTtl: 60,
+          responseCode: 200,
+          responsePagePath: '/index.html'
+        }],
         originConfigs: [
           {
             s3OriginSource: {
@@ -66,19 +92,31 @@ export class WebChatStack extends cdk.Stack {
           {
             s3OriginSource: {
               originAccessIdentity: cloudfrontAI,
-              originPath: `/${rasaBot.customerName}`,
-              s3BucketSource: bucket,
+              originPath: `/frontend/${frontendVersion}`,
+              s3BucketSource: codeBucket,
             },
             behaviors: [
               {
                 isDefaultBehavior: true,
               }
             ]
+          },
+          { 
+            s3OriginSource: {
+              originAccessIdentity: cloudfrontAI,
+              s3BucketSource: frontendBucket,
+              originPath: `/frontend-rasa-config/${props.envName}/${rasaBot.customerName}`,
+            },
+            behaviors: [
+              {
+                pathPattern: '/config/*'
+              }
+            ]
           }
         ],
         viewerCertificate: cloudfront.ViewerCertificate.fromAcmCertificate(cert, {
           aliases: [
-            props.subDomain
+            rasaBotDomain
           ],
           securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2019
         })
@@ -87,7 +125,7 @@ export class WebChatStack extends cdk.Stack {
       new route53.ARecord(this, `${prefix}cf-route53-${rasaBot.customerName}`, {
         target: route53.RecordTarget.fromAlias(new route53targets.CloudFrontTarget(cloudFrontWebDistribution)),
         zone: hostedZone,
-        recordName: props.subDomain
+        recordName: rasaBotDomain
       });
 
     }

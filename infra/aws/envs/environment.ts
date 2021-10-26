@@ -32,7 +32,7 @@ export function createEnvironment(app: cdk.App, config: EnvironmentConfiguration
     throw new Error(`Env: ${config.envName}. Cannot create environment because of colliding rasa port configurations. ${JSON.stringify(config.rasaBots)}`);
   }
 
-  if (rasaPortCollision) {
+  if (actionPortCollision) {
     throw new Error(`Env: ${config.envName}. Cannot create environment because of colliding action port configurations. ${JSON.stringify(config.rasaBots)}`);
   }
 
@@ -78,7 +78,7 @@ export function createEnvironment(app: cdk.App, config: EnvironmentConfiguration
     env: config.env,
     rasaBots: config.rasaBots,
     domain: config.domain,
-    subDomain: config.subDomain,
+    subDomain: config.subDomain
   });
 
   return { ecsBaseStack, EcsBfStack, rasaBotStack };
