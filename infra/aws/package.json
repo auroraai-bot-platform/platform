@@ -13,8 +13,9 @@
   },
   "devDependencies": {
     "@aws-cdk/assert": "^1.121.0",
+    "@types/fs-extra": "^9.0.13",
     "@types/jest": "^26.0.10",
-    "@types/node": "10.17.27",
+    "@types/node": "^10.17.27",
     "cdk-ecr-deployment": "0.0.76",
     "jest": "^26.4.2",
     "ts-jest": "^26.2.0",
@@ -39,6 +40,7 @@
     "@aws-cdk/aws-secretsmanager": "^1.121.0",
     "@aws-cdk/aws-ssm": "^1.121.0",
     "@aws-cdk/core": "^1.121.0",
+    "fs-extra": "^10.0.0",
     "source-map-support": "^0.5.16"
   }
 }
