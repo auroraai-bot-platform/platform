@@ -67,24 +67,6 @@ export class EcsRasaStack extends cdk.Stack {
         }
       );
 
-      rasatd.addContainer(`${prefix}container-actions-${rasaBot.customerName}`, {
-        image: ecs.ContainerImage.fromEcrRepository(actionsrepo),
-        containerName: `actions-${rasaBot.customerName}`,
-        portMappings: [{
-          hostPort: rasaBot.actionsPort,
-          containerPort: rasaBot.actionsPort
-        }],
-        command: ["start", "--actions", "actions", "--debug", "--port", rasaBot.actionsPort.toString()],
-        environment: {
-          PORT: rasaBot.actionsPort.toString(),
-          BF_URL: `http://botfront.${props.envName}service.internal:8888/graphql`
-        },
-        logging: ecs.LogDriver.awsLogs({
-          streamPrefix: `${prefix}container-actions-${rasaBot.customerName}`,
-          logRetention: RetentionDays.ONE_DAY
-        })
-      });
-
       actionstd.addContainer(`${prefix}actions`, {
         image: ecs.ContainerImage.fromEcrRepository(actionsrepo),
         containerName: `actions-${rasaBot.customerName}`,
