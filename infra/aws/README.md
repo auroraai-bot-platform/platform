@@ -8,12 +8,25 @@
 
 ## Manual steps
 
-### Creating
+### Creating an environment
 - Allow NAT gateway's elastic IP to mongodb (Does not stop deployment)
 - Populate secret of the environment in secretsmanager (Does not stop deployment)
+export function createEnvironment(app: cdk.App, config: EnvironmentConfiguration) {
+- Create a new environment with the `createEnvironment` function and run `cdk deploy <envName>-*`
+### Destroying an environment
+- Empty and delete ECR repos manually if you destroy environments (After environment destruction)
+- Empty and delete the frontend and file s3 buckets for the destroyed environment (After environment destruction)
 
-### Deleting
-- Empty and delete ECR repos manually if you destroy environments (After deleting)
+### Adding a rasabot instance
+- Add a new entry to the `RasaBot` array
+- Make sure, that provided ports within a single environment are not overlapping
+- Run `cdk deploy <envName>-*`
+
+### Removing a rasabot instance
+- Remove the entry from the `RasaBot` array
+- Run `cdk deploy <envName>-*`
+- Empty and delete the ECR repos manually for the rasabot
+- Delete the remaining data in the s3 frontend and files bucket
 
 ## Naming Convention
 To easily identify and find resources in AWS, all resources should follow a strict convention on naming and tagging.
@@ -55,6 +68,7 @@ Additionally, each resource should have following tags:
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
+
 ## Useful commands
 
  * `npm run build`   compile typescript to js
@@ -64,25 +78,3 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
  * `cdk diff`        compare deployed stack with current state
  * `cdk synth`       emits the synthesized CloudFormation template
 
-
-## Deploy WebChat Stack
-The WebChat stack provides the frontend for a simple react app to show the integration of the rasa chatbot into a web app.
-
-Steps:
-- `cdk deploy WebChatStack`
-- build demo-frontend
-- copy demo-frontend files to the created s3 bucket
-
-## Use the demo environment
-
-*Botfront*
-* URL: `http://ec2-13-53-66-50.eu-north-1.compute.amazonaws.com:8888/`
-* Login: `johannes.feig@gofore.com`
-* Password: `HkddxmVT43Wiqqv`
-
-You can create your own account in Botfront after login.
-
-*Frontend*
-* URL: `https://dfu5c3kd1h37l.cloudfront.net/`
-* Login: `demouser`
-* Password: `AURORAai2021`

@@ -50,7 +50,7 @@ export class EcsRasaStack extends cdk.Stack {
           BF_URL: `http://botfront.${props.envName}service.internal:8888/graphql`
         },
         logging: ecs.LogDriver.awsLogs({
-          streamPrefix: `${prefix}rasa-${rasaBot.customerName}`,
+          streamPrefix: `${prefix}container-rasa-${rasaBot.customerName}`,
           logRetention: RetentionDays.ONE_DAY
         })
       }).addMountPoints(
@@ -61,7 +61,7 @@ export class EcsRasaStack extends cdk.Stack {
         }
       );
 
-      rasatd.addContainer(`${prefix}actions`, {
+      rasatd.addContainer(`${prefix}container-actions-${rasaBot.customerName}`, {
         image: ecs.ContainerImage.fromEcrRepository(actionsrepo),
         containerName: `actions-${rasaBot.customerName}`,
         portMappings: [{
@@ -74,7 +74,7 @@ export class EcsRasaStack extends cdk.Stack {
           BF_URL: `http://botfront.${props.envName}service.internal:8888/graphql`
         },
         logging: ecs.LogDriver.awsLogs({
-          streamPrefix: `${prefix}rasa-${rasaBot.customerName}`,
+          streamPrefix: `${prefix}container-actions-${rasaBot.customerName}`,
           logRetention: RetentionDays.ONE_DAY
         })
       });
@@ -84,7 +84,8 @@ export class EcsRasaStack extends cdk.Stack {
         taskDefinition: rasatd,
         cloudMapOptions: {
           name: `rasa-${rasaBot.customerName}`
-        }
+        },
+        serviceName: `${props.envName}-service-rasa-${rasaBot.customerName}`
       });
 
       const listener = new elbv2.ApplicationListener(this, `${prefix}listener-rasa-${rasaBot.customerName}`, {
