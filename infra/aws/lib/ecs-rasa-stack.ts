@@ -58,7 +58,7 @@ export class EcsRasaStack extends cdk.Stack {
         logging: ecs.LogDriver.awsLogs({
           streamPrefix: `${prefix}rasa-${rasaBot.customerName}`,
           logRetention: RetentionDays.ONE_DAY
-        }),
+        })
       }).addMountPoints(
         {
           containerPath: '/app/models',
