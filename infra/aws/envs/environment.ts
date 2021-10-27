@@ -25,15 +25,10 @@ export interface DefaultRepositories {
 
 export function createEnvironment(app: cdk.App, config: EnvironmentConfiguration) {
 
-  const rasaPortCollision = [...new Set(config.rasaBots.map((bot) => bot.rasaPort))].length !== config.rasaBots.length;
-  const actionPortCollision = [...new Set(config.rasaBots.map((bot) => bot.actionsPort))].length !== config.rasaBots.length;
+  const portCollision = [...new Set(config.rasaBots.map((bot) => bot.rasaPort)), ...new Set(config.rasaBots.map((bot) => bot.actionsPort))].length !== config.rasaBots.length * 2;
 
-  if (rasaPortCollision) {
-    throw new Error(`Env: ${config.envName}. Cannot create environment because of colliding rasa port configurations. ${JSON.stringify(config.rasaBots)}`);
-  }
-
-  if (actionPortCollision) {
-    throw new Error(`Env: ${config.envName}. Cannot create environment because of colliding action port configurations. ${JSON.stringify(config.rasaBots)}`);
+  if (portCollision) {
+    throw new Error(`Env: ${config.envName}. Cannot create environment because of colliding port configurations. ${JSON.stringify(config.rasaBots)}`);
   }
 
   // Demo-ecs env
