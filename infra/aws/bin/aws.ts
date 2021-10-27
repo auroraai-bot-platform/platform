@@ -2,11 +2,6 @@
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
 import { BaseStack } from '../lib/base-stack';
-import { Ec2Stack } from '../lib/ec2-stack';
-import { EcsBaseStack } from '../lib/ecs-base-stack';
-import { WebChatStack } from '../lib/web-chat-stack';
-import { EcsBfStack } from '../lib/ecs-bf-stack';
-import { EcsRasaStack } from '../lib/ecs-rasa-stack';
 import { RasaBot } from '../types';
 import { createEnvironment, DefaultRepositories } from '../envs/environment';
 

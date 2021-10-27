@@ -3,7 +3,6 @@ import * as fs from 'fs-extra';
 
 import * as cdk from '@aws-cdk/core';
 import * as cloudfront from '@aws-cdk/aws-cloudfront';
-import * as lambda from '@aws-cdk/aws-lambda';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 import * as route53 from '@aws-cdk/aws-route53';
@@ -12,7 +11,6 @@ import * as acm from '@aws-cdk/aws-certificatemanager'
 
 import { BaseStackProps, RasaBot } from '../types/index';
 import { createPrefix } from './utilities';
-import { version } from 'process';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
 import { BucketPolicy } from '@aws-cdk/aws-s3';
 
