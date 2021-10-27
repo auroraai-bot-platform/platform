@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 
 import './App.scss';
 
-
-
 const onSocketEvent = {
   'bot_uttered': () => console.log('the bot said something'),
   'connect': () => console.log('connection established'),
@@ -15,11 +13,15 @@ const onSocketEvent = {
 interface RasaConfig {
   url: string;
   language?: string;
+  intents?: {
+    [key: string]: string;
+  }
 }
 
 function App() {
   const [rasaConfig, setRasaConfig] = useState<RasaConfig>({ url: '' });
   const rasaConfigUrl = 'config/rasa-config.json';
+  const urlPath = window.location.pathname.substring(1);
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
@@ -37,7 +39,7 @@ function App() {
       <div className="App">
         <header className="App-header">
           <Widget
-            initPayload={"/get_started"}
+            initPayload={rasaConfig?.intents?.[urlPath] || "/get_started"}
             socketUrl={rasaConfig?.url}
             socketPath={"/socket.io/"}
             onSocketEvent={onSocketEvent}
