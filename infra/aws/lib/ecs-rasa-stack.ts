@@ -33,8 +33,8 @@ export class EcsRasaStack extends cdk.Stack {
       });
 
       const actionstd = new ecs.TaskDefinition(this, `${prefix}taskdefinition-actions-${rasaBot.customerName}`, {
-        cpu: '1024',
-        memoryMiB: '2048',
+        cpu: '256',
+        memoryMiB: '512',
         compatibility: ecs.Compatibility.FARGATE
       });
 
