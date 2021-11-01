@@ -1,7 +1,6 @@
 import Widget from 'rasa-webchat';
 import { useEffect, useState } from 'react';
 
-
 import './App.scss';
 
 const onSocketEvent = {
@@ -13,15 +12,17 @@ const onSocketEvent = {
 interface RasaConfig {
   url: string;
   language?: string;
-  intents?: {
-    [key: string]: string;
+  additionalConfig?: {
+    intents: {
+      [key: string]: string;
+    }
   }
 }
 
 function App() {
   const [rasaConfig, setRasaConfig] = useState<RasaConfig>({ url: '' });
   const rasaConfigUrl = 'config/rasa-config.json';
-  const urlPath = window.location.pathname.substring(1);
+  const urlPath = window.location.pathname.substring(1).toLocaleLowerCase();
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
@@ -39,7 +40,7 @@ function App() {
       <div className="App">
         <header className="App-header">
           <Widget
-            initPayload={rasaConfig?.intents?.[urlPath] || "/get_started"}
+            initPayload={rasaConfig?.additionalConfig?.intents[urlPath] || "/aloita"}
             socketUrl={rasaConfig?.url}
             socketPath={"/socket.io/"}
             onSocketEvent={onSocketEvent}
