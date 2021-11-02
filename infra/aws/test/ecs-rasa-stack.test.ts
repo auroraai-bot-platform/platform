@@ -62,15 +62,6 @@ test('Create rasa-stack with one bot', () => {
     rasaBots: ecrRepos
   });
   // THEN
-/*   expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 1)
-  .and(countResources('AWS::IAM::Role', 2))
-  .and(countResources('AWS::IAM::Policy', 1))
-  .and(countResources('AWS::ECS::Service', 1))
-  .and(countResources('AWS::ServiceDiscovery::Service', 1))
-  .and(countResources('AWS::EC2::SecurityGroup', 1))
-  .and(countResources('AWS::ElasticLoadBalancingV2::Listener', 1))
-  .and(countResources('AWS::ElasticLoadBalancingV2::TargetGroup', 1))
-  ); */
   expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
 });
 
@@ -120,14 +111,5 @@ test('Create rasa-stack with two bots', () => {
     rasaBots: ecrRepos
   });
   // THEN
-/*   expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 2)
-  .and(countResources('AWS::IAM::Role', 4))
-  .and(countResources('AWS::IAM::Policy', 2))
-  .and(countResources('AWS::ECS::Service', 2))
-  .and(countResources('AWS::ServiceDiscovery::Service', 2))
-  .and(countResources('AWS::EC2::SecurityGroup', 2))
-  .and(countResources('AWS::ElasticLoadBalancingV2::Listener', 2))
-  .and(countResources('AWS::ElasticLoadBalancingV2::TargetGroup', 2))
-  ); */
   expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
 });

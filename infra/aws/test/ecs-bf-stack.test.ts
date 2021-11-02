@@ -48,15 +48,6 @@ test('Create botfront-stack with one bot', () => {
     mongoSecret: basestack.mongoSecret
   });
   // THEN
-  /* expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 1)
-  .and(countResources('AWS::IAM::Role', 2))
-  .and(countResources('AWS::IAM::Policy', 1))
-  .and(countResources('AWS::ECS::Service', 1))
-  .and(countResources('AWS::ServiceDiscovery::Service', 1))
-  .and(countResources('AWS::EC2::SecurityGroup', 1))
-  .and(countResources('AWS::ElasticLoadBalancingV2::Listener', 1))
-  .and(countResources('AWS::ElasticLoadBalancingV2::TargetGroup', 1))
-  ); */
   expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
 });
 
@@ -93,14 +84,5 @@ test('Create botfront-stack with two bots', () => {
       mongoSecret: basestack.mongoSecret
     });
     // THEN
-/*     expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 1)
-    .and(countResources('AWS::IAM::Role', 2))
-    .and(countResources('AWS::IAM::Policy', 1))
-    .and(countResources('AWS::ECS::Service', 1))
-    .and(countResources('AWS::ServiceDiscovery::Service', 1))
-    .and(countResources('AWS::EC2::SecurityGroup', 1))
-    .and(countResources('AWS::ElasticLoadBalancingV2::Listener', 1))
-    .and(countResources('AWS::ElasticLoadBalancingV2::TargetGroup', 1))
-    ); */
     expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
 });
