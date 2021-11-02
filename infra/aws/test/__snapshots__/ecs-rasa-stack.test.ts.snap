@@ -3,6 +3,31 @@
 exports[`Create rasa-stack with one bot 1`] = `
 Object {
   "Resources": Object {
+    "testecsrasalisteneractionsveryrealcustomer593F16DF": Object {
+      "Properties": Object {
+        "Certificates": Array [
+          Object {
+            "CertificateArn": Object {
+              "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbaseacmcertificateB13926F63E853FB1",
+            },
+          },
+        ],
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "testecsrasatargetgroupactionsveryrealcustomer12F4DF56",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasealbbase531813B072720B06",
+        },
+        "Port": 2,
+        "Protocol": "HTTPS",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
     "testecsrasalistenerrasaveryrealcustomerC1DA269C": Object {
       "Properties": Object {
         "Certificates": Array [
@@ -27,6 +52,182 @@ Object {
         "Protocol": "HTTPS",
       },
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "testecsrasaserviceactionsveryrealcustomerCloudmapServiceD5283A53": Object {
+      "Properties": Object {
+        "DnsConfig": Object {
+          "DnsRecords": Array [
+            Object {
+              "TTL": 60,
+              "Type": "A",
+            },
+          ],
+          "NamespaceId": Object {
+            "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbaseecsclusterDefaultServiceDiscoveryNamespaceCF03B33EIdD1398CF8",
+          },
+          "RoutingPolicy": "MULTIVALUE",
+        },
+        "HealthCheckCustomConfig": Object {
+          "FailureThreshold": 1,
+        },
+        "Name": "actions-veryrealcustomer",
+        "NamespaceId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbaseecsclusterDefaultServiceDiscoveryNamespaceCF03B33EIdD1398CF8",
+        },
+      },
+      "Type": "AWS::ServiceDiscovery::Service",
+    },
+    "testecsrasaserviceactionsveryrealcustomerSecurityGroup9C131078": Object {
+      "Properties": Object {
+        "GroupDescription": "MyTestStack/test.ecsrasa.service-actions-veryrealcustomer/SecurityGroup",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "testecsrasaserviceactionsveryrealcustomerSecurityGroupMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A042fromF7A8FB07": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaserviceactionsveryrealcustomerSecurityGroup9C131078",
+            "GroupId",
+          ],
+        },
+        "FromPort": 2,
+        "GroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 2,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "testecsrasaserviceactionsveryrealcustomerSecurityGroupfromMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A042A520EBD7": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 2,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaserviceactionsveryrealcustomerSecurityGroup9C131078",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "ToPort": 2,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testecsrasaserviceactionsveryrealcustomerSecurityGroupfromMyBfStacktestecsbfservicebotfrontSecurityGroup61478B53286EB90EF": Object {
+      "Properties": Object {
+        "Description": "from MyBfStacktestecsbfservicebotfrontSecurityGroup61478B53:2",
+        "FromPort": 2,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaserviceactionsveryrealcustomerSecurityGroup9C131078",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::ImportValue": "MyBfStack:ExportsOutputFnGetAtttestecsbfservicebotfrontSecurityGroupDAC99FD2GroupId3DADD82E",
+        },
+        "ToPort": 2,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testecsrasaserviceactionsveryrealcustomerSecurityGroupfromMyTestStacktestecsrasaservicerasaveryrealcustomerSecurityGroup2FBC0DAB2BF187547": Object {
+      "Properties": Object {
+        "Description": "from MyTestStacktestecsrasaservicerasaveryrealcustomerSecurityGroup2FBC0DAB:2",
+        "FromPort": 2,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaserviceactionsveryrealcustomerSecurityGroup9C131078",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaservicerasaveryrealcustomerSecurityGroup6EDAE8B1",
+            "GroupId",
+          ],
+        },
+        "ToPort": 2,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testecsrasaserviceactionsveryrealcustomerService89944982": Object {
+      "DependsOn": Array [
+        "testecsrasalisteneractionsveryrealcustomer593F16DF",
+      ],
+      "Properties": Object {
+        "Cluster": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbaseecscluster2FF70F4D9784160F",
+        },
+        "DeploymentConfiguration": Object {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50,
+        },
+        "EnableECSManagedTags": false,
+        "HealthCheckGracePeriodSeconds": 60,
+        "LaunchType": "FARGATE",
+        "LoadBalancers": Array [
+          Object {
+            "ContainerName": "actions-veryrealcustomer",
+            "ContainerPort": 2,
+            "TargetGroupArn": Object {
+              "Ref": "testecsrasatargetgroupactionsveryrealcustomer12F4DF56",
+            },
+          },
+        ],
+        "NetworkConfiguration": Object {
+          "AwsvpcConfiguration": Object {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": Array [
+              Object {
+                "Fn::GetAtt": Array [
+                  "testecsrasaserviceactionsveryrealcustomerSecurityGroup9C131078",
+                  "GroupId",
+                ],
+              },
+            ],
+            "Subnets": Array [
+              Object {
+                "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpcPrivateSubnet1Subnet878A5AD46CF1A964",
+              },
+              Object {
+                "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpcPrivateSubnet2Subnet02D85502F7210C29",
+              },
+            ],
+          },
+        },
+        "ServiceRegistries": Array [
+          Object {
+            "RegistryArn": Object {
+              "Fn::GetAtt": Array [
+                "testecsrasaserviceactionsveryrealcustomerCloudmapServiceD5283A53",
+                "Arn",
+              ],
+            },
+          },
+        ],
+        "TaskDefinition": Object {
+          "Ref": "testecsrasataskdefinitionactionsveryrealcustomerC350F325",
+        },
+      },
+      "Type": "AWS::ECS::Service",
     },
     "testecsrasaservicerasaveryrealcustomerCloudmapServiceB66DBBE7": Object {
       "Properties": Object {
@@ -185,6 +386,7 @@ Object {
             ],
           },
         },
+        "ServiceName": "test-service-rasa-veryrealcustomer",
         "ServiceRegistries": Array [
           Object {
             "RegistryArn": Object {
@@ -201,6 +403,18 @@ Object {
       },
       "Type": "AWS::ECS::Service",
     },
+    "testecsrasatargetgroupactionsveryrealcustomer12F4DF56": Object {
+      "Properties": Object {
+        "HealthCheckPath": "/actions",
+        "Port": 2,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "VpcId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
     "testecsrasatargetgrouprasaveryrealcustomer814E82B6": Object {
       "Properties": Object {
         "Port": 1,
@@ -211,6 +425,179 @@ Object {
         },
       },
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomerC350F325": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Command": Array [
+              "start",
+              "--actions",
+              "actions",
+              "--debug",
+              "--port",
+              "2",
+            ],
+            "Environment": Array [
+              Object {
+                "Name": "PORT",
+                "Value": "2",
+              },
+              Object {
+                "Name": "BF_URL",
+                "Value": "http://botfront.testservice.internal:8888/graphql",
+              },
+            ],
+            "Essential": true,
+            "Image": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "0123456789.dkr.ecr.test.",
+                  Object {
+                    "Ref": "AWS::URLSuffix",
+                  },
+                  "/test-actions-veryrealcustomer:latest",
+                ],
+              ],
+            },
+            "LogConfiguration": Object {
+              "LogDriver": "awslogs",
+              "Options": Object {
+                "awslogs-group": Object {
+                  "Ref": "testecsrasataskdefinitionactionsveryrealcustomertestecsrasaactionsLogGroup7873CD00",
+                },
+                "awslogs-region": "test",
+                "awslogs-stream-prefix": "test.ecsrasa.actions-veryrealcustomer",
+              },
+            },
+            "Name": "actions-veryrealcustomer",
+            "PortMappings": Array [
+              Object {
+                "ContainerPort": 2,
+                "HostPort": 2,
+                "Protocol": "tcp",
+              },
+            ],
+          },
+        ],
+        "Cpu": "256",
+        "ExecutionRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasataskdefinitionactionsveryrealcustomerExecutionRole543438A7",
+            "Arn",
+          ],
+        },
+        "Family": "MyTestStacktestecsrasataskdefinitionactionsveryrealcustomer618C7F52",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": Array [
+          "FARGATE",
+        ],
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasataskdefinitionactionsveryrealcustomerTaskRole165EB774",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomerExecutionRole543438A7": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomerExecutionRoleDefaultPolicyC6AAEDBF": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:test:0123456789:repository/test-actions-veryrealcustomer",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": Array [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "testecsrasataskdefinitionactionsveryrealcustomertestecsrasaactionsLogGroup7873CD00",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testecsrasataskdefinitionactionsveryrealcustomerExecutionRoleDefaultPolicyC6AAEDBF",
+        "Roles": Array [
+          Object {
+            "Ref": "testecsrasataskdefinitionactionsveryrealcustomerExecutionRole543438A7",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomerTaskRole165EB774": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomertestecsrasaactionsLogGroup7873CD00": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "RetentionInDays": 1,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
     },
     "testecsrasataskdefinitionrasaveryrealcustomer8EBB3CB3": Object {
       "Properties": Object {
@@ -258,7 +645,7 @@ Object {
                   "Ref": "testecsrasataskdefinitionrasaveryrealcustomertestecsrasacontainerrasaveryrealcustomerLogGroup16E7FE4D",
                 },
                 "awslogs-region": "test",
-                "awslogs-stream-prefix": "test.ecsrasa.rasa-veryrealcustomer",
+                "awslogs-stream-prefix": "test.ecsrasa.container-rasa-veryrealcustomer",
               },
             },
             "MountPoints": Array [
@@ -273,57 +660,6 @@ Object {
               Object {
                 "ContainerPort": 1,
                 "HostPort": 1,
-                "Protocol": "tcp",
-              },
-            ],
-          },
-          Object {
-            "Command": Array [
-              "start",
-              "--actions",
-              "actions",
-              "--debug",
-              "--port",
-              "2",
-            ],
-            "Environment": Array [
-              Object {
-                "Name": "PORT",
-                "Value": "2",
-              },
-              Object {
-                "Name": "BF_URL",
-                "Value": "http://botfront.testservice.internal:8888/graphql",
-              },
-            ],
-            "Essential": true,
-            "Image": Object {
-              "Fn::Join": Array [
-                "",
-                Array [
-                  "0123456789.dkr.ecr.test.",
-                  Object {
-                    "Ref": "AWS::URLSuffix",
-                  },
-                  "/test-actions-veryrealcustomer:latest",
-                ],
-              ],
-            },
-            "LogConfiguration": Object {
-              "LogDriver": "awslogs",
-              "Options": Object {
-                "awslogs-group": Object {
-                  "Ref": "testecsrasataskdefinitionrasaveryrealcustomertestecsrasaactionsLogGroupF6F7B0C4",
-                },
-                "awslogs-region": "test",
-                "awslogs-stream-prefix": "test.ecsrasa.rasa-veryrealcustomer",
-              },
-            },
-            "Name": "actions-veryrealcustomer",
-            "PortMappings": Array [
-              Object {
-                "ContainerPort": 2,
-                "HostPort": 2,
                 "Protocol": "tcp",
               },
             ],
@@ -415,39 +751,6 @@ Object {
                 ],
               },
             },
-            Object {
-              "Action": Array [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": Object {
-                "Fn::Join": Array [
-                  "",
-                  Array [
-                    "arn:",
-                    Object {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":ecr:test:0123456789:repository/test-actions-veryrealcustomer",
-                  ],
-                ],
-              },
-            },
-            Object {
-              "Action": Array [
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              "Effect": "Allow",
-              "Resource": Object {
-                "Fn::GetAtt": Array [
-                  "testecsrasataskdefinitionrasaveryrealcustomertestecsrasaactionsLogGroupF6F7B0C4",
-                  "Arn",
-                ],
-              },
-            },
           ],
           "Version": "2012-10-17",
         },
@@ -477,14 +780,6 @@ Object {
       },
       "Type": "AWS::IAM::Role",
     },
-    "testecsrasataskdefinitionrasaveryrealcustomertestecsrasaactionsLogGroupF6F7B0C4": Object {
-      "DeletionPolicy": "Retain",
-      "Properties": Object {
-        "RetentionInDays": 1,
-      },
-      "Type": "AWS::Logs::LogGroup",
-      "UpdateReplacePolicy": "Retain",
-    },
     "testecsrasataskdefinitionrasaveryrealcustomertestecsrasacontainerrasaveryrealcustomerLogGroup16E7FE4D": Object {
       "DeletionPolicy": "Retain",
       "Properties": Object {
@@ -500,6 +795,56 @@ Object {
 exports[`Create rasa-stack with two bots 1`] = `
 Object {
   "Resources": Object {
+    "testecsrasalisteneractionsveryrealcustomer2BC31FFA6": Object {
+      "Properties": Object {
+        "Certificates": Array [
+          Object {
+            "CertificateArn": Object {
+              "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbaseacmcertificateB13926F63E853FB1",
+            },
+          },
+        ],
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "testecsrasatargetgroupactionsveryrealcustomer207BA717E",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasealbbase531813B072720B06",
+        },
+        "Port": 4,
+        "Protocol": "HTTPS",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "testecsrasalisteneractionsveryrealcustomer593F16DF": Object {
+      "Properties": Object {
+        "Certificates": Array [
+          Object {
+            "CertificateArn": Object {
+              "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbaseacmcertificateB13926F63E853FB1",
+            },
+          },
+        ],
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "testecsrasatargetgroupactionsveryrealcustomer12F4DF56",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasealbbase531813B072720B06",
+        },
+        "Port": 2,
+        "Protocol": "HTTPS",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
     "testecsrasalistenerrasaveryrealcustomer272B41A63": Object {
       "Properties": Object {
         "Certificates": Array [
@@ -549,6 +894,358 @@ Object {
         "Protocol": "HTTPS",
       },
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "testecsrasaserviceactionsveryrealcustomer2CloudmapServiceD76E7232": Object {
+      "Properties": Object {
+        "DnsConfig": Object {
+          "DnsRecords": Array [
+            Object {
+              "TTL": 60,
+              "Type": "A",
+            },
+          ],
+          "NamespaceId": Object {
+            "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbaseecsclusterDefaultServiceDiscoveryNamespaceCF03B33EIdD1398CF8",
+          },
+          "RoutingPolicy": "MULTIVALUE",
+        },
+        "HealthCheckCustomConfig": Object {
+          "FailureThreshold": 1,
+        },
+        "Name": "actions-veryrealcustomer2",
+        "NamespaceId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbaseecsclusterDefaultServiceDiscoveryNamespaceCF03B33EIdD1398CF8",
+        },
+      },
+      "Type": "AWS::ServiceDiscovery::Service",
+    },
+    "testecsrasaserviceactionsveryrealcustomer2SecurityGroup026380CA": Object {
+      "Properties": Object {
+        "GroupDescription": "MyTestStack/test.ecsrasa.service-actions-veryrealcustomer2/SecurityGroup",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "testecsrasaserviceactionsveryrealcustomer2SecurityGroupMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A044from082D714A": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaserviceactionsveryrealcustomer2SecurityGroup026380CA",
+            "GroupId",
+          ],
+        },
+        "FromPort": 4,
+        "GroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 4,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "testecsrasaserviceactionsveryrealcustomer2SecurityGroupfromMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A044E52DAD5D": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 4,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaserviceactionsveryrealcustomer2SecurityGroup026380CA",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "ToPort": 4,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testecsrasaserviceactionsveryrealcustomer2SecurityGroupfromMyBfStacktestecsbfservicebotfrontSecurityGroup61478B534D5BBCF57": Object {
+      "Properties": Object {
+        "Description": "from MyBfStacktestecsbfservicebotfrontSecurityGroup61478B53:4",
+        "FromPort": 4,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaserviceactionsveryrealcustomer2SecurityGroup026380CA",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::ImportValue": "MyBfStack:ExportsOutputFnGetAtttestecsbfservicebotfrontSecurityGroupDAC99FD2GroupId3DADD82E",
+        },
+        "ToPort": 4,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testecsrasaserviceactionsveryrealcustomer2SecurityGroupfromMyTestStacktestecsrasaservicerasaveryrealcustomer2SecurityGroupF44AB96D4DEC3FD9D": Object {
+      "Properties": Object {
+        "Description": "from MyTestStacktestecsrasaservicerasaveryrealcustomer2SecurityGroupF44AB96D:4",
+        "FromPort": 4,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaserviceactionsveryrealcustomer2SecurityGroup026380CA",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaservicerasaveryrealcustomer2SecurityGroup4834F447",
+            "GroupId",
+          ],
+        },
+        "ToPort": 4,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testecsrasaserviceactionsveryrealcustomer2ServiceC99AF3C8": Object {
+      "DependsOn": Array [
+        "testecsrasalisteneractionsveryrealcustomer2BC31FFA6",
+      ],
+      "Properties": Object {
+        "Cluster": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbaseecscluster2FF70F4D9784160F",
+        },
+        "DeploymentConfiguration": Object {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50,
+        },
+        "EnableECSManagedTags": false,
+        "HealthCheckGracePeriodSeconds": 60,
+        "LaunchType": "FARGATE",
+        "LoadBalancers": Array [
+          Object {
+            "ContainerName": "actions-veryrealcustomer2",
+            "ContainerPort": 4,
+            "TargetGroupArn": Object {
+              "Ref": "testecsrasatargetgroupactionsveryrealcustomer207BA717E",
+            },
+          },
+        ],
+        "NetworkConfiguration": Object {
+          "AwsvpcConfiguration": Object {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": Array [
+              Object {
+                "Fn::GetAtt": Array [
+                  "testecsrasaserviceactionsveryrealcustomer2SecurityGroup026380CA",
+                  "GroupId",
+                ],
+              },
+            ],
+            "Subnets": Array [
+              Object {
+                "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpcPrivateSubnet1Subnet878A5AD46CF1A964",
+              },
+              Object {
+                "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpcPrivateSubnet2Subnet02D85502F7210C29",
+              },
+            ],
+          },
+        },
+        "ServiceRegistries": Array [
+          Object {
+            "RegistryArn": Object {
+              "Fn::GetAtt": Array [
+                "testecsrasaserviceactionsveryrealcustomer2CloudmapServiceD76E7232",
+                "Arn",
+              ],
+            },
+          },
+        ],
+        "TaskDefinition": Object {
+          "Ref": "testecsrasataskdefinitionactionsveryrealcustomer2E3C68EC6",
+        },
+      },
+      "Type": "AWS::ECS::Service",
+    },
+    "testecsrasaserviceactionsveryrealcustomerCloudmapServiceD5283A53": Object {
+      "Properties": Object {
+        "DnsConfig": Object {
+          "DnsRecords": Array [
+            Object {
+              "TTL": 60,
+              "Type": "A",
+            },
+          ],
+          "NamespaceId": Object {
+            "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbaseecsclusterDefaultServiceDiscoveryNamespaceCF03B33EIdD1398CF8",
+          },
+          "RoutingPolicy": "MULTIVALUE",
+        },
+        "HealthCheckCustomConfig": Object {
+          "FailureThreshold": 1,
+        },
+        "Name": "actions-veryrealcustomer",
+        "NamespaceId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbaseecsclusterDefaultServiceDiscoveryNamespaceCF03B33EIdD1398CF8",
+        },
+      },
+      "Type": "AWS::ServiceDiscovery::Service",
+    },
+    "testecsrasaserviceactionsveryrealcustomerSecurityGroup9C131078": Object {
+      "Properties": Object {
+        "GroupDescription": "MyTestStack/test.ecsrasa.service-actions-veryrealcustomer/SecurityGroup",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "testecsrasaserviceactionsveryrealcustomerSecurityGroupMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A042fromF7A8FB07": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaserviceactionsveryrealcustomerSecurityGroup9C131078",
+            "GroupId",
+          ],
+        },
+        "FromPort": 2,
+        "GroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 2,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "testecsrasaserviceactionsveryrealcustomerSecurityGroupfromMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A042A520EBD7": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 2,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaserviceactionsveryrealcustomerSecurityGroup9C131078",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "ToPort": 2,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testecsrasaserviceactionsveryrealcustomerSecurityGroupfromMyBfStacktestecsbfservicebotfrontSecurityGroup61478B53286EB90EF": Object {
+      "Properties": Object {
+        "Description": "from MyBfStacktestecsbfservicebotfrontSecurityGroup61478B53:2",
+        "FromPort": 2,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaserviceactionsveryrealcustomerSecurityGroup9C131078",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::ImportValue": "MyBfStack:ExportsOutputFnGetAtttestecsbfservicebotfrontSecurityGroupDAC99FD2GroupId3DADD82E",
+        },
+        "ToPort": 2,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testecsrasaserviceactionsveryrealcustomerSecurityGroupfromMyTestStacktestecsrasaservicerasaveryrealcustomerSecurityGroup2FBC0DAB2BF187547": Object {
+      "Properties": Object {
+        "Description": "from MyTestStacktestecsrasaservicerasaveryrealcustomerSecurityGroup2FBC0DAB:2",
+        "FromPort": 2,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaserviceactionsveryrealcustomerSecurityGroup9C131078",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasaservicerasaveryrealcustomerSecurityGroup6EDAE8B1",
+            "GroupId",
+          ],
+        },
+        "ToPort": 2,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testecsrasaserviceactionsveryrealcustomerService89944982": Object {
+      "DependsOn": Array [
+        "testecsrasalisteneractionsveryrealcustomer593F16DF",
+      ],
+      "Properties": Object {
+        "Cluster": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbaseecscluster2FF70F4D9784160F",
+        },
+        "DeploymentConfiguration": Object {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50,
+        },
+        "EnableECSManagedTags": false,
+        "HealthCheckGracePeriodSeconds": 60,
+        "LaunchType": "FARGATE",
+        "LoadBalancers": Array [
+          Object {
+            "ContainerName": "actions-veryrealcustomer",
+            "ContainerPort": 2,
+            "TargetGroupArn": Object {
+              "Ref": "testecsrasatargetgroupactionsveryrealcustomer12F4DF56",
+            },
+          },
+        ],
+        "NetworkConfiguration": Object {
+          "AwsvpcConfiguration": Object {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": Array [
+              Object {
+                "Fn::GetAtt": Array [
+                  "testecsrasaserviceactionsveryrealcustomerSecurityGroup9C131078",
+                  "GroupId",
+                ],
+              },
+            ],
+            "Subnets": Array [
+              Object {
+                "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpcPrivateSubnet1Subnet878A5AD46CF1A964",
+              },
+              Object {
+                "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpcPrivateSubnet2Subnet02D85502F7210C29",
+              },
+            ],
+          },
+        },
+        "ServiceRegistries": Array [
+          Object {
+            "RegistryArn": Object {
+              "Fn::GetAtt": Array [
+                "testecsrasaserviceactionsveryrealcustomerCloudmapServiceD5283A53",
+                "Arn",
+              ],
+            },
+          },
+        ],
+        "TaskDefinition": Object {
+          "Ref": "testecsrasataskdefinitionactionsveryrealcustomerC350F325",
+        },
+      },
+      "Type": "AWS::ECS::Service",
     },
     "testecsrasaservicerasaveryrealcustomer2CloudmapService8C053361": Object {
       "Properties": Object {
@@ -707,6 +1404,7 @@ Object {
             ],
           },
         },
+        "ServiceName": "test-service-rasa-veryrealcustomer2",
         "ServiceRegistries": Array [
           Object {
             "RegistryArn": Object {
@@ -880,6 +1578,7 @@ Object {
             ],
           },
         },
+        "ServiceName": "test-service-rasa-veryrealcustomer",
         "ServiceRegistries": Array [
           Object {
             "RegistryArn": Object {
@@ -895,6 +1594,30 @@ Object {
         },
       },
       "Type": "AWS::ECS::Service",
+    },
+    "testecsrasatargetgroupactionsveryrealcustomer12F4DF56": Object {
+      "Properties": Object {
+        "HealthCheckPath": "/actions",
+        "Port": 2,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "VpcId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "testecsrasatargetgroupactionsveryrealcustomer207BA717E": Object {
+      "Properties": Object {
+        "HealthCheckPath": "/actions",
+        "Port": 4,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "VpcId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
     },
     "testecsrasatargetgrouprasaveryrealcustomer2515031AC": Object {
       "Properties": Object {
@@ -917,6 +1640,352 @@ Object {
         },
       },
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomer2E3C68EC6": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Command": Array [
+              "start",
+              "--actions",
+              "actions",
+              "--debug",
+              "--port",
+              "4",
+            ],
+            "Environment": Array [
+              Object {
+                "Name": "PORT",
+                "Value": "4",
+              },
+              Object {
+                "Name": "BF_URL",
+                "Value": "http://botfront.testservice.internal:8888/graphql",
+              },
+            ],
+            "Essential": true,
+            "Image": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "0123456789.dkr.ecr.test.",
+                  Object {
+                    "Ref": "AWS::URLSuffix",
+                  },
+                  "/test-actions-veryrealcustomer2:latest",
+                ],
+              ],
+            },
+            "LogConfiguration": Object {
+              "LogDriver": "awslogs",
+              "Options": Object {
+                "awslogs-group": Object {
+                  "Ref": "testecsrasataskdefinitionactionsveryrealcustomer2testecsrasaactionsLogGroupE8D0423B",
+                },
+                "awslogs-region": "test",
+                "awslogs-stream-prefix": "test.ecsrasa.actions-veryrealcustomer2",
+              },
+            },
+            "Name": "actions-veryrealcustomer2",
+            "PortMappings": Array [
+              Object {
+                "ContainerPort": 4,
+                "HostPort": 4,
+                "Protocol": "tcp",
+              },
+            ],
+          },
+        ],
+        "Cpu": "256",
+        "ExecutionRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasataskdefinitionactionsveryrealcustomer2ExecutionRoleDB2C9352",
+            "Arn",
+          ],
+        },
+        "Family": "MyTestStacktestecsrasataskdefinitionactionsveryrealcustomer2F2D4EB7D",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": Array [
+          "FARGATE",
+        ],
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasataskdefinitionactionsveryrealcustomer2TaskRole96064480",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomer2ExecutionRoleDB2C9352": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomer2ExecutionRoleDefaultPolicy71A17401": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:test:0123456789:repository/test-actions-veryrealcustomer2",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": Array [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "testecsrasataskdefinitionactionsveryrealcustomer2testecsrasaactionsLogGroupE8D0423B",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testecsrasataskdefinitionactionsveryrealcustomer2ExecutionRoleDefaultPolicy71A17401",
+        "Roles": Array [
+          Object {
+            "Ref": "testecsrasataskdefinitionactionsveryrealcustomer2ExecutionRoleDB2C9352",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomer2TaskRole96064480": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomer2testecsrasaactionsLogGroupE8D0423B": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "RetentionInDays": 1,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomerC350F325": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Command": Array [
+              "start",
+              "--actions",
+              "actions",
+              "--debug",
+              "--port",
+              "2",
+            ],
+            "Environment": Array [
+              Object {
+                "Name": "PORT",
+                "Value": "2",
+              },
+              Object {
+                "Name": "BF_URL",
+                "Value": "http://botfront.testservice.internal:8888/graphql",
+              },
+            ],
+            "Essential": true,
+            "Image": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "0123456789.dkr.ecr.test.",
+                  Object {
+                    "Ref": "AWS::URLSuffix",
+                  },
+                  "/test-actions-veryrealcustomer:latest",
+                ],
+              ],
+            },
+            "LogConfiguration": Object {
+              "LogDriver": "awslogs",
+              "Options": Object {
+                "awslogs-group": Object {
+                  "Ref": "testecsrasataskdefinitionactionsveryrealcustomertestecsrasaactionsLogGroup7873CD00",
+                },
+                "awslogs-region": "test",
+                "awslogs-stream-prefix": "test.ecsrasa.actions-veryrealcustomer",
+              },
+            },
+            "Name": "actions-veryrealcustomer",
+            "PortMappings": Array [
+              Object {
+                "ContainerPort": 2,
+                "HostPort": 2,
+                "Protocol": "tcp",
+              },
+            ],
+          },
+        ],
+        "Cpu": "256",
+        "ExecutionRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasataskdefinitionactionsveryrealcustomerExecutionRole543438A7",
+            "Arn",
+          ],
+        },
+        "Family": "MyTestStacktestecsrasataskdefinitionactionsveryrealcustomer618C7F52",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": Array [
+          "FARGATE",
+        ],
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testecsrasataskdefinitionactionsveryrealcustomerTaskRole165EB774",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomerExecutionRole543438A7": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomerExecutionRoleDefaultPolicyC6AAEDBF": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:test:0123456789:repository/test-actions-veryrealcustomer",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": Array [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "testecsrasataskdefinitionactionsveryrealcustomertestecsrasaactionsLogGroup7873CD00",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testecsrasataskdefinitionactionsveryrealcustomerExecutionRoleDefaultPolicyC6AAEDBF",
+        "Roles": Array [
+          Object {
+            "Ref": "testecsrasataskdefinitionactionsveryrealcustomerExecutionRole543438A7",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomerTaskRole165EB774": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testecsrasataskdefinitionactionsveryrealcustomertestecsrasaactionsLogGroup7873CD00": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "RetentionInDays": 1,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
     },
     "testecsrasataskdefinitionrasaveryrealcustomer2174F3979": Object {
       "Properties": Object {
@@ -964,7 +2033,7 @@ Object {
                   "Ref": "testecsrasataskdefinitionrasaveryrealcustomer2testecsrasacontainerrasaveryrealcustomer2LogGroupC6466A84",
                 },
                 "awslogs-region": "test",
-                "awslogs-stream-prefix": "test.ecsrasa.rasa-veryrealcustomer2",
+                "awslogs-stream-prefix": "test.ecsrasa.container-rasa-veryrealcustomer2",
               },
             },
             "MountPoints": Array [
@@ -979,57 +2048,6 @@ Object {
               Object {
                 "ContainerPort": 3,
                 "HostPort": 3,
-                "Protocol": "tcp",
-              },
-            ],
-          },
-          Object {
-            "Command": Array [
-              "start",
-              "--actions",
-              "actions",
-              "--debug",
-              "--port",
-              "4",
-            ],
-            "Environment": Array [
-              Object {
-                "Name": "PORT",
-                "Value": "4",
-              },
-              Object {
-                "Name": "BF_URL",
-                "Value": "http://botfront.testservice.internal:8888/graphql",
-              },
-            ],
-            "Essential": true,
-            "Image": Object {
-              "Fn::Join": Array [
-                "",
-                Array [
-                  "0123456789.dkr.ecr.test.",
-                  Object {
-                    "Ref": "AWS::URLSuffix",
-                  },
-                  "/test-actions-veryrealcustomer2:latest",
-                ],
-              ],
-            },
-            "LogConfiguration": Object {
-              "LogDriver": "awslogs",
-              "Options": Object {
-                "awslogs-group": Object {
-                  "Ref": "testecsrasataskdefinitionrasaveryrealcustomer2testecsrasaactionsLogGroupC172000C",
-                },
-                "awslogs-region": "test",
-                "awslogs-stream-prefix": "test.ecsrasa.rasa-veryrealcustomer2",
-              },
-            },
-            "Name": "actions-veryrealcustomer2",
-            "PortMappings": Array [
-              Object {
-                "ContainerPort": 4,
-                "HostPort": 4,
                 "Protocol": "tcp",
               },
             ],
@@ -1121,39 +2139,6 @@ Object {
                 ],
               },
             },
-            Object {
-              "Action": Array [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": Object {
-                "Fn::Join": Array [
-                  "",
-                  Array [
-                    "arn:",
-                    Object {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":ecr:test:0123456789:repository/test-actions-veryrealcustomer2",
-                  ],
-                ],
-              },
-            },
-            Object {
-              "Action": Array [
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              "Effect": "Allow",
-              "Resource": Object {
-                "Fn::GetAtt": Array [
-                  "testecsrasataskdefinitionrasaveryrealcustomer2testecsrasaactionsLogGroupC172000C",
-                  "Arn",
-                ],
-              },
-            },
           ],
           "Version": "2012-10-17",
         },
@@ -1182,14 +2167,6 @@ Object {
         },
       },
       "Type": "AWS::IAM::Role",
-    },
-    "testecsrasataskdefinitionrasaveryrealcustomer2testecsrasaactionsLogGroupC172000C": Object {
-      "DeletionPolicy": "Retain",
-      "Properties": Object {
-        "RetentionInDays": 1,
-      },
-      "Type": "AWS::Logs::LogGroup",
-      "UpdateReplacePolicy": "Retain",
     },
     "testecsrasataskdefinitionrasaveryrealcustomer2testecsrasacontainerrasaveryrealcustomer2LogGroupC6466A84": Object {
       "DeletionPolicy": "Retain",
@@ -1245,7 +2222,7 @@ Object {
                   "Ref": "testecsrasataskdefinitionrasaveryrealcustomertestecsrasacontainerrasaveryrealcustomerLogGroup16E7FE4D",
                 },
                 "awslogs-region": "test",
-                "awslogs-stream-prefix": "test.ecsrasa.rasa-veryrealcustomer",
+                "awslogs-stream-prefix": "test.ecsrasa.container-rasa-veryrealcustomer",
               },
             },
             "MountPoints": Array [
@@ -1260,57 +2237,6 @@ Object {
               Object {
                 "ContainerPort": 1,
                 "HostPort": 1,
-                "Protocol": "tcp",
-              },
-            ],
-          },
-          Object {
-            "Command": Array [
-              "start",
-              "--actions",
-              "actions",
-              "--debug",
-              "--port",
-              "2",
-            ],
-            "Environment": Array [
-              Object {
-                "Name": "PORT",
-                "Value": "2",
-              },
-              Object {
-                "Name": "BF_URL",
-                "Value": "http://botfront.testservice.internal:8888/graphql",
-              },
-            ],
-            "Essential": true,
-            "Image": Object {
-              "Fn::Join": Array [
-                "",
-                Array [
-                  "0123456789.dkr.ecr.test.",
-                  Object {
-                    "Ref": "AWS::URLSuffix",
-                  },
-                  "/test-actions-veryrealcustomer:latest",
-                ],
-              ],
-            },
-            "LogConfiguration": Object {
-              "LogDriver": "awslogs",
-              "Options": Object {
-                "awslogs-group": Object {
-                  "Ref": "testecsrasataskdefinitionrasaveryrealcustomertestecsrasaactionsLogGroupF6F7B0C4",
-                },
-                "awslogs-region": "test",
-                "awslogs-stream-prefix": "test.ecsrasa.rasa-veryrealcustomer",
-              },
-            },
-            "Name": "actions-veryrealcustomer",
-            "PortMappings": Array [
-              Object {
-                "ContainerPort": 2,
-                "HostPort": 2,
                 "Protocol": "tcp",
               },
             ],
@@ -1402,39 +2328,6 @@ Object {
                 ],
               },
             },
-            Object {
-              "Action": Array [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": Object {
-                "Fn::Join": Array [
-                  "",
-                  Array [
-                    "arn:",
-                    Object {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":ecr:test:0123456789:repository/test-actions-veryrealcustomer",
-                  ],
-                ],
-              },
-            },
-            Object {
-              "Action": Array [
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              "Effect": "Allow",
-              "Resource": Object {
-                "Fn::GetAtt": Array [
-                  "testecsrasataskdefinitionrasaveryrealcustomertestecsrasaactionsLogGroupF6F7B0C4",
-                  "Arn",
-                ],
-              },
-            },
           ],
           "Version": "2012-10-17",
         },
@@ -1463,14 +2356,6 @@ Object {
         },
       },
       "Type": "AWS::IAM::Role",
-    },
-    "testecsrasataskdefinitionrasaveryrealcustomertestecsrasaactionsLogGroupF6F7B0C4": Object {
-      "DeletionPolicy": "Retain",
-      "Properties": Object {
-        "RetentionInDays": 1,
-      },
-      "Type": "AWS::Logs::LogGroup",
-      "UpdateReplacePolicy": "Retain",
     },
     "testecsrasataskdefinitionrasaveryrealcustomertestecsrasacontainerrasaveryrealcustomerLogGroup16E7FE4D": Object {
       "DeletionPolicy": "Retain",
