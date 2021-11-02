@@ -27,7 +27,15 @@ const hyteSubDomain = `${hyteEnvName}.${domain}`;
 const customerEnvName = 'customer';
 const customerSubDomain = `${customerEnvName}.${domain}`;
 const customerWebChatSubDomain = `chat.${customerSubDomain}`;
-const customerRasaBots: RasaBot[] = [{rasaPort: 5005, actionsPort: 5055, projectId: 'HFqcqN9LEiDo8u2N7', customerName: 'hyte-firstbot'}];
+const customerRasaBots: RasaBot[] = [{rasaPort: 5005, actionsPort: 5055, projectId: 'HFqcqN9LEiDo8u2N7', customerName: 'hyte-firstbot', additionalConfig: {
+  intents: {
+    onerva: '/aloita{"oma_organisaatio": "onerva"}',
+    vamos: '/aloita{"oma_organisaatio": "vamos"}',
+    helsinkimissio: '/aloita{"oma_organisaatio": "helsinki missio"}',
+    poikienpuhelin: '/aloita{"oma_organisaatio": "poikien puhelin"}',
+    asemanlapset: '/aloita{"oma_organisaatio": "aseman lapset"}'
+  }
+}}];
 
 const demoEnvName = 'demo';
 const demoSubDomain = `${demoEnvName}.${domain}`;

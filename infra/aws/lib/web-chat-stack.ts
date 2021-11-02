@@ -20,7 +20,7 @@ interface WebChatProps extends BaseStackProps {
   subDomain: string;
 }
 
-const frontendVersion = '0.0.3';
+const frontendVersion = '0.0.6';
 const sourceBucketName = 'auroraai-source-code-bucket';
 export class WebChatStack extends cdk.Stack {
   public readonly rasaBotAddressMap: Map<RasaBot, string> = new Map<RasaBot, string>();
@@ -76,7 +76,14 @@ export class WebChatStack extends cdk.Stack {
 
       // write rasa config files to temp folder for the deployment
       fs.mkdirSync(`temp/${prefix}/${rasaBot.customerName}/config`, { recursive: true });
-      fs.writeFileSync(`temp/${prefix}/${rasaBot.customerName}/config/rasa-config.json`, `{"url": "${props.subDomain}:${rasaBot.rasaPort}", "language": "fi"}`);
+
+      const config = {
+        additionalConfig: rasaBot.additionalConfig,
+        language: 'fi',
+        url: `${props.subDomain}:${rasaBot.rasaPort}`,
+      };
+
+      fs.writeFileSync(`temp/${prefix}/${rasaBot.customerName}/config/rasa-config.json`, JSON.stringify(config));
 
       const cloudFrontWebDistribution = new cloudfront.CloudFrontWebDistribution(this, `${prefix}frontend-distribution-${rasaBot.customerName}`, {
         defaultRootObject: 'index.html',
