@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import { BaseStack } from '../lib/base-stack';
 import { RasaBot } from '../types';
 import { createEnvironment, DefaultRepositories } from '../envs/environment';
 
@@ -49,12 +48,6 @@ const testWebChatSubDomain = `chat.${demoSubDomain}`;
 const testRasaBots: RasaBot[] = [{rasaPort: 5006, actionsPort: 5055, projectId: 'test-project', customerName: 'test-1'}];
 
 const app = new cdk.App();
-const base = new BaseStack(app, 'BaseStack', {
-  env: {
-    region,
-    account
-  }
-});
 
 const demoenv = createEnvironment(app, {
   domain,
