@@ -1,0 +1,1791 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create base-stack with one bot 1`] = `
+Object {
+  "Parameters": Object {
+    "AssetParameterseec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7eArtifactHash82F67A16": Object {
+      "Description": "Artifact hash for asset \\"eec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7e\\"",
+      "Type": "String",
+    },
+    "AssetParameterseec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7eS3BucketFF061DF8": Object {
+      "Description": "S3 bucket for asset \\"eec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7e\\"",
+      "Type": "String",
+    },
+    "AssetParameterseec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7eS3VersionKey45473141": Object {
+      "Description": "S3 key for asset version \\"eec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7e\\"",
+      "Type": "String",
+    },
+  },
+  "Resources": Object {
+    "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB28EAD8E4": Object {
+      "DependsOn": Array [
+        "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRoleDefaultPolicy280095F8",
+        "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRole8C8B0491",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParameterseec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7eS3BucketFF061DF8",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameterseec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7eS3VersionKey45473141",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameterseec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7eS3VersionKey45473141",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Handler": "main",
+        "MemorySize": 512,
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRole8C8B0491",
+            "Arn",
+          ],
+        },
+        "Runtime": "go1.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRole8C8B0491": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRoleDefaultPolicy280095F8": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "ecr:GetAuthorizationToken",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:GetRepositoryPolicy",
+                "ecr:DescribeRepositories",
+                "ecr:ListImages",
+                "ecr:DescribeImages",
+                "ecr:BatchGetImage",
+                "ecr:ListTagsForResource",
+                "ecr:DescribeImageScanFindings",
+                "ecr:InitiateLayerUpload",
+                "ecr:UploadLayerPart",
+                "ecr:CompleteLayerUpload",
+                "ecr:PutImage",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRoleDefaultPolicy280095F8",
+        "Roles": Array [
+          Object {
+            "Ref": "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRole8C8B0491",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testecsbaseacmcertificateB13926F6": Object {
+      "Properties": Object {
+        "DomainName": "test",
+        "DomainValidationOptions": Array [
+          Object {
+            "DomainName": "test",
+            "HostedZoneId": "DUMMY",
+          },
+        ],
+        "ValidationMethod": "DNS",
+      },
+      "Type": "AWS::CertificateManager::Certificate",
+    },
+    "testecsbasealbbase531813B0": Object {
+      "DependsOn": Array [
+        "testecsbasevpcPublicSubnet1DefaultRoute57413FBD",
+        "testecsbasevpcPublicSubnet2DefaultRouteC81F32D7",
+      ],
+      "Properties": Object {
+        "LoadBalancerAttributes": Array [
+          Object {
+            "Key": "deletion_protection.enabled",
+            "Value": "false",
+          },
+        ],
+        "Scheme": "internet-facing",
+        "SecurityGroups": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "testecsbasealbbaseSecurityGroupF7AE226C",
+              "GroupId",
+            ],
+          },
+        ],
+        "Subnets": Array [
+          Object {
+            "Ref": "testecsbasevpcPublicSubnet1Subnet70F9C86D",
+          },
+          Object {
+            "Ref": "testecsbasevpcPublicSubnet2Subnet1A1CB2C2",
+          },
+        ],
+        "Type": "application",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+    },
+    "testecsbasealbbaseSecurityGroupF7AE226C": Object {
+      "Properties": Object {
+        "GroupDescription": "Automatically created Security Group for ELB MyTestStacktestecsbasealbbase05D9D2DD",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "255.255.255.255/32",
+            "Description": "Disallow all traffic",
+            "FromPort": 252,
+            "IpProtocol": "icmp",
+            "ToPort": 86,
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "testecsbasedeployactionsimageveryrealcustomerCustomResource0D29CCEE": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "DestImage": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "docker://",
+              Object {
+                "Fn::Select": Array [
+                  4,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositoryactionsveryrealcustomer250EC5FB",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".dkr.ecr.",
+              Object {
+                "Fn::Select": Array [
+                  3,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositoryactionsveryrealcustomer250EC5FB",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".",
+              Object {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/",
+              Object {
+                "Ref": "testecsbaseecrrepositoryactionsveryrealcustomer250EC5FB",
+              },
+              ":latest",
+            ],
+          ],
+        },
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB28EAD8E4",
+            "Arn",
+          ],
+        },
+        "SrcImage": "docker://test",
+      },
+      "Type": "Custom::CDKBucketDeployment",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "testecsbasedeploybfimageCustomResource0F7EB09B": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "DestImage": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "docker://",
+              Object {
+                "Fn::Select": Array [
+                  4,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositorybotfront7719FDC4",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".dkr.ecr.",
+              Object {
+                "Fn::Select": Array [
+                  3,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositorybotfront7719FDC4",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".",
+              Object {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/",
+              Object {
+                "Ref": "testecsbaseecrrepositorybotfront7719FDC4",
+              },
+              ":latest",
+            ],
+          ],
+        },
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB28EAD8E4",
+            "Arn",
+          ],
+        },
+        "SrcImage": "docker://test",
+      },
+      "Type": "Custom::CDKBucketDeployment",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "testecsbasedeployrasaimageveryrealcustomerCustomResource495FBAA6": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "DestImage": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "docker://",
+              Object {
+                "Fn::Select": Array [
+                  4,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositoryrasaveryrealcustomer498B58DD",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".dkr.ecr.",
+              Object {
+                "Fn::Select": Array [
+                  3,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositoryrasaveryrealcustomer498B58DD",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".",
+              Object {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/",
+              Object {
+                "Ref": "testecsbaseecrrepositoryrasaveryrealcustomer498B58DD",
+              },
+              ":latest",
+            ],
+          ],
+        },
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB28EAD8E4",
+            "Arn",
+          ],
+        },
+        "SrcImage": "docker://test",
+      },
+      "Type": "Custom::CDKBucketDeployment",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "testecsbaseecrrepositoryactionsveryrealcustomer250EC5FB": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "ImageScanningConfiguration": Object {
+          "ScanOnPush": true,
+        },
+        "RepositoryName": "test-actions-veryrealcustomer",
+      },
+      "Type": "AWS::ECR::Repository",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testecsbaseecrrepositorybotfront7719FDC4": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "ImageScanningConfiguration": Object {
+          "ScanOnPush": true,
+        },
+        "RepositoryName": "test-botfront",
+      },
+      "Type": "AWS::ECR::Repository",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testecsbaseecrrepositoryrasaveryrealcustomer498B58DD": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "ImageScanningConfiguration": Object {
+          "ScanOnPush": true,
+        },
+        "RepositoryName": "test-rasa-veryrealcustomer",
+      },
+      "Type": "AWS::ECR::Repository",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testecsbaseecscluster2FF70F4D": Object {
+      "Properties": Object {
+        "ClusterName": "test-cluster",
+        "ClusterSettings": Array [
+          Object {
+            "Name": "containerInsights",
+            "Value": "enabled",
+          },
+        ],
+      },
+      "Type": "AWS::ECS::Cluster",
+    },
+    "testecsbaseecsclusterDefaultServiceDiscoveryNamespaceCF03B33E": Object {
+      "Properties": Object {
+        "Name": "testservice.internal",
+        "Vpc": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
+    },
+    "testecsbasemongoconnectionstring3319ECBA": Object {
+      "Properties": Object {
+        "GenerateSecretString": Object {},
+        "Name": "test.ecsbase.mongo-connectionstring",
+      },
+      "Type": "AWS::SecretsManager::Secret",
+    },
+    "testecsbaseroute53recorda363256DB": Object {
+      "Properties": Object {
+        "AliasTarget": Object {
+          "DNSName": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "dualstack.",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "testecsbasealbbase531813B0",
+                    "DNSName",
+                  ],
+                },
+              ],
+            ],
+          },
+          "HostedZoneId": Object {
+            "Fn::GetAtt": Array [
+              "testecsbasealbbase531813B0",
+              "CanonicalHostedZoneID",
+            ],
+          },
+        },
+        "HostedZoneId": "DUMMY",
+        "Name": "test.test.test.",
+        "Type": "A",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
+    "testecsbasevpc681C41C8": Object {
+      "Properties": Object {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "testecsbasevpcIGW890DD37D": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::InternetGateway",
+    },
+    "testecsbasevpcPrivateSubnet1DefaultRouteC383E0DD": Object {
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": Object {
+          "Ref": "testecsbasevpcPublicSubnet1NATGatewayE0CAC773",
+        },
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPrivateSubnet1RouteTable23113BC0",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "testecsbasevpcPrivateSubnet1RouteTable23113BC0": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PrivateSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "testecsbasevpcPrivateSubnet1RouteTableAssociation2B15B092": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPrivateSubnet1RouteTable23113BC0",
+        },
+        "SubnetId": Object {
+          "Ref": "testecsbasevpcPrivateSubnet1Subnet878A5AD4",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "testecsbasevpcPrivateSubnet1Subnet878A5AD4": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.0.128.0/18",
+        "MapPublicIpOnLaunch": false,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PrivateSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "testecsbasevpcPrivateSubnet2DefaultRouteE950AA84": Object {
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": Object {
+          "Ref": "testecsbasevpcPublicSubnet1NATGatewayE0CAC773",
+        },
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPrivateSubnet2RouteTable18CADA25",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "testecsbasevpcPrivateSubnet2RouteTable18CADA25": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PrivateSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "testecsbasevpcPrivateSubnet2RouteTableAssociation7F447F89": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPrivateSubnet2RouteTable18CADA25",
+        },
+        "SubnetId": Object {
+          "Ref": "testecsbasevpcPrivateSubnet2Subnet02D85502",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "testecsbasevpcPrivateSubnet2Subnet02D85502": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1b",
+        "CidrBlock": "10.0.192.0/18",
+        "MapPublicIpOnLaunch": false,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PrivateSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "testecsbasevpcPublicSubnet1DefaultRoute57413FBD": Object {
+      "DependsOn": Array [
+        "testecsbasevpcVPCGW379414A4",
+      ],
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "testecsbasevpcIGW890DD37D",
+        },
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPublicSubnet1RouteTableAA1FF79B",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "testecsbasevpcPublicSubnet1EIPD83AD3C1": Object {
+      "Properties": Object {
+        "Domain": "vpc",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::EIP",
+    },
+    "testecsbasevpcPublicSubnet1NATGatewayE0CAC773": Object {
+      "Properties": Object {
+        "AllocationId": Object {
+          "Fn::GetAtt": Array [
+            "testecsbasevpcPublicSubnet1EIPD83AD3C1",
+            "AllocationId",
+          ],
+        },
+        "SubnetId": Object {
+          "Ref": "testecsbasevpcPublicSubnet1Subnet70F9C86D",
+        },
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::NatGateway",
+    },
+    "testecsbasevpcPublicSubnet1RouteTableAA1FF79B": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "testecsbasevpcPublicSubnet1RouteTableAssociationD0C95E41": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPublicSubnet1RouteTableAA1FF79B",
+        },
+        "SubnetId": Object {
+          "Ref": "testecsbasevpcPublicSubnet1Subnet70F9C86D",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "testecsbasevpcPublicSubnet1Subnet70F9C86D": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.0.0.0/18",
+        "MapPublicIpOnLaunch": true,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "testecsbasevpcPublicSubnet2DefaultRouteC81F32D7": Object {
+      "DependsOn": Array [
+        "testecsbasevpcVPCGW379414A4",
+      ],
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "testecsbasevpcIGW890DD37D",
+        },
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPublicSubnet2RouteTableF72F7394",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "testecsbasevpcPublicSubnet2RouteTableAssociation62613109": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPublicSubnet2RouteTableF72F7394",
+        },
+        "SubnetId": Object {
+          "Ref": "testecsbasevpcPublicSubnet2Subnet1A1CB2C2",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "testecsbasevpcPublicSubnet2RouteTableF72F7394": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PublicSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "testecsbasevpcPublicSubnet2Subnet1A1CB2C2": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1b",
+        "CidrBlock": "10.0.64.0/18",
+        "MapPublicIpOnLaunch": true,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PublicSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "testecsbasevpcVPCGW379414A4": Object {
+      "Properties": Object {
+        "InternetGatewayId": Object {
+          "Ref": "testecsbasevpcIGW890DD37D",
+        },
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+    },
+  },
+}
+`;
+
+exports[`Create base-stack with two bots 1`] = `
+Object {
+  "Parameters": Object {
+    "AssetParameterseec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7eArtifactHash82F67A16": Object {
+      "Description": "Artifact hash for asset \\"eec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7e\\"",
+      "Type": "String",
+    },
+    "AssetParameterseec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7eS3BucketFF061DF8": Object {
+      "Description": "S3 bucket for asset \\"eec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7e\\"",
+      "Type": "String",
+    },
+    "AssetParameterseec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7eS3VersionKey45473141": Object {
+      "Description": "S3 key for asset version \\"eec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7e\\"",
+      "Type": "String",
+    },
+  },
+  "Resources": Object {
+    "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB28EAD8E4": Object {
+      "DependsOn": Array [
+        "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRoleDefaultPolicy280095F8",
+        "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRole8C8B0491",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParameterseec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7eS3BucketFF061DF8",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameterseec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7eS3VersionKey45473141",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameterseec6957be22cd1fee5c375b707633eddeaf7647611cd3b543390ea54ffc32b7eS3VersionKey45473141",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Handler": "main",
+        "MemorySize": 512,
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRole8C8B0491",
+            "Arn",
+          ],
+        },
+        "Runtime": "go1.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRole8C8B0491": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRoleDefaultPolicy280095F8": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "ecr:GetAuthorizationToken",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:GetRepositoryPolicy",
+                "ecr:DescribeRepositories",
+                "ecr:ListImages",
+                "ecr:DescribeImages",
+                "ecr:BatchGetImage",
+                "ecr:ListTagsForResource",
+                "ecr:DescribeImageScanFindings",
+                "ecr:InitiateLayerUpload",
+                "ecr:UploadLayerPart",
+                "ecr:CompleteLayerUpload",
+                "ecr:PutImage",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRoleDefaultPolicy280095F8",
+        "Roles": Array [
+          Object {
+            "Ref": "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRole8C8B0491",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testecsbaseacmcertificateB13926F6": Object {
+      "Properties": Object {
+        "DomainName": "test",
+        "DomainValidationOptions": Array [
+          Object {
+            "DomainName": "test",
+            "HostedZoneId": "DUMMY",
+          },
+        ],
+        "ValidationMethod": "DNS",
+      },
+      "Type": "AWS::CertificateManager::Certificate",
+    },
+    "testecsbasealbbase531813B0": Object {
+      "DependsOn": Array [
+        "testecsbasevpcPublicSubnet1DefaultRoute57413FBD",
+        "testecsbasevpcPublicSubnet2DefaultRouteC81F32D7",
+      ],
+      "Properties": Object {
+        "LoadBalancerAttributes": Array [
+          Object {
+            "Key": "deletion_protection.enabled",
+            "Value": "false",
+          },
+        ],
+        "Scheme": "internet-facing",
+        "SecurityGroups": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "testecsbasealbbaseSecurityGroupF7AE226C",
+              "GroupId",
+            ],
+          },
+        ],
+        "Subnets": Array [
+          Object {
+            "Ref": "testecsbasevpcPublicSubnet1Subnet70F9C86D",
+          },
+          Object {
+            "Ref": "testecsbasevpcPublicSubnet2Subnet1A1CB2C2",
+          },
+        ],
+        "Type": "application",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+    },
+    "testecsbasealbbaseSecurityGroupF7AE226C": Object {
+      "Properties": Object {
+        "GroupDescription": "Automatically created Security Group for ELB MyTestStacktestecsbasealbbase05D9D2DD",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "255.255.255.255/32",
+            "Description": "Disallow all traffic",
+            "FromPort": 252,
+            "IpProtocol": "icmp",
+            "ToPort": 86,
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "testecsbasedeployactionsimageveryrealcustomer2CustomResourceC7F8FE3F": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "DestImage": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "docker://",
+              Object {
+                "Fn::Select": Array [
+                  4,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositoryactionsveryrealcustomer210FE43C5",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".dkr.ecr.",
+              Object {
+                "Fn::Select": Array [
+                  3,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositoryactionsveryrealcustomer210FE43C5",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".",
+              Object {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/",
+              Object {
+                "Ref": "testecsbaseecrrepositoryactionsveryrealcustomer210FE43C5",
+              },
+              ":latest",
+            ],
+          ],
+        },
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB28EAD8E4",
+            "Arn",
+          ],
+        },
+        "SrcImage": "docker://test",
+      },
+      "Type": "Custom::CDKBucketDeployment",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "testecsbasedeployactionsimageveryrealcustomerCustomResource0D29CCEE": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "DestImage": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "docker://",
+              Object {
+                "Fn::Select": Array [
+                  4,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositoryactionsveryrealcustomer250EC5FB",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".dkr.ecr.",
+              Object {
+                "Fn::Select": Array [
+                  3,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositoryactionsveryrealcustomer250EC5FB",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".",
+              Object {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/",
+              Object {
+                "Ref": "testecsbaseecrrepositoryactionsveryrealcustomer250EC5FB",
+              },
+              ":latest",
+            ],
+          ],
+        },
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB28EAD8E4",
+            "Arn",
+          ],
+        },
+        "SrcImage": "docker://test",
+      },
+      "Type": "Custom::CDKBucketDeployment",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "testecsbasedeploybfimageCustomResource0F7EB09B": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "DestImage": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "docker://",
+              Object {
+                "Fn::Select": Array [
+                  4,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositorybotfront7719FDC4",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".dkr.ecr.",
+              Object {
+                "Fn::Select": Array [
+                  3,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositorybotfront7719FDC4",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".",
+              Object {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/",
+              Object {
+                "Ref": "testecsbaseecrrepositorybotfront7719FDC4",
+              },
+              ":latest",
+            ],
+          ],
+        },
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB28EAD8E4",
+            "Arn",
+          ],
+        },
+        "SrcImage": "docker://test",
+      },
+      "Type": "Custom::CDKBucketDeployment",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "testecsbasedeployrasaimageveryrealcustomer2CustomResourceD7868960": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "DestImage": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "docker://",
+              Object {
+                "Fn::Select": Array [
+                  4,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositoryrasaveryrealcustomer2A44042CD",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".dkr.ecr.",
+              Object {
+                "Fn::Select": Array [
+                  3,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositoryrasaveryrealcustomer2A44042CD",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".",
+              Object {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/",
+              Object {
+                "Ref": "testecsbaseecrrepositoryrasaveryrealcustomer2A44042CD",
+              },
+              ":latest",
+            ],
+          ],
+        },
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB28EAD8E4",
+            "Arn",
+          ],
+        },
+        "SrcImage": "docker://test",
+      },
+      "Type": "Custom::CDKBucketDeployment",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "testecsbasedeployrasaimageveryrealcustomerCustomResource495FBAA6": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "DestImage": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "docker://",
+              Object {
+                "Fn::Select": Array [
+                  4,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositoryrasaveryrealcustomer498B58DD",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".dkr.ecr.",
+              Object {
+                "Fn::Select": Array [
+                  3,
+                  Object {
+                    "Fn::Split": Array [
+                      ":",
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "testecsbaseecrrepositoryrasaveryrealcustomer498B58DD",
+                          "Arn",
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ".",
+              Object {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/",
+              Object {
+                "Ref": "testecsbaseecrrepositoryrasaveryrealcustomer498B58DD",
+              },
+              ":latest",
+            ],
+          ],
+        },
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB28EAD8E4",
+            "Arn",
+          ],
+        },
+        "SrcImage": "docker://test",
+      },
+      "Type": "Custom::CDKBucketDeployment",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "testecsbaseecrrepositoryactionsveryrealcustomer210FE43C5": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "ImageScanningConfiguration": Object {
+          "ScanOnPush": true,
+        },
+        "RepositoryName": "test-actions-veryrealcustomer2",
+      },
+      "Type": "AWS::ECR::Repository",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testecsbaseecrrepositoryactionsveryrealcustomer250EC5FB": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "ImageScanningConfiguration": Object {
+          "ScanOnPush": true,
+        },
+        "RepositoryName": "test-actions-veryrealcustomer",
+      },
+      "Type": "AWS::ECR::Repository",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testecsbaseecrrepositorybotfront7719FDC4": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "ImageScanningConfiguration": Object {
+          "ScanOnPush": true,
+        },
+        "RepositoryName": "test-botfront",
+      },
+      "Type": "AWS::ECR::Repository",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testecsbaseecrrepositoryrasaveryrealcustomer2A44042CD": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "ImageScanningConfiguration": Object {
+          "ScanOnPush": true,
+        },
+        "RepositoryName": "test-rasa-veryrealcustomer2",
+      },
+      "Type": "AWS::ECR::Repository",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testecsbaseecrrepositoryrasaveryrealcustomer498B58DD": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "ImageScanningConfiguration": Object {
+          "ScanOnPush": true,
+        },
+        "RepositoryName": "test-rasa-veryrealcustomer",
+      },
+      "Type": "AWS::ECR::Repository",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testecsbaseecscluster2FF70F4D": Object {
+      "Properties": Object {
+        "ClusterName": "test-cluster",
+        "ClusterSettings": Array [
+          Object {
+            "Name": "containerInsights",
+            "Value": "enabled",
+          },
+        ],
+      },
+      "Type": "AWS::ECS::Cluster",
+    },
+    "testecsbaseecsclusterDefaultServiceDiscoveryNamespaceCF03B33E": Object {
+      "Properties": Object {
+        "Name": "testservice.internal",
+        "Vpc": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
+    },
+    "testecsbasemongoconnectionstring3319ECBA": Object {
+      "Properties": Object {
+        "GenerateSecretString": Object {},
+        "Name": "test.ecsbase.mongo-connectionstring",
+      },
+      "Type": "AWS::SecretsManager::Secret",
+    },
+    "testecsbaseroute53recorda363256DB": Object {
+      "Properties": Object {
+        "AliasTarget": Object {
+          "DNSName": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "dualstack.",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "testecsbasealbbase531813B0",
+                    "DNSName",
+                  ],
+                },
+              ],
+            ],
+          },
+          "HostedZoneId": Object {
+            "Fn::GetAtt": Array [
+              "testecsbasealbbase531813B0",
+              "CanonicalHostedZoneID",
+            ],
+          },
+        },
+        "HostedZoneId": "DUMMY",
+        "Name": "test.test.test.",
+        "Type": "A",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
+    "testecsbasevpc681C41C8": Object {
+      "Properties": Object {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "testecsbasevpcIGW890DD37D": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::InternetGateway",
+    },
+    "testecsbasevpcPrivateSubnet1DefaultRouteC383E0DD": Object {
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": Object {
+          "Ref": "testecsbasevpcPublicSubnet1NATGatewayE0CAC773",
+        },
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPrivateSubnet1RouteTable23113BC0",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "testecsbasevpcPrivateSubnet1RouteTable23113BC0": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PrivateSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "testecsbasevpcPrivateSubnet1RouteTableAssociation2B15B092": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPrivateSubnet1RouteTable23113BC0",
+        },
+        "SubnetId": Object {
+          "Ref": "testecsbasevpcPrivateSubnet1Subnet878A5AD4",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "testecsbasevpcPrivateSubnet1Subnet878A5AD4": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.0.128.0/18",
+        "MapPublicIpOnLaunch": false,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PrivateSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "testecsbasevpcPrivateSubnet2DefaultRouteE950AA84": Object {
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": Object {
+          "Ref": "testecsbasevpcPublicSubnet1NATGatewayE0CAC773",
+        },
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPrivateSubnet2RouteTable18CADA25",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "testecsbasevpcPrivateSubnet2RouteTable18CADA25": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PrivateSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "testecsbasevpcPrivateSubnet2RouteTableAssociation7F447F89": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPrivateSubnet2RouteTable18CADA25",
+        },
+        "SubnetId": Object {
+          "Ref": "testecsbasevpcPrivateSubnet2Subnet02D85502",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "testecsbasevpcPrivateSubnet2Subnet02D85502": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1b",
+        "CidrBlock": "10.0.192.0/18",
+        "MapPublicIpOnLaunch": false,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PrivateSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "testecsbasevpcPublicSubnet1DefaultRoute57413FBD": Object {
+      "DependsOn": Array [
+        "testecsbasevpcVPCGW379414A4",
+      ],
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "testecsbasevpcIGW890DD37D",
+        },
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPublicSubnet1RouteTableAA1FF79B",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "testecsbasevpcPublicSubnet1EIPD83AD3C1": Object {
+      "Properties": Object {
+        "Domain": "vpc",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::EIP",
+    },
+    "testecsbasevpcPublicSubnet1NATGatewayE0CAC773": Object {
+      "Properties": Object {
+        "AllocationId": Object {
+          "Fn::GetAtt": Array [
+            "testecsbasevpcPublicSubnet1EIPD83AD3C1",
+            "AllocationId",
+          ],
+        },
+        "SubnetId": Object {
+          "Ref": "testecsbasevpcPublicSubnet1Subnet70F9C86D",
+        },
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::NatGateway",
+    },
+    "testecsbasevpcPublicSubnet1RouteTableAA1FF79B": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "testecsbasevpcPublicSubnet1RouteTableAssociationD0C95E41": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPublicSubnet1RouteTableAA1FF79B",
+        },
+        "SubnetId": Object {
+          "Ref": "testecsbasevpcPublicSubnet1Subnet70F9C86D",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "testecsbasevpcPublicSubnet1Subnet70F9C86D": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.0.0.0/18",
+        "MapPublicIpOnLaunch": true,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "testecsbasevpcPublicSubnet2DefaultRouteC81F32D7": Object {
+      "DependsOn": Array [
+        "testecsbasevpcVPCGW379414A4",
+      ],
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "testecsbasevpcIGW890DD37D",
+        },
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPublicSubnet2RouteTableF72F7394",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "testecsbasevpcPublicSubnet2RouteTableAssociation62613109": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "testecsbasevpcPublicSubnet2RouteTableF72F7394",
+        },
+        "SubnetId": Object {
+          "Ref": "testecsbasevpcPublicSubnet2Subnet1A1CB2C2",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "testecsbasevpcPublicSubnet2RouteTableF72F7394": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PublicSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "testecsbasevpcPublicSubnet2Subnet1A1CB2C2": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1b",
+        "CidrBlock": "10.0.64.0/18",
+        "MapPublicIpOnLaunch": true,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "MyTestStack/test.ecsbase.vpc/PublicSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "testecsbasevpcVPCGW379414A4": Object {
+      "Properties": Object {
+        "InternetGatewayId": Object {
+          "Ref": "testecsbasevpcIGW890DD37D",
+        },
+        "VpcId": Object {
+          "Ref": "testecsbasevpc681C41C8",
+        },
+      },
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+    },
+  },
+}
+`;

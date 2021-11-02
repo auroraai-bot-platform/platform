@@ -1,0 +1,835 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create botfront-stack with one bot 1`] = `
+Object {
+  "Resources": Object {
+    "testecsbflistenerbotfront108F939B": Object {
+      "Properties": Object {
+        "Certificates": Array [
+          Object {
+            "CertificateArn": Object {
+              "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbaseacmcertificateB13926F63E853FB1",
+            },
+          },
+        ],
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "testecsbftargetgroupbotfront16EB0C22",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasealbbase531813B072720B06",
+        },
+        "Port": 443,
+        "Protocol": "HTTPS",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "testecsbfservicebotfrontCloudmapServiceAA6DA754": Object {
+      "Properties": Object {
+        "DnsConfig": Object {
+          "DnsRecords": Array [
+            Object {
+              "TTL": 60,
+              "Type": "A",
+            },
+          ],
+          "NamespaceId": Object {
+            "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbaseecsclusterDefaultServiceDiscoveryNamespaceCF03B33EIdD1398CF8",
+          },
+          "RoutingPolicy": "MULTIVALUE",
+        },
+        "HealthCheckCustomConfig": Object {
+          "FailureThreshold": 1,
+        },
+        "Name": "botfront",
+        "NamespaceId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbaseecsclusterDefaultServiceDiscoveryNamespaceCF03B33EIdD1398CF8",
+        },
+      },
+      "Type": "AWS::ServiceDiscovery::Service",
+    },
+    "testecsbfservicebotfrontSecurityGroupDAC99FD2": Object {
+      "Properties": Object {
+        "GroupDescription": "MyTestStack/test.ecsbf.service-botfront/SecurityGroup",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "SecurityGroupIngress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "from 0.0.0.0/0:8888",
+            "FromPort": 8888,
+            "IpProtocol": "tcp",
+            "ToPort": 8888,
+          },
+        ],
+        "VpcId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "testecsbfservicebotfrontSecurityGroupMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A04443from88BB6C74": Object {
+      "Properties": Object {
+        "Description": "to MyTestStacktestecsbfservicebotfrontSecurityGroup42EFE7E0:443",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsbfservicebotfrontSecurityGroupDAC99FD2",
+            "GroupId",
+          ],
+        },
+        "FromPort": 443,
+        "GroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 443,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "testecsbfservicebotfrontSecurityGroupMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A048888fromFCD2D75C": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsbfservicebotfrontSecurityGroupDAC99FD2",
+            "GroupId",
+          ],
+        },
+        "FromPort": 8888,
+        "GroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 8888,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "testecsbfservicebotfrontSecurityGroupfromMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A0444384922C9F": Object {
+      "Properties": Object {
+        "Description": "from MyBaseStacktestecsbasealbbaseSecurityGroupB4D71A04:443",
+        "FromPort": 443,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsbfservicebotfrontSecurityGroupDAC99FD2",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "ToPort": 443,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testecsbfservicebotfrontSecurityGroupfromMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A048888747DED15": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 8888,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsbfservicebotfrontSecurityGroupDAC99FD2",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "ToPort": 8888,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testecsbfservicebotfrontServiceAF5FB79E": Object {
+      "DependsOn": Array [
+        "testecsbflistenerbotfront108F939B",
+      ],
+      "Properties": Object {
+        "Cluster": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbaseecscluster2FF70F4D9784160F",
+        },
+        "DeploymentConfiguration": Object {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50,
+        },
+        "EnableECSManagedTags": false,
+        "HealthCheckGracePeriodSeconds": 60,
+        "LaunchType": "FARGATE",
+        "LoadBalancers": Array [
+          Object {
+            "ContainerName": "botfront",
+            "ContainerPort": 8888,
+            "TargetGroupArn": Object {
+              "Ref": "testecsbftargetgroupbotfront16EB0C22",
+            },
+          },
+        ],
+        "NetworkConfiguration": Object {
+          "AwsvpcConfiguration": Object {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": Array [
+              Object {
+                "Fn::GetAtt": Array [
+                  "testecsbfservicebotfrontSecurityGroupDAC99FD2",
+                  "GroupId",
+                ],
+              },
+            ],
+            "Subnets": Array [
+              Object {
+                "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpcPrivateSubnet1Subnet878A5AD46CF1A964",
+              },
+              Object {
+                "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpcPrivateSubnet2Subnet02D85502F7210C29",
+              },
+            ],
+          },
+        },
+        "ServiceRegistries": Array [
+          Object {
+            "RegistryArn": Object {
+              "Fn::GetAtt": Array [
+                "testecsbfservicebotfrontCloudmapServiceAA6DA754",
+                "Arn",
+              ],
+            },
+          },
+        ],
+        "TaskDefinition": Object {
+          "Ref": "testecsbftaskdefinitionbotfront448095A8",
+        },
+      },
+      "Type": "AWS::ECS::Service",
+    },
+    "testecsbftargetgroupbotfront16EB0C22": Object {
+      "Properties": Object {
+        "Port": 8888,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "VpcId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "testecsbftaskdefinitionbotfront448095A8": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Environment": Array [
+              Object {
+                "Name": "PORT",
+                "Value": "8888",
+              },
+              Object {
+                "Name": "REST_API_PORT",
+                "Value": "3030",
+              },
+              Object {
+                "Name": "ROOT_URL",
+                "Value": "https://test.test.test",
+              },
+            ],
+            "Essential": true,
+            "Image": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "0123456789.dkr.ecr.test.",
+                  Object {
+                    "Ref": "AWS::URLSuffix",
+                  },
+                  "/test-botfront:latest",
+                ],
+              ],
+            },
+            "LogConfiguration": Object {
+              "LogDriver": "awslogs",
+              "Options": Object {
+                "awslogs-group": Object {
+                  "Ref": "testecsbftaskdefinitionbotfronttestecsbfcontainerbotfrontLogGroup6FC42D12",
+                },
+                "awslogs-region": "test",
+                "awslogs-stream-prefix": "test.ecsbf.botfront",
+              },
+            },
+            "Name": "botfront",
+            "PortMappings": Array [
+              Object {
+                "ContainerPort": 8888,
+                "HostPort": 8888,
+                "Protocol": "tcp",
+              },
+              Object {
+                "ContainerPort": 3030,
+                "HostPort": 3030,
+                "Protocol": "tcp",
+              },
+            ],
+            "Secrets": Array [
+              Object {
+                "Name": "MONGO_URL",
+                "ValueFrom": Object {
+                  "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasemongoconnectionstring3319ECBA20BA2BD2",
+                },
+              },
+            ],
+          },
+        ],
+        "Cpu": "1024",
+        "ExecutionRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testecsbftaskdefinitionbotfrontExecutionRole670E3DA3",
+            "Arn",
+          ],
+        },
+        "Family": "MyTestStacktestecsbftaskdefinitionbotfront4A0D1437",
+        "Memory": "4096",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": Array [
+          "FARGATE",
+        ],
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testecsbftaskdefinitionbotfrontTaskRole62DFF8B7",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "testecsbftaskdefinitionbotfrontExecutionRole670E3DA3": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testecsbftaskdefinitionbotfrontExecutionRoleDefaultPolicy63A6B48C": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:test:0123456789:repository/test-botfront",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": Array [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "testecsbftaskdefinitionbotfronttestecsbfcontainerbotfrontLogGroup6FC42D12",
+                  "Arn",
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:DescribeSecret",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasemongoconnectionstring3319ECBA20BA2BD2",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testecsbftaskdefinitionbotfrontExecutionRoleDefaultPolicy63A6B48C",
+        "Roles": Array [
+          Object {
+            "Ref": "testecsbftaskdefinitionbotfrontExecutionRole670E3DA3",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testecsbftaskdefinitionbotfrontTaskRole62DFF8B7": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testecsbftaskdefinitionbotfronttestecsbfcontainerbotfrontLogGroup6FC42D12": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "RetentionInDays": 1,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+  },
+}
+`;
+
+exports[`Create botfront-stack with two bots 1`] = `
+Object {
+  "Resources": Object {
+    "testecsbflistenerbotfront108F939B": Object {
+      "Properties": Object {
+        "Certificates": Array [
+          Object {
+            "CertificateArn": Object {
+              "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbaseacmcertificateB13926F63E853FB1",
+            },
+          },
+        ],
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "testecsbftargetgroupbotfront16EB0C22",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasealbbase531813B072720B06",
+        },
+        "Port": 443,
+        "Protocol": "HTTPS",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "testecsbfservicebotfrontCloudmapServiceAA6DA754": Object {
+      "Properties": Object {
+        "DnsConfig": Object {
+          "DnsRecords": Array [
+            Object {
+              "TTL": 60,
+              "Type": "A",
+            },
+          ],
+          "NamespaceId": Object {
+            "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbaseecsclusterDefaultServiceDiscoveryNamespaceCF03B33EIdD1398CF8",
+          },
+          "RoutingPolicy": "MULTIVALUE",
+        },
+        "HealthCheckCustomConfig": Object {
+          "FailureThreshold": 1,
+        },
+        "Name": "botfront",
+        "NamespaceId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbaseecsclusterDefaultServiceDiscoveryNamespaceCF03B33EIdD1398CF8",
+        },
+      },
+      "Type": "AWS::ServiceDiscovery::Service",
+    },
+    "testecsbfservicebotfrontSecurityGroupDAC99FD2": Object {
+      "Properties": Object {
+        "GroupDescription": "MyTestStack/test.ecsbf.service-botfront/SecurityGroup",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "SecurityGroupIngress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "from 0.0.0.0/0:8888",
+            "FromPort": 8888,
+            "IpProtocol": "tcp",
+            "ToPort": 8888,
+          },
+        ],
+        "VpcId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "testecsbfservicebotfrontSecurityGroupMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A04443from88BB6C74": Object {
+      "Properties": Object {
+        "Description": "to MyTestStacktestecsbfservicebotfrontSecurityGroup42EFE7E0:443",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsbfservicebotfrontSecurityGroupDAC99FD2",
+            "GroupId",
+          ],
+        },
+        "FromPort": 443,
+        "GroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 443,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "testecsbfservicebotfrontSecurityGroupMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A048888fromFCD2D75C": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsbfservicebotfrontSecurityGroupDAC99FD2",
+            "GroupId",
+          ],
+        },
+        "FromPort": 8888,
+        "GroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 8888,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "testecsbfservicebotfrontSecurityGroupfromMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A0444384922C9F": Object {
+      "Properties": Object {
+        "Description": "from MyBaseStacktestecsbasealbbaseSecurityGroupB4D71A04:443",
+        "FromPort": 443,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsbfservicebotfrontSecurityGroupDAC99FD2",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "ToPort": 443,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testecsbfservicebotfrontSecurityGroupfromMyBaseStacktestecsbasealbbaseSecurityGroupB4D71A048888747DED15": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 8888,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "testecsbfservicebotfrontSecurityGroupDAC99FD2",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputFnGetAtttestecsbasealbbaseSecurityGroupF7AE226CGroupIdC9BF808A",
+        },
+        "ToPort": 8888,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "testecsbfservicebotfrontServiceAF5FB79E": Object {
+      "DependsOn": Array [
+        "testecsbflistenerbotfront108F939B",
+      ],
+      "Properties": Object {
+        "Cluster": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbaseecscluster2FF70F4D9784160F",
+        },
+        "DeploymentConfiguration": Object {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50,
+        },
+        "EnableECSManagedTags": false,
+        "HealthCheckGracePeriodSeconds": 60,
+        "LaunchType": "FARGATE",
+        "LoadBalancers": Array [
+          Object {
+            "ContainerName": "botfront",
+            "ContainerPort": 8888,
+            "TargetGroupArn": Object {
+              "Ref": "testecsbftargetgroupbotfront16EB0C22",
+            },
+          },
+        ],
+        "NetworkConfiguration": Object {
+          "AwsvpcConfiguration": Object {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": Array [
+              Object {
+                "Fn::GetAtt": Array [
+                  "testecsbfservicebotfrontSecurityGroupDAC99FD2",
+                  "GroupId",
+                ],
+              },
+            ],
+            "Subnets": Array [
+              Object {
+                "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpcPrivateSubnet1Subnet878A5AD46CF1A964",
+              },
+              Object {
+                "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpcPrivateSubnet2Subnet02D85502F7210C29",
+              },
+            ],
+          },
+        },
+        "ServiceRegistries": Array [
+          Object {
+            "RegistryArn": Object {
+              "Fn::GetAtt": Array [
+                "testecsbfservicebotfrontCloudmapServiceAA6DA754",
+                "Arn",
+              ],
+            },
+          },
+        ],
+        "TaskDefinition": Object {
+          "Ref": "testecsbftaskdefinitionbotfront448095A8",
+        },
+      },
+      "Type": "AWS::ECS::Service",
+    },
+    "testecsbftargetgroupbotfront16EB0C22": Object {
+      "Properties": Object {
+        "Port": 8888,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "VpcId": Object {
+          "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "testecsbftaskdefinitionbotfront448095A8": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Environment": Array [
+              Object {
+                "Name": "PORT",
+                "Value": "8888",
+              },
+              Object {
+                "Name": "REST_API_PORT",
+                "Value": "3030",
+              },
+              Object {
+                "Name": "ROOT_URL",
+                "Value": "https://test.test.test",
+              },
+            ],
+            "Essential": true,
+            "Image": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "0123456789.dkr.ecr.test.",
+                  Object {
+                    "Ref": "AWS::URLSuffix",
+                  },
+                  "/test-botfront:latest",
+                ],
+              ],
+            },
+            "LogConfiguration": Object {
+              "LogDriver": "awslogs",
+              "Options": Object {
+                "awslogs-group": Object {
+                  "Ref": "testecsbftaskdefinitionbotfronttestecsbfcontainerbotfrontLogGroup6FC42D12",
+                },
+                "awslogs-region": "test",
+                "awslogs-stream-prefix": "test.ecsbf.botfront",
+              },
+            },
+            "Name": "botfront",
+            "PortMappings": Array [
+              Object {
+                "ContainerPort": 8888,
+                "HostPort": 8888,
+                "Protocol": "tcp",
+              },
+              Object {
+                "ContainerPort": 3030,
+                "HostPort": 3030,
+                "Protocol": "tcp",
+              },
+            ],
+            "Secrets": Array [
+              Object {
+                "Name": "MONGO_URL",
+                "ValueFrom": Object {
+                  "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasemongoconnectionstring3319ECBA20BA2BD2",
+                },
+              },
+            ],
+          },
+        ],
+        "Cpu": "1024",
+        "ExecutionRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testecsbftaskdefinitionbotfrontExecutionRole670E3DA3",
+            "Arn",
+          ],
+        },
+        "Family": "MyTestStacktestecsbftaskdefinitionbotfront4A0D1437",
+        "Memory": "4096",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": Array [
+          "FARGATE",
+        ],
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testecsbftaskdefinitionbotfrontTaskRole62DFF8B7",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "testecsbftaskdefinitionbotfrontExecutionRole670E3DA3": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testecsbftaskdefinitionbotfrontExecutionRoleDefaultPolicy63A6B48C": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:test:0123456789:repository/test-botfront",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": Array [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "testecsbftaskdefinitionbotfronttestecsbfcontainerbotfrontLogGroup6FC42D12",
+                  "Arn",
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:DescribeSecret",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasemongoconnectionstring3319ECBA20BA2BD2",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testecsbftaskdefinitionbotfrontExecutionRoleDefaultPolicy63A6B48C",
+        "Roles": Array [
+          Object {
+            "Ref": "testecsbftaskdefinitionbotfrontExecutionRole670E3DA3",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testecsbftaskdefinitionbotfrontTaskRole62DFF8B7": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testecsbftaskdefinitionbotfronttestecsbfcontainerbotfrontLogGroup6FC42D12": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "RetentionInDays": 1,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+  },
+}
+`;
