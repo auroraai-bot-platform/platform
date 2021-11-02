@@ -32,6 +32,12 @@ export class EcsRasaStack extends cdk.Stack {
         compatibility: ecs.Compatibility.FARGATE
       });
 
+      const actionstd = new ecs.TaskDefinition(this, `${prefix}taskdefinition-actions-${rasaBot.customerName}`, {
+        cpu: '256',
+        memoryMiB: '512',
+        compatibility: ecs.Compatibility.FARGATE
+      });
+
       rasatd.addVolume({
         name: `rasavolume-${rasaBot.customerName}`,
       });
@@ -61,7 +67,7 @@ export class EcsRasaStack extends cdk.Stack {
         }
       );
 
-      rasatd.addContainer(`${prefix}container-actions-${rasaBot.customerName}`, {
+      actionstd.addContainer(`${prefix}actions`, {
         image: ecs.ContainerImage.fromEcrRepository(actionsrepo),
         containerName: `actions-${rasaBot.customerName}`,
         portMappings: [{
@@ -74,7 +80,7 @@ export class EcsRasaStack extends cdk.Stack {
           BF_URL: `http://botfront.${props.envName}service.internal:8888/graphql`
         },
         logging: ecs.LogDriver.awsLogs({
-          streamPrefix: `${prefix}container-actions-${rasaBot.customerName}`,
+          streamPrefix: `${prefix}actions-${rasaBot.customerName}`,
           logRetention: RetentionDays.ONE_DAY
         })
       });
@@ -88,27 +94,59 @@ export class EcsRasaStack extends cdk.Stack {
         serviceName: `${props.envName}-service-rasa-${rasaBot.customerName}`
       });
 
-      const listener = new elbv2.ApplicationListener(this, `${prefix}listener-rasa-${rasaBot.customerName}`, {
+      const actionsservice = new ecs.FargateService(this, `${prefix}service-actions-${rasaBot.customerName}`, {
+        cluster: props.baseCluster,
+        taskDefinition: actionstd,
+        cloudMapOptions: {
+          name: `actions-${rasaBot.customerName}`
+        }
+      });
+
+      const rasalistener = new elbv2.ApplicationListener(this, `${prefix}listener-rasa-${rasaBot.customerName}`, {
         loadBalancer: props.baseLoadbalancer,
         port: rasaBot.rasaPort,
         protocol: elbv2.ApplicationProtocol.HTTPS,
         certificates: [props.baseCertificate]
       })
 
-      const tg = new elbv2.ApplicationTargetGroup(this, `${prefix}targetgroup-rasa-${rasaBot.customerName}`, {
+      const actionslistener = new elbv2.ApplicationListener(this, `${prefix}listener-actions-${rasaBot.customerName}`, {
+        loadBalancer: props.baseLoadbalancer,
+        port: rasaBot.actionsPort,
+        protocol: elbv2.ApplicationProtocol.HTTPS,
+        certificates: [props.baseCertificate]
+      })
+
+      const rasatg = new elbv2.ApplicationTargetGroup(this, `${prefix}targetgroup-rasa-${rasaBot.customerName}`, {
         targets: [rasaservice],
         protocol: elbv2.ApplicationProtocol.HTTP,
         vpc: props.baseVpc,
         port: rasaBot.rasaPort
       });
 
-      listener.addTargetGroups(`${prefix}targetgroupadd-rasa-${rasaBot.customerName}`, {
-        targetGroups: [tg]
+      const actionstg = new elbv2.ApplicationTargetGroup(this, `${prefix}targetgroup-actions-${rasaBot.customerName}`, {
+        targets: [actionsservice],
+        protocol: elbv2.ApplicationProtocol.HTTP,
+        vpc: props.baseVpc,
+        port: rasaBot.actionsPort,
+        healthCheck: {
+          path: "/actions"
+        }
+      });
+
+      rasalistener.addTargetGroups(`${prefix}targetgroupadd-rasa-${rasaBot.customerName}`, {
+        targetGroups: [rasatg]
+      });
+
+      actionslistener.addTargetGroups(`${prefix}targetgroupadd-actions-${rasaBot.customerName}`, {
+        targetGroups: [actionstg]
       });
 
       rasaservice.connections.allowFrom(props.baseLoadbalancer, ec2.Port.tcp(rasaBot.rasaPort));
       rasaservice.connections.allowFrom(props.botfrontService, ec2.Port.tcp(rasaBot.rasaPort));
       rasaservice.connections.allowFrom(props.botfrontService, ec2.Port.tcp(rasaBot.actionsPort));
+
+      actionsservice.connections.allowFrom(props.botfrontService, ec2.Port.tcp(rasaBot.actionsPort));
+      actionsservice.connections.allowFrom(rasaservice, ec2.Port.tcp(rasaBot.actionsPort));
     }
   }
 }
