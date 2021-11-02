@@ -3,6 +3,8 @@
 *.d.ts
 node_modules
 
+temp
+
 # CDK asset staging directory
 .cdk.staging
 cdk.out
@@ -12,4 +14,3 @@ cdk.out
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 
-temp
