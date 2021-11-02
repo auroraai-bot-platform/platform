@@ -2,14 +2,8 @@
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
 import { BaseStack } from '../lib/base-stack';
-import { Ec2Stack } from '../lib/ec2-stack';
-import { EcsBaseStack } from '../lib/ecs-base-stack';
-import { WebChatStack } from '../lib/web-chat-stack';
-import { EcsBfStack } from '../lib/ecs-bf-stack';
-import { EcsRasaStack } from '../lib/ecs-rasa-stack';
 import { RasaBot } from '../types';
 import { createEnvironment, DefaultRepositories } from '../envs/environment';
-
 
 const region = process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION || 'eu-north-1';
 const account = process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT || '';
@@ -40,6 +34,12 @@ const demoSubDomain = `${demoEnvName}.${domain}`;
 const demoWebChatSubDomain = `chat.${demoSubDomain}`;
 const demoRasaBots: RasaBot[] = [{rasaPort: 5006, actionsPort: 5055, projectId: 'hH4Z8S7GXiHsp3PTP', customerName: 'demo-1'}];
 
+
+const testEnvName = 'test';
+const testSubDomain = `${testEnvName}.${domain}`;
+const testWebChatSubDomain = `chat.${demoSubDomain}`;
+const testRasaBots: RasaBot[] = [{rasaPort: 5006, actionsPort: 5055, projectId: 'test-project', customerName: 'test-1'}];
+
 const app = new cdk.App();
 const base = new BaseStack(app, 'BaseStack', {
   env: {
@@ -48,7 +48,7 @@ const base = new BaseStack(app, 'BaseStack', {
   }
 });
 
-const env = createEnvironment(app, {
+const demoenv = createEnvironment(app, {
   domain,
   defaultRepositories,
   env: {account, region},
@@ -57,74 +57,20 @@ const env = createEnvironment(app, {
   subDomain: demoSubDomain
 });
 
-// Hyte env
-// Destroy this when hyte-ecs is ok
-const hyteStack = new Ec2Stack(app, 'HyteStack', {
-  baseVpc: base.baseVpc,
-  subDomain: hyteSubDomain,
+const customerenv = createEnvironment(app, {
   domain,
-  envName: hyteEnvName,
-  env: {
-    region,
-    account
-  }
-});
-
-// Destroy this when hyte-ecs is ok
-new WebChatStack(app, 'HyteWebChatStack', {
-  envName: hyteEnvName,
-  rasaIp: hyteStack.hostIp,
-  domain,
-  subDomain: hyteSubDomain,
-  env: {
-    region,
-    account
-  }
-});
-
-
-
-// customer ecs env
-const customerBaseStack = new EcsBaseStack(app, 'CustomerBaseStack', {
+  defaultRepositories,
+  env: {account, region},
   envName: customerEnvName,
-  subDomain: customerSubDomain,
-  ecrRepos: customerRasaBots,
-  domain,
-  env: {
-    region,
-    account
-  },
-  defaultRepositories
-});
-cdk.Tags.of(customerBaseStack).add('environment', customerEnvName)
-
-const customerBfStack = new EcsBfStack(app, 'CustomerBfStack', {
-  envName: customerEnvName,
-  baseCluster: customerBaseStack.baseCluster,
-  baseCertificate: customerBaseStack.baseCertificate,
-  baseLoadbalancer: customerBaseStack.baseLoadBalancer,
-  baseVpc: customerBaseStack.baseVpc,
-  domain,
-  env: {
-    region,
-    account
-  },
-  mongoSecret: customerBaseStack.mongoSecret
-});
-
-cdk.Tags.of(customerBfStack).add('environment', customerEnvName)
-
-const customerRasaBotStack = new EcsRasaStack(app, `CustomerRasaStack`, {
-  envName: customerEnvName,
-  baseCluster: customerBaseStack.baseCluster,
-  baseVpc: customerBaseStack.baseVpc,
-  baseLoadbalancer: customerBaseStack.baseLoadBalancer,
-  baseCertificate: customerBaseStack.baseCertificate,
-  botfrontService: customerBfStack.botfrontService,
   rasaBots: customerRasaBots,
-  env: {
-    region,
-    account
-  }
+  subDomain: customerSubDomain
 });
 
+const testEnv = createEnvironment(app, {
+  domain,
+  defaultRepositories,
+  env: {account, region},
+  envName: testEnvName,
+  rasaBots: testRasaBots,
+  subDomain: testSubDomain
+});
