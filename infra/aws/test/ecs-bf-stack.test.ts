@@ -1,5 +1,4 @@
-
-import { expect as expectCDK, haveResource, countResources, countResourcesLike, SynthUtils } from '@aws-cdk/assert';
+/* import { expect as expectCDK, haveResource, countResources, countResourcesLike, SynthUtils } from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
 import { EcsBfStack } from '../lib/ecs-bf-stack';
 import { EcsBaseStack } from '../lib/ecs-base-stack';
@@ -85,4 +84,4 @@ test('Create botfront-stack with two bots', () => {
     });
     // THEN
     expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
-});
+}); */
