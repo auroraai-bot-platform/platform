@@ -1,4 +1,5 @@
 import { expect as expectCDK, countResources, countResourcesLike, SynthUtils } from '@aws-cdk/assert';
+import '@aws-cdk/assert/jest'
 import * as cdk from '@aws-cdk/core';
 import { EcsBaseStack } from '../lib/ecs-base-stack';
 import { RasaBot } from '../types';
@@ -17,6 +18,23 @@ const defaultRepositories: DefaultRepositories = {
 };
 let ecrRepos: RasaBot[] = [{rasaPort: 1, actionsPort: 2, projectId: 'veryrealid', customerName: 'veryrealcustomer'}];
 
+test('Create base-stack with one bot without snapshot', () => {
+  const app = new cdk.App();
+  // WHEN
+  const teststack = new EcsBaseStack(app, 'MyTestStack', {
+    envName,
+    subDomain,
+    ecrRepos,
+    domain,
+    env: {
+      region,
+      account
+    },
+    defaultRepositories
+  });
+  // THEN
+  expect(teststack).toHaveResource('AWS::EC2::VPC');
+});
 
 test('Create base-stack with one bot', () => {
   const app = new cdk.App();
