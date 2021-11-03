@@ -408,6 +408,12 @@ Object {
         "HealthCheckPath": "/actions",
         "Port": 2,
         "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "stickiness.enabled",
+            "Value": "false",
+          },
+        ],
         "TargetType": "ip",
         "VpcId": Object {
           "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
@@ -419,6 +425,12 @@ Object {
       "Properties": Object {
         "Port": 1,
         "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "stickiness.enabled",
+            "Value": "false",
+          },
+        ],
         "TargetType": "ip",
         "VpcId": Object {
           "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
@@ -1600,6 +1612,12 @@ Object {
         "HealthCheckPath": "/actions",
         "Port": 2,
         "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "stickiness.enabled",
+            "Value": "false",
+          },
+        ],
         "TargetType": "ip",
         "VpcId": Object {
           "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
@@ -1612,6 +1630,12 @@ Object {
         "HealthCheckPath": "/actions",
         "Port": 4,
         "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "stickiness.enabled",
+            "Value": "false",
+          },
+        ],
         "TargetType": "ip",
         "VpcId": Object {
           "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
@@ -1623,6 +1647,12 @@ Object {
       "Properties": Object {
         "Port": 3,
         "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "stickiness.enabled",
+            "Value": "false",
+          },
+        ],
         "TargetType": "ip",
         "VpcId": Object {
           "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
@@ -1634,6 +1664,12 @@ Object {
       "Properties": Object {
         "Port": 1,
         "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "stickiness.enabled",
+            "Value": "false",
+          },
+        ],
         "TargetType": "ip",
         "VpcId": Object {
           "Fn::ImportValue": "MyBaseStack:ExportsOutputReftestecsbasevpc681C41C8766F2B06",
