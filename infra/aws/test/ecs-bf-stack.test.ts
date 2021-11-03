@@ -1,4 +1,4 @@
-/* import { expect as expectCDK, haveResource, countResources, countResourcesLike, SynthUtils } from '@aws-cdk/assert';
+import '@aws-cdk/assert/jest'
 import * as cdk from '@aws-cdk/core';
 import { EcsBfStack } from '../lib/ecs-bf-stack';
 import { EcsBaseStack } from '../lib/ecs-base-stack';
@@ -47,7 +47,7 @@ test('Create botfront-stack with one bot', () => {
     mongoSecret: basestack.mongoSecret
   });
   // THEN
-  expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
+  expect(teststack).toHaveResource('AWS::ECS::TaskDefinition')
 });
 
 test('Create botfront-stack with two bots', () => {
@@ -83,5 +83,5 @@ test('Create botfront-stack with two bots', () => {
       mongoSecret: basestack.mongoSecret
     });
     // THEN
-    expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
-}); */
+    expect(teststack).toHaveResource('AWS::ECS::TaskDefinition')
+});

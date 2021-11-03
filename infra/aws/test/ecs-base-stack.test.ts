@@ -1,4 +1,3 @@
-import { expect as expectCDK, countResources, countResourcesLike, SynthUtils } from '@aws-cdk/assert';
 import '@aws-cdk/assert/jest'
 import * as cdk from '@aws-cdk/core';
 import { EcsBaseStack } from '../lib/ecs-base-stack';
@@ -34,24 +33,9 @@ test('Create base-stack with one bot without snapshot', () => {
   });
   // THEN
   expect(teststack).toHaveResource('AWS::EC2::VPC');
-});
-
-/* test('Create base-stack with one bot', () => {
-  const app = new cdk.App();
-  // WHEN
-  const teststack = new EcsBaseStack(app, 'MyTestStack', {
-    envName,
-    subDomain,
-    ecrRepos,
-    domain,
-    env: {
-      region,
-      account
-    },
-    defaultRepositories
-  });
-  // THEN
-  expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
+  expect(teststack).toHaveResource('AWS::EC2::Subnet');
+  expect(teststack).toHaveResource('AWS::EC2::RouteTable');
+  
 });
 
 test('Create base-stack with two bots', () => {
@@ -74,5 +58,6 @@ test('Create base-stack with two bots', () => {
     defaultRepositories
   });
   // THEN
-  expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
-}); */
+  expect(teststack).toHaveResource('AWS::EC2::VPC');
+  expect(teststack).toHaveResource('AWS::EC2::Subnet');
+});

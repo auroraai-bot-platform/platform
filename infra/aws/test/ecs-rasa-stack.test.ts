@@ -1,4 +1,4 @@
-/* import { expect as expectCDK, haveResource, countResources, countResourcesLike, SynthUtils } from '@aws-cdk/assert';
+import '@aws-cdk/assert/jest'
 import * as cdk from '@aws-cdk/core';
 import { EcsRasaStack } from '../lib/ecs-rasa-stack';
 import { EcsBfStack } from '../lib/ecs-bf-stack';
@@ -61,7 +61,7 @@ test('Create rasa-stack with one bot', () => {
     rasaBots: ecrRepos
   });
   // THEN
-  expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
+  expect(teststack).toHaveResource('AWS::ECS::TaskDefinition');
 });
 
 test('Create rasa-stack with two bots', () => {
@@ -110,5 +110,5 @@ test('Create rasa-stack with two bots', () => {
     rasaBots: ecrRepos
   });
   // THEN
-  expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
-}); */
+  expect(teststack).toHaveResource('AWS::ECS::TaskDefinition');
+});
