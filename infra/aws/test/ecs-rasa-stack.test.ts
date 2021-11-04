@@ -1,4 +1,4 @@
-import '@aws-cdk/assert/jest'
+import {countResources, expect as expectCDK }from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
 import { EcsRasaStack } from '../lib/ecs-rasa-stack';
 import { EcsBfStack } from '../lib/ecs-bf-stack';
@@ -61,7 +61,16 @@ test('Create rasa-stack with one bot', () => {
     rasaBots: ecrRepos
   });
   // THEN
-  expect(teststack).toHaveResource('AWS::ECS::TaskDefinition');
+  expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 2)
+  .and(countResources('AWS::IAM::Role', 4))
+  .and(countResources('AWS::Logs::LogGroup', 2))
+  .and(countResources('AWS::IAM::Policy', 2))
+  .and(countResources('AWS::ECS::Service', 2))
+  .and(countResources('AWS::ServiceDiscovery::Service', 2))
+  .and(countResources('AWS::EC2::SecurityGroup', 2))
+  .and(countResources('AWS::ElasticLoadBalancingV2::Listener', 2))
+  .and(countResources('AWS::ElasticLoadBalancingV2::TargetGroup', 2))
+  );
 });
 
 test('Create rasa-stack with two bots', () => {
@@ -110,5 +119,14 @@ test('Create rasa-stack with two bots', () => {
     rasaBots: ecrRepos
   });
   // THEN
-  expect(teststack).toHaveResource('AWS::ECS::TaskDefinition');
+  expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 4)
+  .and(countResources('AWS::IAM::Role', 8))
+  .and(countResources('AWS::Logs::LogGroup', 4))
+  .and(countResources('AWS::IAM::Policy', 4))
+  .and(countResources('AWS::ECS::Service', 4))
+  .and(countResources('AWS::ServiceDiscovery::Service', 4))
+  .and(countResources('AWS::EC2::SecurityGroup', 4))
+  .and(countResources('AWS::ElasticLoadBalancingV2::Listener', 4))
+  .and(countResources('AWS::ElasticLoadBalancingV2::TargetGroup', 4))
+  );
 });

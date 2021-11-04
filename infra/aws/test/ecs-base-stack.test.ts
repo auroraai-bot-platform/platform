@@ -1,4 +1,4 @@
-import '@aws-cdk/assert/jest'
+import {countResources, expect as expectCDK }from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
 import { EcsBaseStack } from '../lib/ecs-base-stack';
 import { RasaBot } from '../types';
@@ -32,10 +32,14 @@ test('Create base-stack with one bot without snapshot', () => {
     defaultRepositories
   });
   // THEN
-  expect(teststack).toHaveResource('AWS::EC2::VPC');
-  expect(teststack).toHaveResource('AWS::EC2::Subnet');
-  expect(teststack).toHaveResource('AWS::EC2::RouteTable');
-  
+  expectCDK(teststack).to(countResources('AWS::EC2::VPC', 1)
+  .and(countResources('AWS::EC2::Subnet', 4))
+  .and(countResources('AWS::EC2::RouteTable', 4))
+  .and(countResources('AWS::ECR::Repository', 3))
+  .and(countResources('AWS::ECS::Cluster', 1))
+  .and(countResources('AWS::ElasticLoadBalancingV2::LoadBalancer', 1))
+  .and(countResources('AWS::Route53::RecordSet', 1))
+  );
 });
 
 test('Create base-stack with two bots', () => {
@@ -58,6 +62,12 @@ test('Create base-stack with two bots', () => {
     defaultRepositories
   });
   // THEN
-  expect(teststack).toHaveResource('AWS::EC2::VPC');
-  expect(teststack).toHaveResource('AWS::EC2::Subnet');
+  expectCDK(teststack).to(countResources('AWS::EC2::VPC', 1)
+  .and(countResources('AWS::EC2::Subnet', 4))
+  .and(countResources('AWS::EC2::RouteTable', 4))
+  .and(countResources('AWS::ECR::Repository', 5))
+  .and(countResources('AWS::ECS::Cluster', 1))
+  .and(countResources('AWS::ElasticLoadBalancingV2::LoadBalancer', 1))
+  .and(countResources('AWS::Route53::RecordSet', 1))
+  );
 });
