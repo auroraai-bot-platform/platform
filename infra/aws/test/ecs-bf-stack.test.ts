@@ -1,5 +1,4 @@
-
-import { expect as expectCDK, haveResource, countResources, countResourcesLike, SynthUtils } from '@aws-cdk/assert';
+import {countResources, expect as expectCDK }from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
 import { EcsBfStack } from '../lib/ecs-bf-stack';
 import { EcsBaseStack } from '../lib/ecs-base-stack';
@@ -48,7 +47,15 @@ test('Create botfront-stack with one bot', () => {
     mongoSecret: basestack.mongoSecret
   });
   // THEN
-  expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
+  expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 1)
+  .and(countResources('AWS::IAM::Role', 2))
+  .and(countResources('AWS::IAM::Policy', 1))
+  .and(countResources('AWS::ECS::Service', 1))
+  .and(countResources('AWS::ServiceDiscovery::Service', 1))
+  .and(countResources('AWS::EC2::SecurityGroup', 1))
+  .and(countResources('AWS::ElasticLoadBalancingV2::Listener', 1))
+  .and(countResources('AWS::ElasticLoadBalancingV2::TargetGroup', 1))
+  );
 });
 
 test('Create botfront-stack with two bots', () => {
@@ -84,5 +91,13 @@ test('Create botfront-stack with two bots', () => {
       mongoSecret: basestack.mongoSecret
     });
     // THEN
-    expect(SynthUtils.toCloudFormation(teststack)).toMatchSnapshot();
+    expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 1)
+    .and(countResources('AWS::IAM::Role', 2))
+    .and(countResources('AWS::IAM::Policy', 1))
+    .and(countResources('AWS::ECS::Service', 1))
+    .and(countResources('AWS::ServiceDiscovery::Service', 1))
+    .and(countResources('AWS::EC2::SecurityGroup', 1))
+    .and(countResources('AWS::ElasticLoadBalancingV2::Listener', 1))
+    .and(countResources('AWS::ElasticLoadBalancingV2::TargetGroup', 1))
+    );
 });
