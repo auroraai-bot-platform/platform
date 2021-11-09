@@ -5,6 +5,8 @@ import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as acm from '@aws-cdk/aws-certificatemanager';
 import * as secrets from '@aws-cdk/aws-secretsmanager';
+import * as s3 from '@aws-cdk/aws-s3';
+import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 
 import { BaseStackProps } from '../types';
 import { createPrefix } from './utilities';
@@ -28,11 +30,23 @@ export class EcsBfStack extends cdk.Stack {
     const prefix = createPrefix(props.envName, this.constructor.name);
     const bfrepo = ecr.Repository.fromRepositoryName(this, `${prefix}repository-botfront`, `${props.envName}-botfront`);
 
+
+    const fileBucket = new s3.Bucket(this, `${prefix}file-bucket`, { bucketName: `${prefix}file-bucket`, publicReadAccess: true });
+
+    new s3deploy.BucketDeployment(this, `${prefix}file-bucket-deployment`, {
+      sources: [s3deploy.Source.asset('../../files')],
+      destinationBucket: fileBucket,
+      destinationKeyPrefix: 'files'
+    });
+
     const botfronttd = new ecs.TaskDefinition(this, `${prefix}taskdefinition-botfront`, {
       cpu: '1024',
       memoryMiB: '4096',
       compatibility:  ecs.Compatibility.FARGATE
     });
+
+    fileBucket.grantReadWrite(botfronttd.taskRole);
+    fileBucket.grantDelete(botfronttd.taskRole);
 
     botfronttd.addContainer(`${prefix}container-botfront`, {
       image: ecs.ContainerImage.fromEcrRepository(bfrepo),
@@ -50,7 +64,10 @@ export class EcsBfStack extends cdk.Stack {
       environment: {
         PORT: '8888',
         REST_API_PORT: '3030',
-        ROOT_URL: `https://${props.envName}.${props.domain}`
+        ROOT_URL: `https://${props.envName}.${props.domain}`,
+        FILE_BUCKET: fileBucket.bucketName,
+        FILE_PREFIX: 'files/',
+        FILE_SIZE_LIMIT: `${1024 * 1024}`
       },
       secrets: {
         MONGO_URL: ecs.Secret.fromSecretsManager(props.mongoSecret)
