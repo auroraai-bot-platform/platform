@@ -49,7 +49,7 @@ test('Create botfront-stack with one bot', () => {
   // THEN
   expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 1)
   .and(countResources('AWS::IAM::Role', 2))
-  .and(countResources('AWS::IAM::Policy', 1))
+  .and(countResources('AWS::IAM::Policy', 2))
   .and(countResources('AWS::ECS::Service', 1))
   .and(countResources('AWS::ServiceDiscovery::Service', 1))
   .and(countResources('AWS::EC2::SecurityGroup', 1))
@@ -93,7 +93,7 @@ test('Create botfront-stack with two bots', () => {
     // THEN
     expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 1)
     .and(countResources('AWS::IAM::Role', 2))
-    .and(countResources('AWS::IAM::Policy', 1))
+    .and(countResources('AWS::IAM::Policy', 2))
     .and(countResources('AWS::ECS::Service', 1))
     .and(countResources('AWS::ServiceDiscovery::Service', 1))
     .and(countResources('AWS::EC2::SecurityGroup', 1))

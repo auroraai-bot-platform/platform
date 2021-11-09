@@ -12,7 +12,6 @@ import * as acm from '@aws-cdk/aws-certificatemanager'
 import { BaseStackProps, RasaBot } from '../types/index';
 import { createPrefix } from './utilities';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
-import { BucketPolicy } from '@aws-cdk/aws-s3';
 
 interface WebChatProps extends BaseStackProps {
   domain: string;
@@ -29,7 +28,6 @@ export class WebChatStack extends cdk.Stack {
     super(scope, id, props);
     const prefix = createPrefix(props.envName, this.constructor.name);
     const frontendBucket = new s3.Bucket(this, `${prefix}frontend-bucket`, { bucketName: `${prefix}frontend-bucket`, publicReadAccess: false });
-    const fileBucket = new s3.Bucket(this, `${prefix}file-bucket`, { bucketName: `${prefix}file-bucket`, publicReadAccess: false });
 
     const cloudfrontAI = new cloudfront.OriginAccessIdentity(this, `${prefix}distribution-access-identity`, {
     });
@@ -37,7 +35,7 @@ export class WebChatStack extends cdk.Stack {
     const codeBucket = s3.Bucket.fromBucketName(this, sourceBucketName, sourceBucketName);
 
     frontendBucket.grantRead(cloudfrontAI);
-    fileBucket.grantRead(cloudfrontAI);
+
 
     const policyStatement = new PolicyStatement();
     policyStatement.addActions('s3:GetBucket*');
@@ -48,16 +46,10 @@ export class WebChatStack extends cdk.Stack {
     policyStatement.addCanonicalUserPrincipal(cloudfrontAI.cloudFrontOriginAccessIdentityS3CanonicalUserId);
 
     if (!codeBucket.policy) {
-      new BucketPolicy(this, 'Policy', { bucket: codeBucket }).document.addStatements(policyStatement);
+      new s3.BucketPolicy(this, 'Policy', { bucket: codeBucket }).document.addStatements(policyStatement);
     } else {
       codeBucket.policy.document.addStatements(policyStatement);
     }
-
-    new s3deploy.BucketDeployment(this, `${prefix}file-bucket-deployment`, {
-      sources: [s3deploy.Source.asset('../../files')],
-      destinationBucket: fileBucket,
-      destinationKeyPrefix: 'files'
-    });
 
     const hostedZone = route53.HostedZone.fromLookup(this, `${prefix}hosted-zone`, { domainName: props.domain });
 
@@ -94,13 +86,6 @@ export class WebChatStack extends cdk.Stack {
           responsePagePath: '/index.html'
         }],
         originConfigs: [
-          {
-            s3OriginSource: {
-              s3BucketSource: fileBucket,
-              originAccessIdentity: cloudfrontAI
-            },
-            behaviors: [{ pathPattern: `/files/*` }]
-          },
           {
             s3OriginSource: {
               originAccessIdentity: cloudfrontAI,
