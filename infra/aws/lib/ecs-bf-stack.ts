@@ -30,14 +30,7 @@ export class EcsBfStack extends cdk.Stack {
     const prefix = createPrefix(props.envName, this.constructor.name);
     const bfrepo = ecr.Repository.fromRepositoryName(this, `${prefix}repository-botfront`, `${props.envName}-botfront`);
 
-
     const fileBucket = new s3.Bucket(this, `${prefix}file-bucket`, { bucketName: `${prefix}file-bucket`, publicReadAccess: true });
-
-    new s3deploy.BucketDeployment(this, `${prefix}file-bucket-deployment`, {
-      sources: [s3deploy.Source.asset('../../files')],
-      destinationBucket: fileBucket,
-      destinationKeyPrefix: 'files'
-    });
 
     const botfronttd = new ecs.TaskDefinition(this, `${prefix}taskdefinition-botfront`, {
       cpu: '1024',
