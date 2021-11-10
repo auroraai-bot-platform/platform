@@ -39,7 +39,29 @@ const customerRasaBots: RasaBot[] = [{rasaPort: 5005, actionsPort: 5055, project
 const demoEnvName = 'demo';
 const demoSubDomain = `${demoEnvName}.${domain}`;
 const demoWebChatSubDomain = `chat.${demoSubDomain}`;
-const demoRasaBots: RasaBot[] = [{rasaPort: 5006, actionsPort: 5055, projectId: 'hH4Z8S7GXiHsp3PTP', customerName: 'demo-1'}];
+const demoRasaBots: RasaBot[] = [
+  {
+    rasaPort: 5006,
+    actionsPort: 5055,
+    projectId: 'hH4Z8S7GXiHsp3PTP',
+    customerName: 'demo-1'
+  }, 
+  {
+    rasaPort: 5005,
+    actionsPort: 5056,
+    projectId: 'h5W28PhKxRYYFkh2N',
+    customerName: 'hytebot-demo',
+    additionalConfig: {
+      intents: {
+        onerva: '/aloita{"oma_organisaatio": "onerva"}',
+        vamos: '/aloita{"oma_organisaatio": "vamos"}',
+        helsinkimissio: '/aloita{"oma_organisaatio": "helsinki missio"}',
+        poikienpuhelin: '/aloita{"oma_organisaatio": "poikien puhelin"}',
+        asemanlapset: '/aloita{"oma_organisaatio": "aseman lapset"}'      
+      }
+    }
+  }
+];
 
 
 const testEnvName = 'test';
