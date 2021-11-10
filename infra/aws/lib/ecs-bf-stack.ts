@@ -6,7 +6,6 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import * as acm from '@aws-cdk/aws-certificatemanager';
 import * as secrets from '@aws-cdk/aws-secretsmanager';
 import * as s3 from '@aws-cdk/aws-s3';
-import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 
 import { BaseStackProps } from '../types';
 import { createPrefix } from './utilities';
@@ -77,7 +76,8 @@ export class EcsBfStack extends cdk.Stack {
       taskDefinition: botfronttd,
       cloudMapOptions: {
         name: 'botfront'
-      }
+      },
+      serviceName: `${props.envName}-service-botfront`
     });
 
     const listener = new elbv2.ApplicationListener(this, `${prefix}listener-botfront`, {

@@ -99,7 +99,8 @@ export class EcsRasaStack extends cdk.Stack {
         taskDefinition: actionstd,
         cloudMapOptions: {
           name: `actions-${rasaBot.customerName}`
-        }
+        },
+        serviceName: `${props.envName}-service-actions-${rasaBot.customerName}`
       });
 
       const rasalistener = new elbv2.ApplicationListener(this, `${prefix}listener-rasa-${rasaBot.customerName}`, {
