@@ -39,6 +39,8 @@ test('Create base-stack with one bot without snapshot', () => {
   .and(countResources('AWS::ECS::Cluster', 1))
   .and(countResources('AWS::ElasticLoadBalancingV2::LoadBalancer', 1))
   .and(countResources('AWS::Route53::RecordSet', 1))
+  .and(countResources('AWS::EC2::VPCEndpoint', 4))
+  .and(countResources('AWS::EC2::SecurityGroup', 4))
   );
 });
 
@@ -69,5 +71,7 @@ test('Create base-stack with two bots', () => {
   .and(countResources('AWS::ECS::Cluster', 1))
   .and(countResources('AWS::ElasticLoadBalancingV2::LoadBalancer', 1))
   .and(countResources('AWS::Route53::RecordSet', 1))
+  .and(countResources('AWS::EC2::VPCEndpoint', 4))
+  .and(countResources('AWS::EC2::SecurityGroup', 4))
   );
 });
