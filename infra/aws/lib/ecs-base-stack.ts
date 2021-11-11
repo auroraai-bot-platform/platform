@@ -37,6 +37,22 @@ export class EcsBaseStack extends cdk.Stack {
       natGateways: 1
     });
 
+    this.baseVpc.addGatewayEndpoint(`${prefix}vpc-endpoint-s3`, {
+      service: ec2.GatewayVpcEndpointAwsService.S3
+    });
+
+    this.baseVpc.addInterfaceEndpoint(`${prefix}vpc-endpoint-ecr`, {
+      service: ec2.InterfaceVpcEndpointAwsService.ECR
+    });
+
+    this.baseVpc.addInterfaceEndpoint(`${prefix}vpc-endpoint-ecr-dkr`, {
+      service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER
+    });
+
+    this.baseVpc.addInterfaceEndpoint(`${prefix}vpc-endpoint-cloudwatch`, {
+      service: ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS
+    });
+
     const zone = route53.HostedZone.fromLookup(this, `${prefix}route53-zone`, {domainName: props.domain});
     this.baseCertificate = new acm.Certificate(this, `${prefix}acm-certificate`, {
       domainName: props.subDomain,
