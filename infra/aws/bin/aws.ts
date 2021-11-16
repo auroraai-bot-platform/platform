@@ -23,7 +23,7 @@ const domain = 'aaibot.link';
 const hyteEnvName = 'hyte';
 const hyteSubDomain = `${hyteEnvName}.${domain}`;
 
-const palmuEnvName = 'hyte';
+const palmuEnvName = 'palmu';
 const palmuSubDomain = `${palmuEnvName}.${domain}`;
 
 const customerEnvName = 'customer';
