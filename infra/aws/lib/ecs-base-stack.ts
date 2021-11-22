@@ -37,6 +37,22 @@ export class EcsBaseStack extends cdk.Stack {
       natGateways: 1
     });
 
+    this.baseVpc.addGatewayEndpoint(`${prefix}vpc-endpoint-s3`, {
+      service: ec2.GatewayVpcEndpointAwsService.S3
+    });
+
+    this.baseVpc.addInterfaceEndpoint(`${prefix}vpc-endpoint-ecr`, {
+      service: ec2.InterfaceVpcEndpointAwsService.ECR
+    });
+
+    this.baseVpc.addInterfaceEndpoint(`${prefix}vpc-endpoint-ecr-dkr`, {
+      service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER
+    });
+
+    this.baseVpc.addInterfaceEndpoint(`${prefix}vpc-endpoint-cloudwatch`, {
+      service: ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS
+    });
+
     const zone = route53.HostedZone.fromLookup(this, `${prefix}route53-zone`, {domainName: props.domain});
     this.baseCertificate = new acm.Certificate(this, `${prefix}acm-certificate`, {
       domainName: props.subDomain,
@@ -99,7 +115,7 @@ export class EcsBaseStack extends cdk.Stack {
     this.baseLoadBalancer = new elbv2.ApplicationLoadBalancer(this, `${prefix}alb-base`, {
       vpc: this.baseVpc,
       internetFacing: true,
-      idleTimeout: cdk.Duration.seconds(600)
+      idleTimeout: cdk.Duration.seconds(1800)
     });
 
     new route53.ARecord(this, `${prefix}route53-record-a`, {
