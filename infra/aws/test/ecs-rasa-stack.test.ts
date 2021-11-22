@@ -45,7 +45,8 @@ test('Create rasa-stack with one bot', () => {
     baseCluster: basestack.baseCluster,
     baseLoadbalancer: basestack.baseLoadBalancer,
     baseVpc: basestack.baseVpc,
-    mongoSecret: basestack.mongoSecret
+    mongoSecret: basestack.mongoSecret,
+    graphqlSecret: basestack.graphqlSecret
   });
   const teststack = new EcsRasaStack(app, 'MyTestStack', {
     envName,
@@ -58,7 +59,8 @@ test('Create rasa-stack with one bot', () => {
     baseLoadbalancer: basestack.baseLoadBalancer,
     baseVpc: basestack.baseVpc,
     botfrontService: bfstack.botfrontService,
-    rasaBots: ecrRepos
+    rasaBots: ecrRepos,
+    graphqlSecret: basestack.graphqlSecret
   });
   // THEN
   expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 2)
@@ -103,7 +105,8 @@ test('Create rasa-stack with two bots', () => {
     baseCluster: basestack.baseCluster,
     baseLoadbalancer: basestack.baseLoadBalancer,
     baseVpc: basestack.baseVpc,
-    mongoSecret: basestack.mongoSecret
+    mongoSecret: basestack.mongoSecret,
+    graphqlSecret: basestack.graphqlSecret
   });
   const teststack = new EcsRasaStack(app, 'MyTestStack', {
     envName,
@@ -116,7 +119,8 @@ test('Create rasa-stack with two bots', () => {
     baseLoadbalancer: basestack.baseLoadBalancer,
     baseVpc: basestack.baseVpc,
     botfrontService: bfstack.botfrontService,
-    rasaBots: ecrRepos
+    rasaBots: ecrRepos,
+    graphqlSecret: basestack.graphqlSecret
   });
   // THEN
   expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 4)

@@ -73,5 +73,6 @@ test('Create base-stack with two bots', () => {
   .and(countResources('AWS::Route53::RecordSet', 1))
   .and(countResources('AWS::EC2::VPCEndpoint', 4))
   .and(countResources('AWS::EC2::SecurityGroup', 4))
+  .and(countResources('AWS::SecretsManager::Secret', 2))
   );
 });
