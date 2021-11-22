@@ -115,7 +115,7 @@ export class EcsBaseStack extends cdk.Stack {
     this.baseLoadBalancer = new elbv2.ApplicationLoadBalancer(this, `${prefix}alb-base`, {
       vpc: this.baseVpc,
       internetFacing: true,
-      idleTimeout: cdk.Duration.seconds(600)
+      idleTimeout: cdk.Duration.seconds(1800)
     });
 
     new route53.ARecord(this, `${prefix}route53-record-a`, {
