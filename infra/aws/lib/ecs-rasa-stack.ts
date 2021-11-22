@@ -140,11 +140,20 @@ export class EcsRasaStack extends cdk.Stack {
       });
 
       rasalistener.addTargetGroups(`${prefix}targetgroupadd-rasa-${rasaBot.customerName}`, {
-        targetGroups: [rasatg]
+        targetGroups: [rasatg],
+        priority: 1,
+        conditions: [
+          elbv2.ListenerCondition.pathPatterns(['/socket.io', '/socket.io/*'])
+        ]
+      });
+
+      rasalistener.addAction(`${prefix}blockdefault-rasa-${rasaBot.customerName}`, {
+        action: elbv2.ListenerAction.fixedResponse(403)
       });
 
       actionslistener.addTargetGroups(`${prefix}targetgroupadd-actions-${rasaBot.customerName}`, {
         targetGroups: [actionstg]
+
       });
 
       rasaservice.connections.allowFrom(props.baseLoadbalancer, ec2.Port.tcp(rasaBot.rasaPort));
