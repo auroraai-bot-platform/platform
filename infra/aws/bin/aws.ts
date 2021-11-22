@@ -23,6 +23,9 @@ const domain = 'aaibot.link';
 const hyteEnvName = 'hyte';
 const hyteSubDomain = `${hyteEnvName}.${domain}`;
 
+const palmuEnvName = 'palmu';
+const palmuSubDomain = `${palmuEnvName}.${domain}`;
+
 const customerEnvName = 'customer';
 const customerSubDomain = `${customerEnvName}.${domain}`;
 const customerWebChatSubDomain = `chat.${customerSubDomain}`;
@@ -60,6 +63,12 @@ const demoRasaBots: RasaBot[] = [
         asemanlapset: '/aloita{"oma_organisaatio": "aseman lapset"}'      
       }
     }
+  },
+  {
+    rasaPort: 5007,
+    actionsPort: 5057,
+    projectId: 'C6y53duQKrDhBqFRp',
+    customerName: 'palmu-demo'
   }
 ];
 
