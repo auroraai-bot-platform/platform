@@ -51,7 +51,7 @@ export class EcsRasaStack extends cdk.Stack {
           hostPort: rasaBot.rasaPort,
           containerPort: rasaBot.rasaPort
         }],
-        command: ["rasa", "run", "--enable-api", "--debug",  "--port", rasaBot.rasaPort.toString()],
+        command: ["rasa", "run", "--enable-api", "--debug",  "--port", rasaBot.rasaPort.toString(), "--auth-token", props.graphqlSecret.secretValue.toString()],
         environment: {
           BF_PROJECT_ID: rasaBot.projectId,
           PORT: rasaBot.rasaPort.toString(),
