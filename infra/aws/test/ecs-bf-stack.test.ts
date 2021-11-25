@@ -44,7 +44,8 @@ test('Create botfront-stack with one bot', () => {
     baseCluster: basestack.baseCluster,
     baseLoadbalancer: basestack.baseLoadBalancer,
     baseVpc: basestack.baseVpc,
-    mongoSecret: basestack.mongoSecret
+    mongoSecret: basestack.mongoSecret,
+    graphqlSecret: basestack.graphqlSecret
   });
   // THEN
   expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 1)
@@ -88,7 +89,8 @@ test('Create botfront-stack with two bots', () => {
       baseCluster: basestack.baseCluster,
       baseLoadbalancer: basestack.baseLoadBalancer,
       baseVpc: basestack.baseVpc,
-      mongoSecret: basestack.mongoSecret
+      mongoSecret: basestack.mongoSecret,
+      graphqlSecret: basestack.graphqlSecret
     });
     // THEN
     expectCDK(teststack).to(countResources('AWS::ECS::TaskDefinition', 1)

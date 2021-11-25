@@ -7,6 +7,7 @@ import * as acm from '@aws-cdk/aws-certificatemanager';
 import { BaseStackProps, RasaBot } from '../types';
 import { createPrefix } from './utilities';
 import { RetentionDays } from '@aws-cdk/aws-logs';
+import { Secret } from '@aws-cdk/aws-secretsmanager';
 
 interface EcsRasaProps extends BaseStackProps {
   baseCluster: ecs.ICluster,
@@ -14,7 +15,8 @@ interface EcsRasaProps extends BaseStackProps {
   baseLoadbalancer: elbv2.IApplicationLoadBalancer,
   baseCertificate: acm.ICertificate,
   botfrontService: ecs.FargateService,
-  rasaBots: RasaBot[]
+  rasaBots: RasaBot[],
+  graphqlSecret: Secret
 }
 
 export class EcsRasaStack extends cdk.Stack {
@@ -49,11 +51,14 @@ export class EcsRasaStack extends cdk.Stack {
           hostPort: rasaBot.rasaPort,
           containerPort: rasaBot.rasaPort
         }],
-        command: ["rasa", "run", "--enable-api", "--debug",  "--port", rasaBot.rasaPort.toString()],
+        command: ["rasa", "run", "--enable-api", "--debug",  "--port", rasaBot.rasaPort.toString(), "--auth-token", props.graphqlSecret.secretValue.toString()],
         environment: {
           BF_PROJECT_ID: rasaBot.projectId,
           PORT: rasaBot.rasaPort.toString(),
           BF_URL: `http://botfront.${props.envName}service.internal:8888/graphql`
+        },
+        secrets: {
+          API_KEY: ecs.Secret.fromSecretsManager(props.graphqlSecret)
         },
         logging: ecs.LogDriver.awsLogs({
           streamPrefix: `${prefix}container-rasa-${rasaBot.customerName}`,
@@ -135,11 +140,20 @@ export class EcsRasaStack extends cdk.Stack {
       });
 
       rasalistener.addTargetGroups(`${prefix}targetgroupadd-rasa-${rasaBot.customerName}`, {
-        targetGroups: [rasatg]
+        targetGroups: [rasatg],
+        priority: 1,
+        conditions: [
+          elbv2.ListenerCondition.pathPatterns(['/socket.io', '/socket.io/*'])
+        ]
+      });
+
+      rasalistener.addAction(`${prefix}blockdefault-rasa-${rasaBot.customerName}`, {
+        action: elbv2.ListenerAction.fixedResponse(403)
       });
 
       actionslistener.addTargetGroups(`${prefix}targetgroupadd-actions-${rasaBot.customerName}`, {
         targetGroups: [actionstg]
+
       });
 
       rasaservice.connections.allowFrom(props.baseLoadbalancer, ec2.Port.tcp(rasaBot.rasaPort));

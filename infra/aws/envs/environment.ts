@@ -51,7 +51,8 @@ export function createEnvironment(app: cdk.App, config: EnvironmentConfiguration
     baseVpc: ecsBaseStack.baseVpc,
     domain: config.domain,
     env: config.env,
-    mongoSecret: ecsBaseStack.mongoSecret
+    mongoSecret: ecsBaseStack.mongoSecret,
+    graphqlSecret: ecsBaseStack.graphqlSecret
   });
   cdk.Tags.of(ecsBfStack).add('environment', config.envName)
 
@@ -63,7 +64,8 @@ export function createEnvironment(app: cdk.App, config: EnvironmentConfiguration
     baseCertificate: ecsBaseStack.baseCertificate,
     botfrontService: ecsBfStack.botfrontService,
     rasaBots: config.rasaBots,
-    env: config.env
+    env: config.env,
+    graphqlSecret: ecsBaseStack.graphqlSecret
   });
 
   cdk.Tags.of(rasaBotStack).add('environment', config.envName);

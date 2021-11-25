@@ -27,6 +27,7 @@ export class EcsBaseStack extends cdk.Stack {
   public readonly baseLoadBalancer: elbv2.ApplicationLoadBalancer;
   public readonly baseCertificate: acm.Certificate;
   public readonly mongoSecret: secrets.Secret;
+  public readonly graphqlSecret: secrets.Secret;
 
   constructor(scope: cdk.Construct, id: string, props: EcsBaseProps) {
     super(scope, id, props);
@@ -97,9 +98,17 @@ export class EcsBaseStack extends cdk.Stack {
 
 
     const mongoSecretName = `${prefix}mongo-connectionstring`;
+    const graphqlSecretName = `${prefix}graphql-apikey`;
 
     this.mongoSecret = new secrets.Secret(this, mongoSecretName, {
       secretName: mongoSecretName
+    });
+
+    this.graphqlSecret = new secrets.Secret(this, graphqlSecretName, {
+      secretName: graphqlSecretName,
+      generateSecretString: {
+        excludePunctuation: true
+      }
     });
 
     this.baseCluster = new ecs.Cluster(this, `${prefix}ecs-cluster`, {

@@ -15,9 +15,10 @@ interface EcsBfProps extends BaseStackProps {
   baseCluster: ecs.Cluster,
   baseVpc: ec2.Vpc,
   baseLoadbalancer: elbv2.ApplicationLoadBalancer,
-  baseCertificate: acm.Certificate
-  domain: string
-  mongoSecret: secrets.Secret;
+  baseCertificate: acm.Certificate,
+  domain: string,
+  mongoSecret: secrets.Secret,
+  graphqlSecret: secrets.Secret
 }
 
 export class EcsBfStack extends cdk.Stack {
@@ -62,7 +63,8 @@ export class EcsBfStack extends cdk.Stack {
         FILE_SIZE_LIMIT: `${1024 * 1024}`
       },
       secrets: {
-        MONGO_URL: ecs.Secret.fromSecretsManager(props.mongoSecret)
+        MONGO_URL: ecs.Secret.fromSecretsManager(props.mongoSecret),
+        API_KEY: ecs.Secret.fromSecretsManager(props.graphqlSecret)
       },
       logging: ecs.LogDriver.awsLogs({
         streamPrefix: `${prefix}botfront`,
