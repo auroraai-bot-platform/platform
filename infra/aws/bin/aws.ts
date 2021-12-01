@@ -95,18 +95,3 @@ const demoenv = createEnvironment(app, {
   rasaBots: demoRasaBots,
   subDomain: demoSubDomain
 });
-
-// Test environment
-const testEnvName = 'test';
-const testSubDomain = `${testEnvName}.${domain}`;
-const testWebChatSubDomain = `chat.${demoSubDomain}`;
-const testRasaBots: RasaBot[] = [{rasaPort: 5006, actionsPort: 5055, projectId: 'test-project', customerName: 'test-1'}];
-
-const testEnv = createEnvironment(app, {
-  domain,
-  defaultRepositories,
-  env: {account, region},
-  envName: testEnvName,
-  rasaBots: testRasaBots,
-  subDomain: testSubDomain
-});
