@@ -7,19 +7,24 @@ import { createEnvironment, DefaultRepositories } from '../envs/environment';
 const region = process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION || 'eu-north-1';
 const account = process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT || '';
 
+const app = new cdk.App();
+
+console.log({account});
+
+// ECR repositories
 const defaultRepositories: DefaultRepositories = {
   actionsRepository: '530123621479.dkr.ecr.eu-north-1.amazonaws.com/actions-private:latest',
   botfrontRepository: '530123621479.dkr.ecr.eu-north-1.amazonaws.com/botfront-private:latest',
   rasaBotRepository: '530123621479.dkr.ecr.eu-north-1.amazonaws.com/rasa-private:latest',
 };
 
-console.log({account});
-
 // Base domain
 const domain = 'aaibot.link';
 
 // Environments
 // RasaBots customerName must be unique!
+
+// Customer environment
 const hyteEnvName = 'hyte';
 const hyteSubDomain = `${hyteEnvName}.${domain}`;
 
@@ -39,6 +44,16 @@ const customerRasaBots: RasaBot[] = [{rasaPort: 5005, actionsPort: 5055, project
   }
 }}];
 
+const customerenv = createEnvironment(app, {
+  domain,
+  defaultRepositories,
+  env: {account, region},
+  envName: customerEnvName,
+  rasaBots: customerRasaBots,
+  subDomain: customerSubDomain
+});
+
+// Demo environment
 const demoEnvName = 'demo';
 const demoSubDomain = `${demoEnvName}.${domain}`;
 const demoWebChatSubDomain = `chat.${demoSubDomain}`;
@@ -72,14 +87,6 @@ const demoRasaBots: RasaBot[] = [
   }
 ];
 
-
-const testEnvName = 'test';
-const testSubDomain = `${testEnvName}.${domain}`;
-const testWebChatSubDomain = `chat.${demoSubDomain}`;
-const testRasaBots: RasaBot[] = [{rasaPort: 5006, actionsPort: 5055, projectId: 'test-project', customerName: 'test-1'}];
-
-const app = new cdk.App();
-
 const demoenv = createEnvironment(app, {
   domain,
   defaultRepositories,
@@ -87,22 +94,4 @@ const demoenv = createEnvironment(app, {
   envName: demoEnvName,
   rasaBots: demoRasaBots,
   subDomain: demoSubDomain
-});
-
-const customerenv = createEnvironment(app, {
-  domain,
-  defaultRepositories,
-  env: {account, region},
-  envName: customerEnvName,
-  rasaBots: customerRasaBots,
-  subDomain: customerSubDomain
-});
-
-const testEnv = createEnvironment(app, {
-  domain,
-  defaultRepositories,
-  env: {account, region},
-  envName: testEnvName,
-  rasaBots: testRasaBots,
-  subDomain: testSubDomain
 });
