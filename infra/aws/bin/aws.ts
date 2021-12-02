@@ -25,16 +25,9 @@ const domain = 'aaibot.link';
 // RasaBots customerName must be unique!
 
 // Customer environment
-const hyteEnvName = 'hyte';
-const hyteSubDomain = `${hyteEnvName}.${domain}`;
-
-const ihtEnvName = 'iht';
-const ihtSubDomain = `${ihtEnvName}.${domain}`;
-
 const customerEnvName = 'customer';
 const customerSubDomain = `${customerEnvName}.${domain}`;
 
-const customerWebChatSubDomain = `chat.${customerSubDomain}`;
 const customerRasaBots: RasaBot[] = [
   {
     rasaPort: 5005, 
@@ -69,13 +62,9 @@ const customerenv = createEnvironment(app, {
 });
 
 // Demo environment
-const palmuEnvName = 'palmu';
-const palmuSubDomain = `${palmuEnvName}.${domain}`;
-
 const demoEnvName = 'demo';
 const demoSubDomain = `${demoEnvName}.${domain}`;
 
-const demoWebChatSubDomain = `chat.${demoSubDomain}`;
 const demoRasaBots: RasaBot[] = [
   {
     rasaPort: 5006,
