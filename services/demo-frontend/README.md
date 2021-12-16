@@ -2,6 +2,12 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Installation
+* run `npm ci` to install all pdendencies
+* clone rasa-webchat repository into a sibling directory of the platform repository
+* run `npm i -g local-install` to install a package to install the local rasa-webchat
+* run `npx local-insall --save ../../../rasa-webchat` to install the local dependency
+
 ## Deployment
 * run `npm run build` to build the production app
 * go to build folder

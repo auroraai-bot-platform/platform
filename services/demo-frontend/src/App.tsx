@@ -1,4 +1,4 @@
-import Widget from 'rasa-webchat';
+import Widget from 'auroraai-webchat';
 import { useEffect, useState } from 'react';
 
 import './App.scss';

@@ -1,1 +1,1 @@
-declare module 'rasa-webchat';
+declare module 'auroraai-webchat';
