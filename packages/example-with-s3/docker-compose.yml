@@ -1,0 +1,112 @@
+######################################################################################################
+# This file is generated when `botfront up` is invoked.                                              #
+# Changes in .botfront/botfront.yml and .botfront/docker-compose-template.yml will be reflected here #
+######################################################################################################
+
+version: '3.0'
+services:
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:latest
+    restart: always
+    networks:
+      - botfront-network
+    volumes:
+      - './tmp:/tmp/localstack'
+      - './aws:/docker-entrypoint-initaws.d'
+    environment: 
+      - AWS_DEFAULT_REGION=eu-north-1
+      - EDGE_PORT=4566
+      - SERVICES=s3
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+    ports: 
+      - '4566-4583:4566-4583'
+
+  botfront:
+    image: '${IMAGES_CURRENT_BOTFRONT}'
+    container_name: botfront-app
+    restart: always
+    networks:
+      - botfront-network
+    volumes:
+      - models:/app/models
+    ports:
+      - '8888:3000'
+    depends_on:
+      - mongo
+    env_file:
+      - .env
+    environment:
+      PORT: 3000
+  rasa:
+    image: '${IMAGES_CURRENT_RASA}'
+    container_name: botfront-rasa
+    networks:
+      - botfront-network
+    restart: always
+    ports:
+      - '5005:5005'
+    volumes:
+      - models:/app/models
+    env_file:
+      - .env
+    environment:
+      - LANGUAGE_MODEL_S3_BUCKET=testbucket
+      - LANGUAGE_MODEL_S3_DIR=languagemodels
+      - LANGUAGE_MODEL_LOCAL_DIR=/app/models/lm
+      - AWS_ACCESS_KEY_ID=foo
+      - AWS_SECRET_ACCESS_KEY=bar
+      - S3_ENDPOINT_URL=http://localstack:4566
+      - AWS_DEFAULT_REGION=eu-north-1
+    command: 
+      - rasa
+      - run
+      - '--debug'
+      - '--enable-api'
+      - '--load-s3-language-models'
+  actions:
+    build:
+      context: ./actions
+      args:
+        RASA_SDK_IMAGE: '${IMAGES_CURRENT_ACTIONS}'
+    container_name: botfront-actions
+    networks:
+      - botfront-network
+    restart: always
+    ports:
+      - '5055:5055'
+    volumes:
+      - './actions:/app/actions'
+    command:
+      - start
+      - '--debug'
+      - '--actions'
+      - actions
+    env_file:
+      - .env
+  duckling:
+    image: 'botfront/duckling:latest'
+    container_name: botfront-duckling
+    networks:
+      - botfront-network
+    restart: always
+    ports:
+      - '8000:8000'
+  mongo:
+    image: 'mongo:latest'
+    container_name: botfront-mongo
+    restart: always
+    networks:
+      - botfront-network
+    volumes:
+      - botfront-db:/data/db
+    ports:
+      - '27017:27017'
+    env_file:
+      - .env
+networks:
+  botfront-network: {}
+volumes:
+  botfront-db:
+  models:
