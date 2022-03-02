@@ -5,23 +5,16 @@
 
 version: '3.0'
 services:
-  localstack:
-    container_name: localstack
-    image: localstack/localstack:latest
+  moto:
+    image: 'motoserver/moto:latest'
+    container_name: moto
     restart: always
     networks:
       - botfront-network
-    volumes:
-      - './tmp:/tmp/localstack'
-      - './aws:/docker-entrypoint-initaws.d'
-    environment: 
-      - AWS_DEFAULT_REGION=eu-north-1
-      - EDGE_PORT=4566
-      - SERVICES=s3
-      - DEBUG=1
-      - DATA_DIR=/tmp/localstack/data
-    ports: 
-      - '4566-4583:4566-4583'
+    ports:
+      - '5000:5000'
+    env_file:
+      - .env
 
   botfront:
     image: '${IMAGES_CURRENT_BOTFRONT}'
