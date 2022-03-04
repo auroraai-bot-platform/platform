@@ -44,14 +44,6 @@ services:
       - models:/app/models
     env_file:
       - .env
-    environment:
-      - LANGUAGE_MODEL_S3_BUCKET=testbucket
-      - LANGUAGE_MODEL_S3_DIR=languagemodels
-      - LANGUAGE_MODEL_LOCAL_DIR=/app/models/lm
-      - AWS_ACCESS_KEY_ID=foo
-      - AWS_SECRET_ACCESS_KEY=bar
-      - S3_ENDPOINT_URL=http://localstack:4566
-      - AWS_DEFAULT_REGION=eu-north-1
     command: 
       - rasa
       - run
