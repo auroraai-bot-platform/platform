@@ -1,4 +1,4 @@
-import Widget from 'rasa-webchat';
+import Widget from 'auroraai-webchat';
 import { useEffect, useState } from 'react';
 
 import './App.scss';
@@ -45,9 +45,6 @@ function App() {
             socketPath={"/socket.io/"}
             onSocketEvent={onSocketEvent}
             customData={{ "language": rasaConfig?.language || 'fi' }} // arbitrary custom data. Stay minimal as this will be added to the socket
-            title="Hytebotti"
-            subtitle={null}
-            inputTextFieldHint="Kirjoita jotain..."
           />
         </header>
       </div>
