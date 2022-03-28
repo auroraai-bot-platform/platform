@@ -3,7 +3,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import SlotSet, AllSlotsReset, Restarted
 from actions.servicerec.api import ServiceRecommenderAPI
 import json
-from actions.servicerec.utils import MUNICIPALITY_CODES
+from actions.utils import MUNICIPALITY_CODES
 
 RESULT_LIMIT_SLOT = "3x10d_result_limit"
 DEFAULT_RESULT_LIMIT = 5
@@ -138,11 +138,10 @@ class ShowServices(Action):
                               life_situation_meters=self.validate_feat(tracker),
                               municipality_code=self.validate_location(tracker)
                               )
-        code = self.validate_location(tracker)
-        dispatcher.utter_message(
-            template=f"lokaatio: {code}")
-        dispatcher.utter_message(
-            template=f"hakuparametrit: {str(api_params.params)}")
+
+        # Enable if you want to display actual parameters sent to api!
+        # dispatcher.utter_message(
+        #     template=f"hakuparametrit: {str(api_params.params)}")
 
         try:
             api = ServiceRecommenderAPI()
@@ -151,11 +150,20 @@ class ShowServices(Action):
 
             if response.ok:
                 services = response.json()
-                names = [service['service_name'] for service in services['recommended_services']]
 
-                for name in names:
+                for service in services['recommended_services']:
+                    name = service['service_name']
+
                     dispatcher.utter_message(
-                        template=f"{name}")
+                            template=f"Palvelu: {name}")
+
+                    for channel in service['service_channels']:
+
+                        dispatcher.utter_message(
+                                template=f"Palvelukanava: {channel['service_channel_name']}")
+
+                        dispatcher.utter_message(
+                                template=f"Web-sivut: {channel['web_pages'][0]}")
 
             else:
                 dispatcher.utter_message(template=utter_api_error)
