@@ -92,16 +92,25 @@ Open Botfront in web browser: `http://localhost:3000/` and login with the admin 
 
 Go inside project and open Settings -> Instance. Set Host to `http://localhost:5005`
 
-Open Credentials settings and copy paste the following:
+Open Endpoints settings and copy paste the following:
 ```
 nlg:
   type: rasa_addons.core.nlg.GraphQLNaturalLanguageGenerator
   url: 'http://localhost:3000/graphql'
 action_endpoint:
-  url: 'http://actions:5055/webhook'
+  url: 'http://localhost:5055/webhook'
 tracker_store:
-  store_type: rasa_addons.core.tracker_stores.botfront_tracker_store.botfront.BotfrontTrackerStore
+  store_type: rasa_addons.core.tracker_stores.anonymized_tracker_store.botfront_anonymized_tracker_store.BotfrontAnonymizedTrackerStore
   url: 'http://localhost:3000/graphql'
+```
+
+Open Credentials settings and copy paste the following:
+```
+rasa_addons.core.channels.webchat.WebchatInput:
+  session_persistence: true
+  base_url: 'http://localhost:5005'
+  socket_path: /socket.io/
+rasa_addons.core.channels.bot_regression_test.BotRegressionTestInput: {}
 ```
 
 ## Running rasa
@@ -124,8 +133,8 @@ Next, let's start rasa with the Botfront project ID that we copied to clipboard:
 ```
 cd dev-bot
 export BF_PROJECT_ID=project_id_from_clipboard
-export BF_URL=http://botfront:3000/graphql
-rasa run --enable-api --credentials credentials.yml
+export BF_URL=http://localhost:3000/graphql
+rasa run --enable-api
 ```
 
 Now you should be able to train the bot in Botfront.
