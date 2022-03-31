@@ -131,9 +131,10 @@ make install-full
 
 Next, let's start rasa with the Botfront project ID that we copied to clipboard:
 ```
-cd dev-bot
 export BF_PROJECT_ID=project_id_from_clipboard
 export BF_URL=http://localhost:3000/graphql
+
+mkdir dev-bot
 rasa run --enable-api
 ```
 
