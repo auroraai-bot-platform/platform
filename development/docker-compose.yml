@@ -1,0 +1,16 @@
+version: '3.0'
+services:
+  mongo:
+    image: 'mongo:latest'
+    container_name: botfront-mongo
+    restart: always
+    networks:
+      - botfront-network
+    volumes:
+      - './botfront-db:/data/db'
+    ports:
+      - '27017:27017'
+networks:
+  botfront-network: {}
+volumes:
+  botfront-db: null
