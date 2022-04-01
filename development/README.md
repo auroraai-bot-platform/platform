@@ -9,9 +9,9 @@ First we install various development tools:
 sudo apt install git curl python3.8-venv make g++
 ```
 
-We use node version manager (nvm) to install nodejs v14. If you have already nodejs v14 installed, you can skip rest of this section. 
+We use node version manager (nvm) to install nodejs v14. If you have already nodejs v14 installed, you can skip rest of this section.
 
-Up-to-date installation instructions for nvm can be found at https://github.com/nvm-sh/nvm#installing-and-updating but here is the installation command for current version of nvm: 
+Up-to-date installation instructions for nvm can be found at https://github.com/nvm-sh/nvm#installing-and-updating but here is the installation command for current version of nvm:
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 ```
@@ -78,7 +78,7 @@ cd botfront-private/botfront
 meteor npm install
 ```
 
-Next we start botfront from source code. On the first run, botfront will create an admin user using environment variables ADMIN_USER and ADMIN_PASSWORD. 
+Next we start botfront from source code. On the first run, botfront will create an admin user using environment variables ADMIN_USER and ADMIN_PASSWORD.
 You can set your own password in the command below:
 ```
 export ADMIN_USER=test@test.local
@@ -115,7 +115,7 @@ rasa_addons.core.channels.bot_regression_test.BotRegressionTestInput: {}
 
 ## Running rasa
 
-Currently, our main branch for rasa is `aurora-main`: 
+Currently, our main branch for rasa is `aurora-main`:
 ```
 cd rasa
 git checkout aurora-main
@@ -134,15 +134,23 @@ Next, let's start rasa with the Botfront project ID that we copied to clipboard:
 export BF_PROJECT_ID=project_id_from_clipboard
 export BF_URL=http://localhost:3000/graphql
 
-mkdir dev-bot
+cd dev-bot
 rasa run --enable-api
+```
+
+If you need rasa actions server, you can start it too as shown
+below. The `dev-bot` directory contains code for a dummy action
+`test_action`.
+```
+rasa run actions
 ```
 
 Now you should be able to train the bot in Botfront.
 
+
 ## Miscellaneous tips
 
-If you are running `docker-compose` a lot, you may want to create alias `dc` for docker-compose: just add `alias dc=docker-compose` in file `~/.bash_aliases` and run 
+If you are running `docker-compose` a lot, you may want to create alias `dc` for docker-compose: just add `alias dc=docker-compose` in file `~/.bash_aliases` and run
 ```
 source ~/.bash_aliases
 ```
