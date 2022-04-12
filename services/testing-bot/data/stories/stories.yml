@@ -1,0 +1,62 @@
+stories:
+  - story: 2-steps-branch
+    steps:
+      - intent: basic_story
+        user: tavallinen tarina
+        entities: []
+      - action: utter_basic_story_1
+      - checkpoint: 2-steps-branch__branches
+    metadata:
+      group: Stories
+  - story: 2-steps-branch__Ei
+    steps:
+      - checkpoint: 2-steps-branch__branches
+      - intent: vastaa_ei
+      - action: utter_vastasit_ei
+    metadata:
+      group: Stories
+  - story: 2-steps-branch__Kyllä
+    steps:
+      - checkpoint: 2-steps-branch__branches
+      - intent: vastaa_kyllä
+      - action: utter_vastasit_kyllä
+    metadata:
+      group: Stories
+  - story: Carousel
+    steps:
+      - intent: carousel
+        user: karuselli
+        entities: []
+      - action: utter_carousel
+    metadata:
+      group: Stories
+  - story: Form story
+    steps:
+      - intent: start_form_story
+        user: käynnistä formi
+        entities: []
+      - action: Test_form
+      - active_loop: Test_form
+      - active_loop: null
+      - action: utter_form_echo
+    metadata:
+      group: Stories
+  - story: Link-story-1
+    steps:
+      - intent: story_links
+        user: keskustelu linkit
+        entities: []
+      - action: utter_story_links_1
+      - checkpoint: link-to-Link-story-2/81db133e-5318-48b3-b4de-3c5e1f255928
+    metadata:
+      group: Stories
+  - story: Link-story-2
+    steps:
+      - checkpoint: link-to-Link-story-2/81db133e-5318-48b3-b4de-3c5e1f255928
+      - intent: story_links_2
+        user: seuraava osa
+        entities: []
+      - action: utter_story_links_2
+    metadata:
+      group: Stories
+rules: []

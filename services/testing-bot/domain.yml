@@ -1,0 +1,191 @@
+actions:
+  - action_botfront_disambiguation
+  - action_botfront_disambiguation_followup
+  - action_botfront_fallback
+  - action_botfront_mapping
+  - utter_ask_city
+  - utter_ask_name
+  - utter_ask_number
+  - utter_basic_story_1
+  - utter_carousel
+  - utter_default
+  - utter_form_echo
+  - utter_get_started
+  - utter_greeting
+  - utter_nlu_fallback
+  - utter_story_links_1
+  - utter_story_links_2
+  - utter_vastasit_ei
+  - utter_vastasit_kyllä
+entities: []
+forms:
+  Test_form:
+    collect_in_botfront: null
+    description: null
+    graph_elements:
+      edges:
+        - condition: null
+          id: e1-name
+          source: '1'
+          target: name
+          type: condition
+        - condition: null
+          id: ename-city
+          source: name
+          target: city
+          type: condition
+        - condition: null
+          id: ecity-number
+          source: city
+          target: number
+          type: condition
+      nodes:
+        - id: '1'
+          position:
+            x: 200
+            'y': 200
+          type: start
+        - id: name
+          position:
+            x: 120
+            'y': 360
+          slotName: name
+          type: slot
+        - id: city
+          position:
+            x: 120
+            'y': 510
+          slotName: city
+          type: slot
+        - id: number
+          position:
+            x: 120
+            'y': 660
+          slotName: number
+          type: slot
+    groupName: Forms
+    name: Test_form
+    slots:
+      - filling:
+          - intent: []
+            not_intent: []
+            type: from_text
+        name: name
+        utter_on_new_valid_slot: false
+      - filling:
+          - entity:
+              - city
+            group: null
+            intent:
+              - inform
+            not_intent: null
+            role: null
+            type: from_entity
+        name: city
+        utter_on_new_valid_slot: false
+      - filling:
+          - entity:
+              - number
+            group: null
+            intent:
+              - number
+            not_intent: null
+            role: null
+            type: from_entity
+        name: number
+        utter_on_new_valid_slot: false
+    updatedAt: 1648708538766
+intents:
+  - basic_story
+  - carousel
+  - get_started
+  - greeting
+  - nlu_fallback
+  - start_form_story
+  - story_links
+  - story_links_2
+  - vastaa_ei
+  - vastaa_kyllä
+responses:
+  utter_ask_city:
+    - language: fi
+      text: Missä asut?
+  utter_ask_name:
+    - language: fi
+      text: Mikä on nimesi?
+  utter_ask_number:
+    - language: fi
+      metadata: null
+      text: Anna numero.
+  utter_basic_story_1:
+    - language: fi
+      metadata: null
+      quick_replies:
+        - payload: /vastaa_kyllä
+          title: Kyllä
+          type: postback
+        - payload: /vastaa_ei
+          title: Ei
+          type: postback
+      text: Selvä juttu! Tässä osa yksi! Sano kyllä tai ei jatkaaksesi!
+  utter_carousel:
+    - elements:
+        - buttons: []
+          image_url: ''
+          subtitle: Karuselli kuvaus 1
+          title: Otsikko 1
+        - buttons: []
+          image_url: ''
+          subtitle: |-
+            Karuselli kuvaus 2
+            Useampi rivi
+            Vielä yksi
+          title: |-
+            Otsikko 2
+            Toinen rivi
+        - buttons: []
+          image_url: ''
+          subtitle: Karuselli kuvaus 3
+          title: Otsikko 3
+      language: fi
+  utter_default:
+    - language: fi
+      text: Core fallback-viesti
+  utter_form_echo:
+    - language: fi
+      metadata: null
+      text: 'Nimesi on siis {name}, asut paikkakunnalla {city} ja numero on {number}'
+  utter_get_started:
+    - language: fi
+      text: 'Moi, olen testibotti! MItä ominaisuutta haluat kokeilla?'
+  utter_greeting:
+    - language: fi
+      text: No terve! Mitä saisi olla?
+  utter_nlu_fallback:
+    - language: fi
+      text: NLU fallback-viesti
+  utter_story_links_1:
+    - language: fi
+      text: Story linkit osa 1
+  utter_story_links_2:
+    - language: fi
+      text: Story linkit osa 2
+  utter_vastasit_ei:
+    - language: fi
+      text: Vastasit siis ei.
+  utter_vastasit_kyllä:
+    - language: fi
+      text: Vastasit siis kyllä.
+session_config: {}
+slots:
+  city:
+    type: unfeaturized
+  disambiguation_message:
+    type: unfeaturized
+  fallback_language:
+    initial_value: fi
+    type: unfeaturized
+  name:
+    type: unfeaturized
+  number:
+    type: unfeaturized

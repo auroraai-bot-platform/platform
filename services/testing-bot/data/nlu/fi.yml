@@ -1,0 +1,169 @@
+version: "2.0"
+nlu:
+- intent: basic_story
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      perus keskustelu
+  - text: |
+      perus stoori
+  - text: |
+      perustarina
+  - text: |
+      tavallinen tarina
+    metadata:
+      canonical: true
+- intent: carousel
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      anna karuselli
+  - text: |
+      karuselli
+    metadata:
+      canonical: true
+  - text: |
+      karusellia peliin
+  - text: |
+      käynnistä karuselli
+- intent: greeting
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      Moi
+    metadata:
+      canonical: true
+  - text: |
+      morjens
+  - text: |
+      moro
+  - text: |
+      terve
+- intent: inform
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      [Espoossa](city)
+    metadata:
+      canonical: true
+  - text: |
+      [Helsingistä](city)
+    metadata:
+      canonical: true
+  - text: |
+      [Tampere](city)
+    metadata:
+      canonical: true
+  - text: |
+      [Turku](city)
+    metadata:
+      canonical: true
+  - text: |
+      [Vantaalta](city)
+    metadata:
+      canonical: true
+  - text: |
+      [hesa](city)
+    metadata:
+      canonical: true
+- intent: number
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      [kaksikymmentäkolme](number)
+    metadata:
+      canonical: true
+  - text: |
+      [kolmesataaneljä](number)
+  - text: |
+      [nolla](number)
+  - text: |
+      [seitsemän miljoonaa kahdeksan](number)
+  - text: |
+      [viisituhattakuusi](number)
+  - text: |
+      [yhdeksänkymmentä](number)
+  - text: |
+      [yksitoista](number)
+- intent: start_form_story
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      form story
+  - text: |
+      formin tarina
+  - text: |
+      käynnistä formi
+    metadata:
+      canonical: true
+  - text: |
+      testaa formi
+- intent: story_links
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      keskustelu ketju
+  - text: |
+      keskustelu linkit
+    metadata:
+      canonical: true
+  - text: |
+      stoori ketju
+  - text: |
+      stoori linkit
+- intent: story_links_2
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      jatka seuraavaan
+  - text: |
+      jatkoa kiitos
+  - text: |
+      seuraava linkki
+  - text: |
+      seuraava osa
+    metadata:
+      canonical: true
+- intent: vastaa_ei
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      ei
+    metadata:
+      canonical: true
+  - text: |
+      ei käy
+  - text: |
+      en
+  - text: |
+      älä
+- intent: vastaa_kyllä
+  metadata:
+    language: fi
+  examples:
+  - text: |
+      joo
+    metadata:
+      canonical: true
+  - text: |
+      kyllä
+  - text: |
+      siitä vaan
+  - text: |
+      tottakai
+- synonym: Helsinki
+  examples: |
+    - hesa
+    - stadi
+- synonym: Tampere
+  examples: |
+    - manse
