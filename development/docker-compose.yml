@@ -1,5 +1,6 @@
-version: '3.0'
+version: '3.3'
 services:
+
   mongo:
     image: 'mongo:latest'
     container_name: botfront-mongo
@@ -10,6 +11,21 @@ services:
       - './botfront-db:/data/db'
     ports:
       - '27017:27017'
+
+  botfront:
+    image: 530123621479.dkr.ecr.eu-north-1.amazonaws.com/botfront-private:3.1.1
+    restart: always
+    networks:
+      - botfront-network
+    ports:
+      - 3000:3000
+    environment:
+      MONGO_URL: mongodb://mongo:27017/bf
+      ROOT_URL: http://localhost:3000
+      PORT: 3000
+    depends_on:
+      - mongo
+
 networks:
   botfront-network: {}
 volumes:

@@ -67,7 +67,7 @@ snap install --classic code
 Example setup has been created in `platform/development`. First we start mongo in a container:
 ```
 cd platform/development
-docker-compose up -d
+docker-compose up -d mongo
 ```
 
 ## Running botfront
@@ -147,8 +147,40 @@ rasa run actions
 
 Now you should be able to train the bot in Botfront.
 
+# Running rasa and botfront from ECR containers
 
-## Miscellaneous tips
+Let's install first AWS CLI tools:
+```
+sudo apt install awscli
+```
+
+In order to access AWS resources from command line, you need to create
+an access key in your AWS account. Select "Security credentials" from
+the upper right account menu and create an access key if you don't
+have one already.
+
+Then run locally `aws configure` and enter the access key information
+there. Test that you can see the repositories:
+```
+aws ecr describe-repositories
+```
+
+Next we give docker access to our images in ECR, and pull the images:
+```
+./ecr-login.sh
+docker-compose pull
+```
+
+After that you should be able to start the mongo and botfront:
+```
+docker-compose up -d mongo botfront
+```
+Now you should be able to access Botfront by browsing to http://localhost:3000/
+
+If you want to monitor the logs, just run `docker-compose logs -f`.
+
+
+# Miscellaneous tips
 
 If you are running `docker-compose` a lot, you may want to create alias `dc` for docker-compose: just add `alias dc=docker-compose` in file `~/.bash_aliases` and run
 ```
