@@ -18,35 +18,51 @@ Documentation of the API can be found here (https://auroraai.astest.suomi.fi/ser
     ```
 ## Environment variables
 
-For local testing user must create .env file to a servicerec/ folder
+For using recommender user must add .env file to a servicerec/ folder
 with key value pair defining api endpoint and api key as follows:
 
 ```python
-AURORA_API_ENDPOINT=https://auroraai.astest.suomi.fi/service-recommender/v1/recommend_service
+AURORA_API_ENDPOINT=https://auroraai.astest.suomi.fi/service-recommender/v1/
 AURORA_API_KEY=api_key_123
+AURORA_API_CLIENT_ID=client_id_xyz
 ```
-
-For other environments a separate solution must be developed.
 
 ## Integration test
 
-Directory `tests/integration` contains simple integration test. The
+Directory `tests/` contains simple integration test. The
 test can be run as follows:
 
 ```
-python -m unittest tests.integration.test_api
+python -m unittest tests.test_api
 ```
 
 ## Usage
 
-Within the servicerec/ folder run following python commands:
+Service recommendations can be asked by two different methods: 
+* text based search
+    - method is ```"text_search"```
+* life situation (3x10D) based search
+    - method is ```"recommend_service"```
+
+They are used as
 
 ```python
 from api import ServiceRecommenderAPI
-
 api = ServiceRecommenderAPI()
+api.get_recommendations(params=params, method=method) 
+```
 
-# Example input dictionary
+where parameters for text search are:
+
+```python
+params = {
+    "search_text": "text that user wants to send to recommender...",
+    "limit": 5
+}
+```
+
+and for life situation based
+```python
 params = {
     "age": 10,
     "life_situation_meters": {
@@ -65,6 +81,4 @@ params = {
     "municipality_code": "853",
     "session_id": "xyz-1232"
 }
-
-output = api.get_recommendations(params) # returns 'recommended services'
 ```
