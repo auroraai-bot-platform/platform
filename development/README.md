@@ -115,10 +115,10 @@ rasa_addons.core.channels.bot_regression_test.BotRegressionTestInput: {}
 
 ## Running rasa
 
-Currently, our main branch for rasa is `aurora-main`:
+Currently, our main branch for rasa is `main`:
 ```
 cd rasa
-git checkout aurora-main
+git checkout main
 ```
 
 Let's create a python virtual environment and install rasa modules and dependencies in it:
