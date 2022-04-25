@@ -7,7 +7,7 @@ pipeline:
   - name: LanguageModelFeaturizer
     model_name: bert
     model_weights: rasa/LaBSE
-    cache_dir: ./app/data/bert
+    cache_dir: /app/models/bert
   - name: DIETClassifier
     epochs: 200
   - name: EntitySynonymMapper
