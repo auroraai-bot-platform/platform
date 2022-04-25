@@ -149,6 +149,8 @@ Now you should be able to train the bot in Botfront.
 
 # Running rasa and botfront from ECR containers
 
+## Preparing AWS and docker tools
+
 Let's install first AWS CLI tools:
 ```
 sudo apt install awscli
@@ -171,6 +173,8 @@ Next we give docker access to our images in ECR, and pull the images:
 docker-compose pull
 ```
 
+## Starting botfront and creating project
+
 After that you should be able to start the mongo and botfront:
 ```
 docker-compose up -d mongo botfront
@@ -179,6 +183,20 @@ Now you should be able to access Botfront by browsing to http://localhost:3000/
 
 If you want to monitor the logs, just run `docker-compose logs -f`.
 
+Create a new project in Botfront. Copy the project id from Botfront UI. Edit
+`docker-compose.yml` and paste the project id to environment section of `rasa`
+and `rasa-prod` services.
+
+## Starting two rasa containers (dev and prod)
+
+In Botfront UI, change the following settings in the project:
+* Project info -> Deployment environments: true
+* Credentials -> Production: change base_url port to 5006
+
+Start rasa containers:
+```
+docker-compose up -d rasa rasa-prod
+```
 
 # Miscellaneous tips
 
