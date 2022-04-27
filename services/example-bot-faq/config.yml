@@ -8,8 +8,6 @@ pipeline:
     max_ngram: 4
   - name: DIETClassifier
     epochs: 200
-  - name: >-
-      rasa_addons.nlu.components.intent_ranking_canonical_example_injector.IntentRankingCanonicalExampleInjector
   - name: EntitySynonymMapper
 language: fi
 

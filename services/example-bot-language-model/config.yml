@@ -10,8 +10,6 @@ pipeline:
     cache_dir: /app/models/bert
   - name: DIETClassifier
     epochs: 200
-  - name: >-
-      rasa_addons.nlu.components.intent_ranking_canonical_example_injector.IntentRankingCanonicalExampleInjector
   - name: EntitySynonymMapper
   - name: ResponseSelector
     epochs: 100
