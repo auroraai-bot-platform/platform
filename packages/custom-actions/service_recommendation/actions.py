@@ -400,3 +400,75 @@ class ActionSlotReset(Action):
 
     def run(self, dispatcher, tracker, domain):
         return[AllSlotsReset()]
+
+class ServiceDemo(Action, ValidateSlots):
+    """
+    Service recommendation using free text search demo action.
+    Slots are collected but not used to make the search
+    """
+
+    def name(self):
+        return 'action_service_demo'
+
+    def run(self, dispatcher, tracker, domain):
+        """
+        Fetches slot values from the bot tracker store and makes a customized api call
+        to fetch wanted services
+        """
+
+        try:
+            toimiala = str(tracker.get_slot('toimiala'))
+        except:
+            toimiala = 'kauneudenhoito'
+
+        try:
+            kunta = tracker.get_slot('kunta').lower().capitalize()
+            code = MUNICIPALITY_CODES[kunta]
+        except:
+            code = '297'
+
+        # parameters here are hard coded to get the wanted results for demo purposes
+        params = {
+        'search_text': 'terveyden suojelu lain mukainen ilmoitus',
+        'service_filters': {
+            'include_national_services': False,
+            'municipality_codes': [code],
+            'service_classes': ['http://uri.suomi.fi/codelist/ptv/ptvserclass2/code/P23']
+            },   
+        'limit':int(9)
+        }
+
+        # Enable if you want to display actual parameters sent to api!
+        # dispatcher.utter_message(f'hakuparametrit: {str(params)}')
+
+        try:
+            api = ServiceRecommenderAPI()
+            response = api.get_recommendations(params=params,
+                                               method='text_search')
+
+            if response.ok:
+                services = response.json()
+                ids = [service['service_id'] for service in services['recommended_services']]
+                names = [service['service_name'] for service in services['recommended_services']]
+
+                if not ids:
+                    dispatcher.utter_message(NO_SERVICES_MESSAGE)
+                else:
+                    dispatcher.utter_message('Palvelusuositukset:')
+
+                i = 0
+                for service_id, name in zip(ids, names):
+                    element = CarouselElement(service_id, name)
+                    dispatcher.utter_message(template=f'Palvelu: {name}',
+                                            buttons=element.element['buttons'])
+                    i += 1
+                    if i == 3: break
+            else:
+                dispatcher.utter_message(template=API_ERROR_MESSAGE)
+                dispatcher.utter_message(str(response))
+
+        except ConnectionError:
+            services = None
+            dispatcher.utter_message(template=API_ERROR_MESSAGE)
+
+        return[SlotSet(RECOMMENDATIONS_SLOT, services)]
