@@ -3,18 +3,27 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import SlotSet, AllSlotsReset, Restarted
 from actions.servicerec.api import ServiceRecommenderAPI
 import json
-from actions.utils import MUNICIPALITY_CODES
+from actions.utils import MUNICIPALITY_CODES, REGION_CODES, HOSPITAL_DISTRICT_CODES, SERVICE_CLASS_CODES
+from actions.utils import CodeFilter
 
-RESULT_LIMIT_SLOT = '3x10d_result_limit'
+RESULT_LIMIT_SLOT = 'sr_param_result_limit'
 DEFAULT_RESULT_LIMIT = 5
 
-LIFE_SITUATION_MUNICIPALITY_NAME_SLOT = '3x10d_municipality_name'
-LIFE_SITUATION_MUNICIPALITY_CODE_SLOT = '3x10d_municipality_code'
-
+MUNICIPALITY_SLOT = 'sr_filter_municipality'
 DEFAULT_MUNICIPALITY_CODE = None
+MunicipalityFilter = CodeFilter(MUNICIPALITY_CODES, MUNICIPALITY_SLOT, DEFAULT_MUNICIPALITY_CODE)
 
-LIFE_SITUATION_AGE_SLOT = '3x10d_age'
-DEFAULT_LIFE_SITUATION_AGE = None
+REGION_SLOT = 'sr_filter_region'
+DEFAULT_REGION_CODE = None
+RegionFilter = CodeFilter(REGION_CODES, REGION_SLOT, DEFAULT_REGION_CODE)
+
+HOSPITAL_DISTRICT_SLOT = 'sr_filter_hospital_district'
+DEFAULT_HOSPITAL_DISTRICT_CODE = None
+HospitalDistrictFilter = CodeFilter(HOSPITAL_DISTRICT_CODES, HOSPITAL_DISTRICT_SLOT, DEFAULT_HOSPITAL_DISTRICT_CODE)
+
+SERVICE_CLASS_SLOT = 'sr_filter_service_class'
+DEFAULT_SERVICE_CLASS_CODE = None
+ServiceClassFilter = CodeFilter(SERVICE_CLASS_CODES, SERVICE_CLASS_SLOT, DEFAULT_SERVICE_CLASS_CODE, parameter_based_on='value')
 
 LIFE_SITUATION_SLOTS = {
     'family': '3x10d_family',
@@ -45,20 +54,24 @@ DEFAULT_LIFE_SITUATION_METER_VALUES = {
 
 DEFAULT_SESSION_ID = 'xyz-123'
 
+INCLUDE_NATIONAL_SERVICES_SLOT = 'sr_filter_include_national_services'
+INCLUDE_NATIONAL_SERVICES_DEFAULT_VALUE = None
+
 # AuroraApi service recommender excepts integer values between zero and ten for features.
 MIN_FEATURE_VALUE = 0
 MAX_FEATURE_VALUE = 10
 
-RECOMMENDATIONS_SLOT = '3x10d_recommended_services'
+RECOMMENDATIONS_SLOT = 'sr_recommended_services'
 
-BUTTON_PRESSED_SLOT = '3x10d_button_pressed'
-SHOW_SERVICE_INFO_INTENT = '3x10d.buttonpressed'
+BUTTON_PRESSED_SLOT = 'sr_button_pressed'
+BUTTON_PRESSED_INTENT = 'sr.buttonpressed'
 
 # todo: Add responses for different languages.
 API_ERROR_MESSAGE = 'En valitettavasti pysty hakemaan palveluita juuri nyt.'
 NO_SERVICES_MESSAGE = 'En löytänyt yhtään tilanteeseesi sopivaa palvelua.'
 NO_SERVICE_CHANNELS_MESSAGE = 'Palvelulla ei toistaiseksi ole yhtään palvelukanavaa.'
 NO_SERVICE_CHANNEL_ITEMS_MESSAGE = '...tätä tietoa ei ole saatavilla.'
+
 
 class CarouselTemplate:
 
@@ -86,7 +99,7 @@ class CarouselElement:
 
     def __init__(self, service_id: str, name: str, image_url: str = None):
         self.service_id = service_id
-        self.payload_body = f'/{SHOW_SERVICE_INFO_INTENT}' + \
+        self.payload_body = f'/{BUTTON_PRESSED_INTENT}' + \
                             '{"' + f'{BUTTON_PRESSED_SLOT}' + \
                             '":"' + f'{self.service_id}'
 
@@ -129,6 +142,24 @@ class ApiParams:
                 self.params[arg] = kwargs[arg]
         return self.params
 
+class ApiFilters:
+    def __init__(self):
+        self.filters = {}
+
+    def add_filters(self, **kwargs):
+        """ Updates api filters """
+
+        for arg in kwargs:
+            if not kwargs[arg]:
+                if isinstance(kwargs[arg], (int, float)):
+                    self.filters[arg] = kwargs[arg]
+                else:
+                    continue
+            else:
+                self.filters[arg] = kwargs[arg]
+        return self.filters
+
+
 class ValidateSlots:
 
     def validate_result_limit(self, tracker):
@@ -140,16 +171,6 @@ class ValidateSlots:
         except:
             limit = DEFAULT_RESULT_LIMIT
         return limit
-
-    def validate_age(self, tracker):
-        """
-        Will check if age slot has a proper value. Otherwise default age is used.
-        """
-        try:
-            age = int(tracker.get_slot(LIFE_SITUATION_AGE_SLOT))
-        except:
-            age = DEFAULT_LIFE_SITUATION_AGE
-        return age
 
     def validate_feat(self, tracker):
         """ Creates life situation feature vector by trying to fetch all slots
@@ -173,22 +194,59 @@ class ValidateSlots:
 
         return feats
 
-    def validate_location(self, tracker):
+    def validate_list_slot(self, tracker, codefilter):
         """
-        Will check if location slot has a proper value which has corresponding
-        municipality code. Otherwise location is not effective factor
+        Check if list slot has a proper value which has corresponding
+        code. Otherwise the slot value does not effective factor.
         """
 
         try:
-            location = tracker.get_slot(LIFE_SITUATION_MUNICIPALITY_NAME_SLOT).lower().capitalize()
-            code = MUNICIPALITY_CODES[location]
+            slot_value = tracker.get_slot(codefilter.slot)
+            validated_slot_value = codefilter.validate_selection(slot_value)
         except:
-            try:
-                code = tracker.get_slot(LIFE_SITUATION_MUNICIPALITY_CODE_SLOT)
-            except:
-                code = DEFAULT_MUNICIPALITY_CODE
+            return None
 
-        return code
+        return validated_slot_value
+
+    def validate_bool_slot(self, tracker, slot_name):
+        """
+        Will check if boolean slot holds proper value. If not, filter is not used.
+        """
+
+        try:
+            slot_value = tracker.get_slot(slot_name)
+            if isinstance(slot_value, str):
+                try:
+                    int_value = int(slot_value)
+                    if int_value == 1:
+                        return True
+                    else:
+                        return False
+                except:
+                    if slot_value.lower() == 'yes':
+                        return True
+                    else:
+                        return False
+            if isinstance(slot_value, int):
+                if slot_value == 1:
+                    return True
+                else:
+                    return False
+        except:
+            return None
+
+    def validate_filters(self, tracker):
+        api_filters = ApiFilters()
+
+        api_filters.add_filters(
+            include_national_services=self.validate_bool_slot(tracker, INCLUDE_NATIONAL_SERVICES_SLOT),
+            municipality_codes=self.validate_list_slot(tracker, MunicipalityFilter),
+            region_codes=self.validate_list_slot(tracker, RegionFilter),
+            hospital_district_codes=self.validate_list_slot(tracker, HospitalDistrictFilter),
+            service_classes=self.validate_list_slot(tracker, ServiceClassFilter)
+        )
+
+        return api_filters.filters
 
 class ActionShowInfo(Action):
     """
@@ -263,7 +321,7 @@ class ActionShowInfo(Action):
             else:
                 dispatcher.utter_message(NO_SERVICE_CHANNELS_MESSAGE)
 
-        return[]
+        return []
 
 class ShowServices(Action, ValidateSlots):
     """
@@ -285,10 +343,8 @@ class ShowServices(Action, ValidateSlots):
         api_params = ApiParams()
 
         api_params.add_params(limit=self.validate_result_limit(tracker),
-                              age=self.validate_age(tracker),
                               life_situation_meters=self.validate_feat(tracker),
-                              municipality_code=self.validate_location(tracker)
-                              )
+                              service_filters=self.validate_filters(tracker))
 
         # Enable if you want to display actual parameters sent to api!
         # dispatcher.utter_message(f'hakuparametrit: {str(json.dumps(api_params.params))}')
@@ -319,8 +375,7 @@ class ShowServices(Action, ValidateSlots):
             services = None
             dispatcher.utter_message(template=API_ERROR_MESSAGE)
 
-        return[SlotSet(RECOMMENDATIONS_SLOT, services)]
-
+        return [SlotSet(RECOMMENDATIONS_SLOT, services)]
 
 class ShowServicesCarousel(Action, ValidateSlots):
     """
@@ -342,10 +397,8 @@ class ShowServicesCarousel(Action, ValidateSlots):
         api_params = ApiParams()
 
         api_params.add_params(limit=self.validate_result_limit(tracker),
-                              age=self.validate_age(tracker),
                               life_situation_meters=self.validate_feat(tracker),
-                              municipality_code=self.validate_location(tracker)
-                              )
+                              service_filters=self.validate_filters(tracker))
 
         # Enable if you want to display actual parameters sent to api!
         # dispatcher.utter_message(f'hakuparametrit: {str(json.dumps(api_params.params))}')
@@ -379,7 +432,7 @@ class ShowServicesCarousel(Action, ValidateSlots):
             services = None
             dispatcher.utter_message(template=API_ERROR_MESSAGE)
 
-        return[SlotSet(RECOMMENDATIONS_SLOT, services)]
+        return [SlotSet(RECOMMENDATIONS_SLOT, services)]
 
 class ActionRestarted(Action):
     """
