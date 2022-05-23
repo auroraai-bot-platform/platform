@@ -40,7 +40,6 @@ function App() {
       <div className="App">
         <header className="App-header">
           <Widget
-            initPayload={rasaConfig?.additionalConfig?.intents[urlPath] || "/aloita"}
             socketUrl={rasaConfig?.url}
             socketPath={"/socket.io/"}
             onSocketEvent={onSocketEvent}
