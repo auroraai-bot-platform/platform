@@ -1,7 +1,0 @@
-*.zip
-# Botfront local files
-.botfront/
-botfront-db/
-models/
-__pycache__/
-.env
