@@ -9,6 +9,8 @@ pipeline:
   - name: DIETClassifier
     epochs: 200
   - name: EntitySynonymMapper
+  - name: rasa_addons.gazette.Gazette
+    min_score: 80
   - name: FallbackClassifier
     threshold: 0.8
   - name: DucklingEntityExtractor
@@ -16,9 +18,8 @@ pipeline:
       - number
     locale: fi_FI
 language: fi
-
-
 policies:
+  - name: AugmentedMemoizationPolicy
   - name: TEDPolicy
     epochs: 50
     max_history: 5
@@ -26,4 +27,3 @@ policies:
       - 32
       - 64
   - name: RulePolicy
-  - name: AugmentedMemoizationPolicy

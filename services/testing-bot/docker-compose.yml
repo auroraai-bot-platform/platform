@@ -1,0 +1,22 @@
+version: '3.0'
+services:
+  mongo:
+    image: 'mongo:latest'
+    container_name: botfront-mongo
+    restart: always
+    networks:
+      - botfront-network
+    volumes:
+      - './botfront-db:/data/db'
+    ports:
+      - '27017:27017'
+  duckling:
+    image: rasa/duckling:latest
+    networks:
+      - botfront-network
+    ports:
+    - "8000:8000"
+networks:
+  botfront-network: {}
+volumes:
+  botfront-db: null

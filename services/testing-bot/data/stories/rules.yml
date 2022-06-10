@@ -1,13 +1,13 @@
 stories: []
 rules:
-  - rule: Get started
+  - rule: get_started
     condition: []
     steps:
       - intent: get_started
       - action: utter_get_started
     metadata:
       group: Rules
-  - rule: Greeting
+  - rule: greeting
     condition: []
     steps:
       - intent: greeting
@@ -16,7 +16,7 @@ rules:
       - action: utter_greeting
     metadata:
       group: Rules
-  - rule: Rasa NLU fallback
+  - rule: nlu-fallback
     condition: []
     steps:
       - intent: nlu_fallback

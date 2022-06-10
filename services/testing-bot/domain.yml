@@ -3,124 +3,85 @@ actions:
   - action_botfront_disambiguation_followup
   - action_botfront_fallback
   - action_botfront_mapping
+  - action_test
   - utter_ask_city
   - utter_ask_name
   - utter_ask_number
   - utter_basic_story_1
   - utter_carousel
   - utter_default
+  - utter_echo_gazette
+  - utter_entity_for_slot
   - utter_form_echo
   - utter_get_started
   - utter_greeting
+  - utter_image
   - utter_nlu_fallback
   - utter_story_links_1
   - utter_story_links_2
+  - utter_test_entity_filled
   - utter_vastasit_ei
   - utter_vastasit_kyllä
-entities: []
-forms:
-  Test_form:
-    collect_in_botfront: null
-    description: null
-    graph_elements:
-      edges:
-        - condition: null
-          id: e1-name
-          source: '1'
-          target: name
-          type: condition
-        - condition: null
-          id: ename-city
-          source: name
-          target: city
-          type: condition
-        - condition: null
-          id: ecity-number
-          source: city
-          target: number
-          type: condition
-      nodes:
-        - id: '1'
-          position:
-            x: 200
-            'y': 200
-          type: start
-        - id: name
-          position:
-            x: 120
-            'y': 360
-          slotName: name
-          type: slot
-        - id: city
-          position:
-            x: 120
-            'y': 510
-          slotName: city
-          type: slot
-        - id: number
-          position:
-            x: 120
-            'y': 660
-          slotName: number
-          type: slot
-    groupName: Forms
-    name: Test_form
-    slots:
-      - filling:
-          - intent: []
-            not_intent: []
-            type: from_text
-        name: name
-        utter_on_new_valid_slot: false
-      - filling:
-          - entity:
-              - city
-            group: null
-            intent:
-              - inform
-            not_intent: null
-            role: null
-            type: from_entity
-        name: city
-        utter_on_new_valid_slot: false
-      - filling:
-          - entity:
-              - number
-            group: null
-            intent:
-              - number
-            not_intent: null
-            role: null
-            type: from_entity
-        name: number
-        utter_on_new_valid_slot: false
-    updatedAt: 1648708538766
+  - utter_video
 intents:
   - basic_story
   - carousel
+  - custom_action
+  - gazette
   - get_started
   - greeting
+  - image
+  - inform
   - nlu_fallback
+  - provide_entity
   - start_form_story
+  - story_fill_slot
   - story_links
   - story_links_2
   - vastaa_ei
   - vastaa_kyllä
+  - video
+entities:
+  - city
+  - test_entity
 responses:
-  utter_ask_city:
-    - language: fi
-      text: Missä asut?
   utter_ask_name:
-    - language: fi
-      text: Mikä on nimesi?
+    - text: Mikä on nimesi?
+      language: fi
+      metadata: null
+    - text: What's your name?
+      language: en
+      metadata: null
+  utter_get_started:
+    - text: 'Moi, olen testibotti! MItä ominaisuutta haluat kokeilla?'
+      language: fi
+      metadata: null
+    - text: Hello this is a testing bot. Which feature do you want to try?
+      language: en
+      metadata: null
+  utter_form_echo:
+    - text: 'Nimesi on siis {name}, asut paikkakunnalla {city} ja numero on {number}'
+      language: fi
+      metadata: null
+    - text: 'Your name is {name}, you live in {city}, and number is {number}'
+      language: en
+      metadata: null
   utter_ask_number:
-    - language: fi
+    - text: Anna numero.
+      language: fi
       metadata: null
-      text: Anna numero.
+    - text: Give a number
+      language: en
+      metadata: null
+  utter_default:
+    - text: Core fallback-viesti
+      language: fi
+      metadata: null
+    - text: Core fallback message
+      language: en
+      metadata: null
   utter_basic_story_1:
-    - language: fi
-      metadata: null
-      quick_replies:
+    - quick_replies:
         - payload: /vastaa_kyllä
           title: Kyllä
           type: postback
@@ -128,64 +89,238 @@ responses:
           title: Ei
           type: postback
       text: Selvä juttu! Tässä osa yksi! Sano kyllä tai ei jatkaaksesi!
-  utter_carousel:
-    - elements:
-        - buttons: []
-          image_url: ''
-          subtitle: Karuselli kuvaus 1
-          title: Otsikko 1
-        - buttons: []
-          image_url: ''
-          subtitle: |-
-            Karuselli kuvaus 2
-            Useampi rivi
-            Vielä yksi
-          title: |-
-            Otsikko 2
-            Toinen rivi
-        - buttons: []
-          image_url: ''
-          subtitle: Karuselli kuvaus 3
-          title: Otsikko 3
       language: fi
-  utter_default:
-    - language: fi
-      text: Core fallback-viesti
-  utter_form_echo:
-    - language: fi
       metadata: null
-      text: 'Nimesi on siis {name}, asut paikkakunnalla {city} ja numero on {number}'
-  utter_get_started:
-    - language: fi
-      text: 'Moi, olen testibotti! MItä ominaisuutta haluat kokeilla?'
+    - text: 'Here,s part one, choose yes or no to continue.'
+      quick_replies:
+        - title: 'Yes'
+          type: postback
+          payload: /vastaa_kyllä
+        - title: 'No'
+          type: postback
+          payload: /vastaa_ei
+      language: en
+      metadata: null
   utter_greeting:
-    - language: fi
-      text: No terve! Mitä saisi olla?
+    - text: No terve! Mitä saisi olla?
+      language: fi
+      metadata: null
+    - text: Greetings! How can I help?
+      language: en
+      metadata: null
+  utter_ask_city:
+    - text: Missä asut?
+      language: fi
+      metadata: null
+    - text: Where do you live?
+      language: en
+      metadata: null
   utter_nlu_fallback:
-    - language: fi
-      text: NLU fallback-viesti
+    - text: NLU fallback-viesti
+      language: fi
+      metadata: null
+    - text: NLU fallback message
+      language: en
+      metadata: null
   utter_story_links_1:
-    - language: fi
-      text: Story linkit osa 1
+    - text: Story linkit osa 1
+      language: fi
+      metadata: null
+    - text: Story links part 1
+      language: en
+      metadata: null
   utter_story_links_2:
-    - language: fi
-      text: Story linkit osa 2
+    - text: Story linkit osa 2
+      language: fi
+      metadata: null
+    - text: Story links part 2
+      language: en
+      metadata: null
   utter_vastasit_ei:
-    - language: fi
-      text: Vastasit siis ei.
+    - text: Vastasit siis ei.
+      language: fi
+      metadata: null
+    - text: You answered NO
+      language: en
+      metadata: null
   utter_vastasit_kyllä:
-    - language: fi
-      text: Vastasit siis kyllä.
-session_config: {}
+    - text: Vastasit siis kyllä.
+      language: fi
+      metadata: null
+    - text: You answered YES
+      language: en
+      metadata: null
+  utter_entity_for_slot:
+    - text: Anna entiteetti
+      language: fi
+      metadata: null
+    - text: Type an entity
+      language: en
+      metadata: null
+  utter_test_entity_filled:
+    - text: 'Slotin täyttö onnistui: {test_entity}'
+      language: fi
+      metadata: null
+    - text: 'Slot filled succesfully: {test_entity}'
+      language: en
+      metadata: null
+  utter_carousel:
+    - text: Tämä on karuselli
+      elements:
+        - title: Otsikko 1
+          subtitle: Kuvaus 1
+          image_url: ''
+          buttons: []
+        - title: Otsikko 2
+          subtitle: |-
+            Kuvaus 2
+            Toinen rivi
+          image_url: ''
+          buttons: []
+      language: fi
+      metadata: null
+    - text: This is a carousel
+      elements:
+        - title: Title 1
+          subtitle: Desc 1
+          image_url: ''
+          buttons: []
+        - title: Title 2
+          subtitle: |-
+            Desc 2
+            Another line
+          image_url: ''
+          buttons: []
+      language: en
+      metadata: null
+  utter_echo_gazette:
+    - text: 'Kaupunkisi on {city}'
+      language: fi
+      metadata: null
+    - text: 'The location is {city}'
+      language: en
+      metadata: null
+  utter_image:
+    - text: ''
+      image: 'https://www.icegif.com/wp-content/uploads/thumbs-up-icegif-1.gif'
+      language: fi
+    - metadata: null
+      text: ''
+      image: 'https://www.icegif.com/wp-content/uploads/thumbs-up-icegif-1.gif'
+      language: en
+  utter_video:
+    - text: ''
+      custom:
+        attachment:
+          autoplay: false
+          type: video
+          payload:
+            src: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+      language: fi
+    - metadata: null
+      text: ''
+      custom:
+        attachment:
+          autoplay: false
+          type: video
+          payload:
+            src: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+      language: en
 slots:
-  city:
-    type: unfeaturized
   disambiguation_message:
-    type: unfeaturized
+    type: any
+    influence_conversation: false
   fallback_language:
+    type: any
     initial_value: fi
-    type: unfeaturized
+    influence_conversation: false
+  city:
+    type: any
+    influence_conversation: false
   name:
-    type: unfeaturized
+    type: any
+    influence_conversation: false
   number:
-    type: unfeaturized
+    type: any
+    influence_conversation: false
+  test_entity:
+    type: text
+    influence_conversation: true
+session_config: {}
+forms:
+  Test_form:
+    collect_in_botfront: null
+    description: null
+    graph_elements:
+      nodes:
+        - id: '1'
+          type: start
+          position:
+            x: 200
+            'y': 200
+        - id: name
+          type: slot
+          slotName: name
+          position:
+            x: 120
+            'y': 360
+        - id: city
+          type: slot
+          slotName: city
+          position:
+            x: 120
+            'y': 510
+        - id: number
+          type: slot
+          slotName: number
+          position:
+            x: 120
+            'y': 660
+      edges:
+        - id: e1-name
+          type: condition
+          source: '1'
+          target: name
+          condition: null
+        - id: ename-city
+          type: condition
+          source: name
+          target: city
+          condition: null
+        - id: ecity-number
+          type: condition
+          source: city
+          target: number
+          condition: null
+    slots:
+      - utter_on_new_valid_slot: false
+        name: name
+        filling:
+          - intent: []
+            not_intent: []
+            type: from_text
+      - utter_on_new_valid_slot: false
+        name: city
+        filling:
+          - intent:
+              - inform
+            not_intent: null
+            type: from_entity
+            entity:
+              - city
+            role: null
+            group: null
+      - utter_on_new_valid_slot: false
+        name: number
+        filling:
+          - intent:
+              - number
+            not_intent: null
+            type: from_entity
+            entity:
+              - number
+            role: null
+            group: null
+    updatedAt: 1654846999808
+    groupName: Forms
+    name: Test_form

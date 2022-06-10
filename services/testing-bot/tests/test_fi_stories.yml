@@ -1,21 +1,15 @@
 stories:
-  - story: test_story_1
+  - story: test_story_Dx0r1JDcx
     steps:
       - user: /get_started
         intent: get_started
       - action: utter_get_started
-      - user: moi
-        intent: greeting
-      - action: utter_greeting
-      - user: perus tarina
-        intent: basic_story
-      - action: utter_basic_story_1
-      - user: joo
-        intent: vastaa_kyllä
-      - action: utter_vastasit_kyllä
-      - user: karueslli
-        intent: carousel
-      - action: utter_carousel
+      - user: story linkit
+        intent: story_links
+      - action: utter_story_links_1
+      - user: seuraava osa
+        intent: story_links_2
+      - action: utter_story_links_2
     metadata:
       group: Tests
       language: fi
