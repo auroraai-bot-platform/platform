@@ -1,12 +1,14 @@
 import requests
 from dotenv import load_dotenv
 import os
+from requests.auth import HTTPBasicAuth
+import base64
 
 load_dotenv()
 
 URL = os.getenv('AURORA_API_ENDPOINT')
 API_KEY = os.getenv('AURORA_API_KEY')
-
+CLIENT_ID = os.getenv('AURORA_API_CLIENT_ID')
 
 class ServiceRecommenderAPI():
     """
@@ -24,9 +26,19 @@ class ServiceRecommenderAPI():
     get_recommendations(params: dict)
         Returns service recommendations.
     """
+    
+    def __init__(self):
 
-    @staticmethod
-    def get_recommendations(params: dict) -> dict:
+        secret_string = f'{CLIENT_ID}:{API_KEY}'
+        base64_secret = base64.b64encode(secret_string.encode('ascii'))
+        secret = base64_secret.decode('ascii')
+    
+        self.headers = {
+           'content-type': 'application/json',
+           'Authorization': 'Basic ' + secret
+        }
+
+    def get_recommendations(self, params: dict, method: str) -> dict:
         """ Fetches service recommendations.
 
         Parameters
@@ -34,7 +46,9 @@ class ServiceRecommenderAPI():
         params : dict
             a dictionary which contains API specific input. Example of the input
             can be found from api documentation (see link in README.md).
-
+        method : str
+            defines endpoint used.
+            
         Raises
         ------
         ConnectionError
@@ -49,12 +63,14 @@ class ServiceRecommenderAPI():
 
         """
 
-        headers = {'content-type': 'application/json',
-                   'x-api-key': API_KEY}
+        endpoint = URL+method
 
         try:
-            output = requests.post(
-                URL, json=params, headers=headers, timeout=10)
+            output = requests.post(endpoint,
+                                   json=params,
+                                   headers=self.headers,
+                                   timeout=10)
+
         except requests.exceptions.RequestException as e:
             raise ConnectionError(e)
 

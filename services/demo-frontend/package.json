@@ -1,6 +1,6 @@
 {
   "name": "demo",
-  "version": "0.1.0",
+  "version": "0.0.10",
   "private": true,
   "scripts": {
     "start": "react-scripts start",
@@ -27,11 +27,10 @@
     ]
   },
   "dependencies": {
-    "auroraai-webchat": "git+ssh://git@github.com/auroraai-bot-platform/rasa-webchat.git",
+    "auroraai-webchat": "github:auroraai-bot-platform/rasa-webchat#b16d147af3286ca16970cd71780ba15c0e3dfeff",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "5.0.0",
-    "typescript": "^4.2.4",
     "web-vitals": "^1.1.2"
   },
   "devDependencies": {
@@ -42,6 +41,7 @@
     "@types/node": "^12.20.12",
     "@types/react": "^17.0.5",
     "@types/react-dom": "^17.0.3",
-    "node-sass": "^7.0.1"
+    "node-sass": "^7.0.1",
+    "typescript": "^4.2.4"
   }
 }
