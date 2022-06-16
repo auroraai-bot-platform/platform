@@ -17,6 +17,9 @@ pipeline:
     dimensions:
       - number
     locale: fi_FI
+  - name: ResponseSelector
+    epochs: 100
+    retrieval_intent: chitchat
 language: fi
 policies:
   - name: AugmentedMemoizationPolicy

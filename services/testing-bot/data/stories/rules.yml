@@ -24,3 +24,11 @@ rules:
       - action: utter_nlu_fallback
     metadata:
       group: Rules
+  - rule: responseselector_chitchat
+    condition: []
+    steps:
+      - intent: chitchat
+        entities: []
+      - action: utter_chitchat
+    metadata:
+      group: Rules

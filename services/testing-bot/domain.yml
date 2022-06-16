@@ -9,6 +9,9 @@ actions:
   - utter_ask_number
   - utter_basic_story_1
   - utter_carousel
+  - utter_chitchat
+  - utter_chitchat/time
+  - utter_chitchat/weather
   - utter_default
   - utter_echo_gazette
   - utter_entity_for_slot
@@ -26,6 +29,7 @@ actions:
 intents:
   - basic_story
   - carousel
+  - chitchat
   - custom_action
   - gazette
   - get_started
@@ -226,6 +230,12 @@ responses:
           payload:
             src: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
       language: en
+  utter_chitchat/weather:
+    - text: 'Sataa, paistaa tai on pilvistä'
+      language: fi
+  utter_chitchat/time:
+    - text: On juuri sopiva aika
+      language: fi
 slots:
   disambiguation_message:
     type: any
@@ -321,6 +331,6 @@ forms:
               - number
             role: null
             group: null
-    updatedAt: 1654846999808
+    updatedAt: 1655380288483
     groupName: Forms
     name: Test_form

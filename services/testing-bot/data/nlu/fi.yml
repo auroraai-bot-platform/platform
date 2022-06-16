@@ -10,6 +10,18 @@ nlu:
       - avaa karuselli
       - karuselli
       - karusellitesti
+  - intent: chitchat/time
+    examples: |
+      - mitä kello näyttää
+      - onko ilta
+      - onko nyt aamu
+      - paljonko kello on
+  - intent: chitchat/weather
+    examples: |
+      - millaista säätä luvassa
+      - minkälainen sää on
+      - paistaako aurinko
+      - sataako nyt
   - intent: custom_action
     examples: |
       - action server
