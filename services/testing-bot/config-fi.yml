@@ -1,0 +1,32 @@
+pipeline:
+  - name: WhitespaceTokenizer
+  - name: LexicalSyntacticFeaturizer
+  - name: CountVectorsFeaturizer
+  - name: CountVectorsFeaturizer
+    analyzer: char_wb
+    min_ngram: 1
+    max_ngram: 4
+  - name: DIETClassifier
+    epochs: 200
+  - name: EntitySynonymMapper
+  - name: rasa_addons.gazette.Gazette
+    min_score: 80
+  - name: FallbackClassifier
+    threshold: 0.8
+  - name: DucklingEntityExtractor
+    dimensions:
+      - number
+    locale: fi_FI
+  - name: ResponseSelector
+    epochs: 100
+    retrieval_intent: chitchat
+language: fi
+policies:
+  - name: AugmentedMemoizationPolicy
+  - name: TEDPolicy
+    epochs: 50
+    max_history: 5
+    batch_size:
+      - 32
+      - 64
+  - name: RulePolicy

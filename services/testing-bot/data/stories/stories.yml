@@ -1,0 +1,114 @@
+stories:
+  - story: custom-action
+    steps:
+      - intent: custom_action
+        user: custom action
+        entities: []
+      - action: action_test
+    metadata:
+      group: Stories
+  - story: entity-gazette
+    steps:
+      - intent: gazette
+        user: gazette
+        entities: []
+      - action: utter_ask_city
+      - intent: inform
+        user: helsinki
+        entities:
+          - city: helsinki
+      - action: utter_echo_gazette
+    metadata:
+      group: Stories
+  - story: entity-slot-filling
+    steps:
+      - intent: story_fill_slot
+        user: slotin täyttö ilman formia
+        entities: []
+      - action: utter_entity_for_slot
+      - intent: provide_entity
+        user: tässä olisi entiteetti
+        entities:
+          - test_entity: entiteetti
+      - slot_was_set:
+          - test_entity: set
+      - action: utter_test_entity_filled
+    metadata:
+      group: Stories
+  - story: response-carousel
+    steps:
+      - intent: carousel
+        user: karuselli
+        entities: []
+      - action: utter_carousel
+    metadata:
+      group: Stories
+  - story: response-image
+    steps:
+      - intent: image
+        user: näytä kuva
+        entities: []
+      - action: utter_image
+    metadata:
+      group: Stories
+  - story: response-video
+    steps:
+      - intent: video
+        user: näytä video
+        entities: []
+      - action: utter_video
+    metadata:
+      group: Stories
+  - story: story-branch
+    steps:
+      - intent: basic_story
+        user: tavallinen tarina
+        entities: []
+      - action: utter_basic_story_1
+      - checkpoint: story-branch__branches
+    metadata:
+      group: Stories
+  - story: story-branch__Ei
+    steps:
+      - checkpoint: story-branch__branches
+      - intent: vastaa_ei
+      - action: utter_vastasit_ei
+    metadata:
+      group: Stories
+  - story: story-branch__Kyllä
+    steps:
+      - checkpoint: story-branch__branches
+      - intent: vastaa_kyllä
+      - action: utter_vastasit_kyllä
+    metadata:
+      group: Stories
+  - story: story-form
+    steps:
+      - intent: start_form_story
+        user: käynnistä formi
+        entities: []
+      - action: Test_form
+      - active_loop: Test_form
+      - active_loop: null
+      - action: utter_form_echo
+    metadata:
+      group: Stories
+  - story: story-link-1
+    steps:
+      - intent: story_links
+        user: keskustelu linkit
+        entities: []
+      - action: utter_story_links_1
+      - checkpoint: link-to-story-link-2/e7604768-5cf1-465d-b808-84905e3f1a2a
+    metadata:
+      group: Stories
+  - story: story-link-2
+    steps:
+      - checkpoint: link-to-story-link-2/e7604768-5cf1-465d-b808-84905e3f1a2a
+      - intent: story_links_2
+        user: seuraava osa
+        entities: []
+      - action: utter_story_links_2
+    metadata:
+      group: Stories
+rules: []

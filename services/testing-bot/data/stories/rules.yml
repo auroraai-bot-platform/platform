@@ -1,0 +1,34 @@
+stories: []
+rules:
+  - rule: get_started
+    condition: []
+    steps:
+      - intent: get_started
+      - action: utter_get_started
+    metadata:
+      group: Rules
+  - rule: greeting
+    condition: []
+    steps:
+      - intent: greeting
+        user: Moi
+        entities: []
+      - action: utter_greeting
+    metadata:
+      group: Rules
+  - rule: nlu-fallback
+    condition: []
+    steps:
+      - intent: nlu_fallback
+        entities: []
+      - action: utter_nlu_fallback
+    metadata:
+      group: Rules
+  - rule: responseselector_chitchat
+    condition: []
+    steps:
+      - intent: chitchat
+        entities: []
+      - action: utter_chitchat
+    metadata:
+      group: Rules

@@ -1,0 +1,118 @@
+nlu:
+  - intent: basic_story
+    examples: |
+      - perus keskustelu
+      - perus stoori
+      - perustarina
+      - tavallinen tarina
+  - intent: carousel
+    examples: |
+      - avaa karuselli
+      - karuselli
+      - karusellitesti
+  - intent: chitchat/time
+    examples: |
+      - mitä kello näyttää
+      - onko ilta
+      - onko nyt aamu
+      - paljonko kello on
+  - intent: chitchat/weather
+    examples: |
+      - millaista säätä luvassa
+      - minkälainen sää on
+      - paistaako aurinko
+      - sataako nyt
+  - intent: custom_action
+    examples: |
+      - action server
+      - custom action
+      - kustomoitu toiminto
+  - intent: gazette
+    examples: |
+      - avaa gazete
+      - gazette
+      - gazettea
+  - intent: greeting
+    examples: |
+      - Moi
+      - morjens
+      - moro
+      - terve
+  - intent: image
+    examples: |
+      - anna kuva
+      - kuva
+      - näytä kuva
+  - intent: inform
+    examples: |
+      - '[Espoossa](city)'
+      - '[Helsingistä](city)'
+      - '[Tampere](city)'
+      - '[Turku](city)'
+      - '[Vantaalta](city)'
+      - '[helsinki](city)'
+      - '[hesa](city)'
+      - '[manse](city)'
+  - intent: number
+    examples: |
+      - '[kaksikymmentäkolme](number)'
+      - '[kolmesataaneljä](number)'
+      - '[nolla](number)'
+      - '[seitsemän miljoonaa kahdeksan](number)'
+      - '[tuhat]{"entity":"number"}'
+      - '[viisi]{"entity":"number"}'
+      - '[viisituhattakuusi](number)'
+      - '[yhdeksänkymmentä](number)'
+      - '[yksitoista](number)'
+  - intent: provide_entity
+    examples: |
+      - '[entiteetti]{"entity":"test_entity"} tässä'
+      - 'syötin [entiteetin]{"entity":"test_entity"}'
+      - 'tässä olisi [entiteetti]{"entity":"test_entity"}'
+  - intent: start_form_story
+    examples: |
+      - form story
+      - formin tarina
+      - käynnistä formi
+      - testaa formi
+  - intent: story_fill_slot
+    examples: |
+      - slotin täyttäminen entiteetillä
+      - slotin täyttö ilman formia
+      - täytetään yksi slotti
+  - intent: story_links
+    examples: |
+      - keskustelu ketju
+      - keskustelu linkit
+      - stoori ketju
+      - stoori linkit
+  - intent: story_links_2
+    examples: |
+      - jatka seuraavaan
+      - jatkoa kiitos
+      - seuraava linkki
+      - seuraava osa
+  - intent: vastaa_ei
+    examples: |
+      - ei
+      - ei käy
+      - en
+      - älä
+  - intent: vastaa_kyllä
+    examples: |
+      - joo
+      - kyllä
+      - siitä vaan
+      - tottakai
+  - intent: video
+    examples: |
+      - näytä video
+      - soita video
+      - video
+  - synonym: Helsinki
+    examples: |
+      - hesa
+      - stadi
+  - synonym: Tampere
+    examples: |
+      - manse

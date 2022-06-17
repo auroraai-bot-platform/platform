@@ -1,0 +1,336 @@
+actions:
+  - action_botfront_disambiguation
+  - action_botfront_disambiguation_followup
+  - action_botfront_fallback
+  - action_botfront_mapping
+  - action_test
+  - utter_ask_city
+  - utter_ask_name
+  - utter_ask_number
+  - utter_basic_story_1
+  - utter_carousel
+  - utter_chitchat
+  - utter_chitchat/time
+  - utter_chitchat/weather
+  - utter_default
+  - utter_echo_gazette
+  - utter_entity_for_slot
+  - utter_form_echo
+  - utter_get_started
+  - utter_greeting
+  - utter_image
+  - utter_nlu_fallback
+  - utter_story_links_1
+  - utter_story_links_2
+  - utter_test_entity_filled
+  - utter_vastasit_ei
+  - utter_vastasit_kyllä
+  - utter_video
+intents:
+  - basic_story
+  - carousel
+  - chitchat
+  - custom_action
+  - gazette
+  - get_started
+  - greeting
+  - image
+  - inform
+  - nlu_fallback
+  - provide_entity
+  - start_form_story
+  - story_fill_slot
+  - story_links
+  - story_links_2
+  - vastaa_ei
+  - vastaa_kyllä
+  - video
+entities:
+  - city
+  - test_entity
+responses:
+  utter_ask_name:
+    - text: Mikä on nimesi?
+      language: fi
+      metadata: null
+    - text: What's your name?
+      language: en
+      metadata: null
+  utter_get_started:
+    - text: 'Moi, olen testibotti! MItä ominaisuutta haluat kokeilla?'
+      language: fi
+      metadata: null
+    - text: Hello this is a testing bot. Which feature do you want to try?
+      language: en
+      metadata: null
+  utter_form_echo:
+    - text: 'Nimesi on siis {name}, asut paikkakunnalla {city} ja numero on {number}'
+      language: fi
+      metadata: null
+    - text: 'Your name is {name}, you live in {city}, and number is {number}'
+      language: en
+      metadata: null
+  utter_ask_number:
+    - text: Anna numero.
+      language: fi
+      metadata: null
+    - text: Give a number
+      language: en
+      metadata: null
+  utter_default:
+    - text: Core fallback-viesti
+      language: fi
+      metadata: null
+    - text: Core fallback message
+      language: en
+      metadata: null
+  utter_basic_story_1:
+    - quick_replies:
+        - payload: /vastaa_kyllä
+          title: Kyllä
+          type: postback
+        - payload: /vastaa_ei
+          title: Ei
+          type: postback
+      text: Selvä juttu! Tässä osa yksi! Sano kyllä tai ei jatkaaksesi!
+      language: fi
+      metadata: null
+    - text: 'Here,s part one, choose yes or no to continue.'
+      quick_replies:
+        - title: 'Yes'
+          type: postback
+          payload: /vastaa_kyllä
+        - title: 'No'
+          type: postback
+          payload: /vastaa_ei
+      language: en
+      metadata: null
+  utter_greeting:
+    - text: No terve! Mitä saisi olla?
+      language: fi
+      metadata: null
+    - text: Greetings! How can I help?
+      language: en
+      metadata: null
+  utter_ask_city:
+    - text: Missä asut?
+      language: fi
+      metadata: null
+    - text: Where do you live?
+      language: en
+      metadata: null
+  utter_nlu_fallback:
+    - text: NLU fallback-viesti
+      language: fi
+      metadata: null
+    - text: NLU fallback message
+      language: en
+      metadata: null
+  utter_story_links_1:
+    - text: Story linkit osa 1
+      language: fi
+      metadata: null
+    - text: Story links part 1
+      language: en
+      metadata: null
+  utter_story_links_2:
+    - text: Story linkit osa 2
+      language: fi
+      metadata: null
+    - text: Story links part 2
+      language: en
+      metadata: null
+  utter_vastasit_ei:
+    - text: Vastasit siis ei.
+      language: fi
+      metadata: null
+    - text: You answered NO
+      language: en
+      metadata: null
+  utter_vastasit_kyllä:
+    - text: Vastasit siis kyllä.
+      language: fi
+      metadata: null
+    - text: You answered YES
+      language: en
+      metadata: null
+  utter_entity_for_slot:
+    - text: Anna entiteetti
+      language: fi
+      metadata: null
+    - text: Type an entity
+      language: en
+      metadata: null
+  utter_test_entity_filled:
+    - text: 'Slotin täyttö onnistui: {test_entity}'
+      language: fi
+      metadata: null
+    - text: 'Slot filled succesfully: {test_entity}'
+      language: en
+      metadata: null
+  utter_carousel:
+    - text: Tämä on karuselli
+      elements:
+        - title: Otsikko 1
+          subtitle: Kuvaus 1
+          image_url: ''
+          buttons: []
+        - title: Otsikko 2
+          subtitle: |-
+            Kuvaus 2
+            Toinen rivi
+          image_url: ''
+          buttons: []
+      language: fi
+      metadata: null
+    - text: This is a carousel
+      elements:
+        - title: Title 1
+          subtitle: Desc 1
+          image_url: ''
+          buttons: []
+        - title: Title 2
+          subtitle: |-
+            Desc 2
+            Another line
+          image_url: ''
+          buttons: []
+      language: en
+      metadata: null
+  utter_echo_gazette:
+    - text: 'Kaupunkisi on {city}'
+      language: fi
+      metadata: null
+    - text: 'The location is {city}'
+      language: en
+      metadata: null
+  utter_image:
+    - text: ''
+      image: 'https://www.icegif.com/wp-content/uploads/thumbs-up-icegif-1.gif'
+      language: fi
+    - metadata: null
+      text: ''
+      image: 'https://www.icegif.com/wp-content/uploads/thumbs-up-icegif-1.gif'
+      language: en
+  utter_video:
+    - text: ''
+      custom:
+        attachment:
+          autoplay: false
+          type: video
+          payload:
+            src: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+      language: fi
+    - metadata: null
+      text: ''
+      custom:
+        attachment:
+          autoplay: false
+          type: video
+          payload:
+            src: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+      language: en
+  utter_chitchat/weather:
+    - text: 'Sataa, paistaa tai on pilvistä'
+      language: fi
+  utter_chitchat/time:
+    - text: On juuri sopiva aika
+      language: fi
+slots:
+  disambiguation_message:
+    type: any
+    influence_conversation: false
+  fallback_language:
+    type: any
+    initial_value: fi
+    influence_conversation: false
+  city:
+    type: any
+    influence_conversation: false
+  name:
+    type: any
+    influence_conversation: false
+  number:
+    type: any
+    influence_conversation: false
+  test_entity:
+    type: text
+    influence_conversation: true
+session_config: {}
+forms:
+  Test_form:
+    collect_in_botfront: null
+    description: null
+    graph_elements:
+      nodes:
+        - id: '1'
+          type: start
+          position:
+            x: 200
+            'y': 200
+        - id: name
+          type: slot
+          slotName: name
+          position:
+            x: 120
+            'y': 360
+        - id: city
+          type: slot
+          slotName: city
+          position:
+            x: 120
+            'y': 510
+        - id: number
+          type: slot
+          slotName: number
+          position:
+            x: 120
+            'y': 660
+      edges:
+        - id: e1-name
+          type: condition
+          source: '1'
+          target: name
+          condition: null
+        - id: ename-city
+          type: condition
+          source: name
+          target: city
+          condition: null
+        - id: ecity-number
+          type: condition
+          source: city
+          target: number
+          condition: null
+    slots:
+      - utter_on_new_valid_slot: false
+        name: name
+        filling:
+          - intent: []
+            not_intent: []
+            type: from_text
+      - utter_on_new_valid_slot: false
+        name: city
+        filling:
+          - intent:
+              - inform
+            not_intent: null
+            type: from_entity
+            entity:
+              - city
+            role: null
+            group: null
+      - utter_on_new_valid_slot: false
+        name: number
+        filling:
+          - intent:
+              - number
+            not_intent: null
+            type: from_entity
+            entity:
+              - number
+            role: null
+            group: null
+    updatedAt: 1655380288483
+    groupName: Forms
+    name: Test_form
