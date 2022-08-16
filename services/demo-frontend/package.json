@@ -27,7 +27,7 @@
     ]
   },
   "dependencies": {
-    "auroraai-webchat": "github:auroraai-bot-platform/rasa-webchat#b16d147af3286ca16970cd71780ba15c0e3dfeff",
+    "auroraai-webchat": "github:auroraai-bot-platform/rasa-webchat#9e56be3235544c3e71e719f9457285ef00352c83",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "5.0.0",
