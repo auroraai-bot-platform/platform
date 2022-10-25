@@ -3,7 +3,7 @@
 *An open-source platform for creating and maintaining chatbots that
 can connect to the AuroraAI network*
 
-## AuroraAI programme
+## AuroraAI Programme
 
 AuroraAI is a Finnish artificial intelligence programme coordinated by
 the Ministry of Finance. The aim of the programme is to offer citizens
@@ -20,7 +20,6 @@ The aim of the platform is to provide open-source tools for creating,
 maintaining and deploying chatbots that can connect to core components
 and other services in the AuroraAI network. The chatbot platform
 consists of the following components:
-The components are maintained in the following Github repositories:
 * Bot development tool:
   [auroraai-bot-platform/botfront](https://github.com/auroraai-bot-platform/botfront). A
   fork of the chatbot authoring tool Botfront with some
@@ -33,8 +32,13 @@ The components are maintained in the following Github repositories:
   [auroraai-bot-platform/rasa-webchat](https://github.com/auroraai-bot-platform/botfront)
 * AWS infra:
   [auroraai-bot-platform/infra](https://github.com/auroraai-bot-platform/infra)
-* Platform:
-  [auroraai-bot-platform/platform](https://github.com/auroraai-bot-platform/platform)
+* Platform (this repository)
+
+## Running the Platform Locally
+
+The easiest say to get started is to run the platform from ready-made
+containers. See more detailed instructions in
+[running/README.md](running/README.md).
 
 ## Installing Development Environment
 
