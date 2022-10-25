@@ -14,8 +14,27 @@ More information about the AuroraAI programme:
 * [AuroraAI national artificial intelligence programme, DigiFinland](https://digifinland.fi/en/our-operations/aurora-ai-national-artificial-intelligence-programme/)
 * [National Artificial Intelligence Programme AuroraAI, Ministry of Finance Finland](https://vm.fi/en/national-artificial-intelligence-programme-auroraai)
 
+## Chatbot Platform
 
-Platform for building chatbots in AuroraAI network
+The aim of the platform is to provide open-source tools for creating,
+maintaining and deploying chatbots that can connect to core components
+and other services in the AuroraAI network. The chatbot platform
+consists of the following components:
+The components are maintained in the following Github repositories:
+* Bot development tool:
+  [auroraai-bot-platform/botfront](https://github.com/auroraai-bot-platform/botfront). A
+  fork of the chatbot authoring tool Botfront with some
+  AuroraAI-specific extensions.
+* Chatbot engine:
+  [auroraai-bot-platform/rasa](https://github.com/auroraai-bot-platform/rasa). A
+  fork of the chatbot platform Rasa with some extensions to enable
+  working with the Botfront frone-end and AuroraAI network.
+* Chatbot widget:
+  [auroraai-bot-platform/rasa-webchat](https://github.com/auroraai-bot-platform/botfront)
+* AWS infra:
+  [auroraai-bot-platform/infra](https://github.com/auroraai-bot-platform/infra)
+* Platform:
+  [auroraai-bot-platform/platform](https://github.com/auroraai-bot-platform/platform)
 
 ## Installing Development Environment
 
