@@ -1,2 +1,4 @@
 # Mac specific
 .DS_Store
+__pycache__
+botfront-db
