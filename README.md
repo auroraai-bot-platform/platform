@@ -36,10 +36,12 @@ consists of the following components:
 
 ## Running the Platform Locally
 
-The easiest say to get started is to run the platform from ready-made
-containers. See more detailed instructions in
+The easiest say to get started is to use docker to run the platform
+from ready-made containers. See more detailed instructions in
 [running/README.md](running/README.md).
 
-## Installing Development Environment
+## Development and Contributing
 
-See [development/README.md](development/README.md) for detailed instructions.
+See [development/README.md](development/README.md) for detailed
+instructions how to put up a development environment and to run the
+components from the sources.
