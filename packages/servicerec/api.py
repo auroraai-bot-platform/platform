@@ -75,3 +75,25 @@ class ServiceRecommenderAPI():
             raise ConnectionError(e)
 
         return output
+
+class SessionAttributesAPI(ServiceRecommenderAPI):
+    def __init__(self):
+        super().__init__()
+
+        self.method = 'session_attributes'
+
+    def post_attributes(self, params: dict):
+        output = self.get_recommendations(params=params, method=self.method)
+        return output
+
+    def get_attributes(self, params: dict):
+
+        endpoint = URL + self.method
+
+        try:
+            output = requests.get(url=endpoint, params=params)
+
+        except requests.exceptions.RequestException as e:
+            raise ConnectionError(e)
+
+        return output
