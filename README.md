@@ -49,7 +49,8 @@ components from the sources.
 We are happy to receive contributions into our repositories. To
 contribute, follow these steps:
 1. Create an issue describing the feature you want to work on
+1. Fork the Github repository you want to work on
 1. Write your code, tests and documentation
 1. Create a pull request describing your changes
 1. Your pull request will be reviewed by a maintainer, who will get
-   back to you about any necessary changes or questions.
+   back to you about possible changes or questions.
