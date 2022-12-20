@@ -10,6 +10,10 @@ the Ministry of Finance. The aim of the programme is to offer citizens
 personalised services at the right time in different life situations
 and events.
 
+DigiFinland Oy has been responsible for developing an open-source
+chatbot platform that can be used to develop and maintain chatbots in
+the AuroraAI network.
+
 More information about the AuroraAI programme:
 * [AuroraAI national artificial intelligence programme, DigiFinland](https://digifinland.fi/en/our-operations/aurora-ai-national-artificial-intelligence-programme/)
 * [National Artificial Intelligence Programme AuroraAI, Ministry of Finance Finland](https://vm.fi/en/national-artificial-intelligence-programme-auroraai)
@@ -19,7 +23,7 @@ More information about the AuroraAI programme:
 The aim of the platform is to provide open-source tools for creating,
 maintaining and deploying chatbots that can connect to core components
 and other services in the AuroraAI network. The chatbot platform
-consists of the following components:
+consists of the following github repositories:
 * Bot development tool:
   [auroraai-bot-platform/botfront](https://github.com/auroraai-bot-platform/botfront). A
   fork of the chatbot authoring tool Botfront with some
@@ -33,6 +37,9 @@ consists of the following components:
 * AWS infra:
   [auroraai-bot-platform/infra](https://github.com/auroraai-bot-platform/infra)
 * Platform (this repository)
+
+At the moment, DigiFinland Oy does not provide support for building or
+running these components.
 
 ## Running the Platform Locally
 
