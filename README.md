@@ -25,7 +25,7 @@ maintaining and deploying chatbots that can connect to core components
 and other services in the AuroraAI network. The chatbot platform
 consists of the following github repositories:
 * Bot development tool:
-  [auroraai-bot-platform/botfront](https://github.com/auroraai-bot-platform/botfront). A
+  [auroraai-bot-platform/botfront-aurora](https://github.com/auroraai-bot-platform/botfront-aurora). A
   fork of the chatbot authoring tool Botfront with some
   AuroraAI-specific extensions.
 * Chatbot engine:

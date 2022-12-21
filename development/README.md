@@ -41,7 +41,7 @@ In github, go to your profile menu (upper right) -> Settings -> SSH and GPG keys
 
 Choose a directory where you clone git repos (for example `~/aurora`) and clone the repos in that directory:
 ```
-git clone git@github.com:auroraai-bot-platform/botfront-private.git
+git clone git@github.com:auroraai-bot-platform/botfront-aurora.git
 git clone git@github.com:auroraai-bot-platform/rasa.git
 git clone git@github.com:auroraai-bot-platform/platform.git
 ```
@@ -74,7 +74,7 @@ docker-compose up -d mongo
 
 Let's install first modules needed by Botfront:
 ```
-cd botfront-private/botfront
+cd botfront-aurora/botfront
 meteor npm install
 ```
 
