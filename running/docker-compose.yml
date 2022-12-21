@@ -13,7 +13,7 @@ services:
       - '27017:27017'
 
   botfront:
-    image: 530123621479.dkr.ecr.eu-north-1.amazonaws.com/botfront-private:3.1.3
+    image: ghcr.io/auroraai-bot-platform/botfront:latest
     restart: always
     networks:
       - botfront-network
@@ -29,7 +29,7 @@ services:
       - mongo
 
   rasa:
-    image: 530123621479.dkr.ecr.eu-north-1.amazonaws.com/rasa-private:latest
+    image: ghcr.io/auroraai-bot-platform/rasa:latest
     networks:
       - botfront-network
     restart: always
@@ -39,11 +39,11 @@ services:
       - './models/:/app/models'
     environment:
       - BOTFRONT_ENV=development
-      - BF_PROJECT_ID=bf
+      - BF_PROJECT_ID=AMCZErq42txFQ8Bt4
       - BF_URL=http://botfront:3000/graphql
 
   rasa-prod:
-    image: 530123621479.dkr.ecr.eu-north-1.amazonaws.com/rasa-private:latest
+    image: ghcr.io/auroraai-bot-platform/rasa:latest
     networks:
       - botfront-network
     restart: always
@@ -53,7 +53,7 @@ services:
       - './models-prod/:/app/models'
     environment:
       - BOTFRONT_ENV=production
-      - BF_PROJECT_ID=bf
+      - BF_PROJECT_ID=AMCZErq42txFQ8Bt4
       - BF_URL=http://botfront:3000/graphql
 
 networks:
