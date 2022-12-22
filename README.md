@@ -33,7 +33,11 @@ consists of the following github repositories:
   fork of the chatbot platform Rasa with some extensions to enable
   working with the Botfront frone-end and AuroraAI network.
 * Chatbot widget:
-  [auroraai-bot-platform/rasa-webchat](https://github.com/auroraai-bot-platform/botfront)
+  [auroraai-bot-platform/rasa-webchat](https://github.com/auroraai-bot-platform/rasa-webchat)
+* Actions:
+  [auroraai-bot-platform/actions](https://github.com/auroraai-bot-platform/actions)
+  Custom actions for rasa bots (including calling service
+  recommendation).
 * AWS infra:
   [auroraai-bot-platform/infra](https://github.com/auroraai-bot-platform/infra)
 * Platform (this repository)
