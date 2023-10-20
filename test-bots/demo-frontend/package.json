@@ -1,6 +1,6 @@
 {
   "name": "demo",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "private": true,
   "scripts": {
     "start": "react-scripts start",
@@ -27,7 +27,7 @@
     ]
   },
   "dependencies": {
-    "auroraai-webchat": "github:auroraai-bot-platform/rasa-webchat#418293f489f419673b718b8df32478de0c4cc81e",
+    "auroraai-webchat": "github:auroraai-bot-platform/rasa-webchat#766321247f7731cde0cd81af76bcae0352ea32b5",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "5.0.0",
